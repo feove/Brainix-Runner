@@ -1,0 +1,9 @@
+zig-cache/
+ig-out/
+/release/
+/debug/
+/build/
+/build-*/
+/docgen_tmp/
+
+.vscode
