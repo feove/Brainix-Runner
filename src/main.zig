@@ -11,7 +11,7 @@ pub fn main() anyerror!void {
 
     while (!rl.windowShouldClose()) {
         // Update
-        
+
         // Draw
         rl.beginDrawing();
         defer rl.endDrawing();
