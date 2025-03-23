@@ -9,11 +9,15 @@ pub fn main() anyerror!void {
 
     //---Inits------------
 
-    window.windowInit();
+    window.windowInit(800, 800);
 
     const grid: Grid = try Grid.init(allocator);
 
     while (!rl.windowShouldClose()) {
+        if (rl.isWindowResized()) {
+            window.windowInit(rl.getScreenWidth(), rl.getScreenHeight());
+        }
+
         window.drawScene(grid);
     }
 

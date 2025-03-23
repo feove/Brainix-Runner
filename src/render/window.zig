@@ -1,10 +1,9 @@
 const rl = @import("raylib");
 const Grid = @import("../game/grid.zig").Grid;
 
-pub fn windowInit() void {
-    const screenWidth = 1000;
-    const screenHeight = 800;
+pub const Window = struct {};
 
+pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
     rl.initWindow(screenWidth, screenHeight, "Brainix Runner");
 }
 

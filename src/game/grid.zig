@@ -4,11 +4,13 @@ const rl = @import("raylib");
 const GRID_X: f32 = 50;
 const GRID_Y: f32 = 50;
 
-const NB_ROWS: usize = 20;
-const NB_COLS: usize = 25;
+const OFFSET: i32 = @intFromFloat(GRID_X);
 
-const CELL_WIDTH: f32 = 32;
-const CELL_HEIGHT: f32 = 32;
+const NB_ROWS: usize = 10;
+const NB_COLS: usize = 10;
+
+var CELL_WIDTH: f32 = undefined;
+var CELL_HEIGHT: f32 = undefined;
 
 pub const Cell = struct {
     x: f32,
@@ -16,6 +18,11 @@ pub const Cell = struct {
     width: f32,
     height: f32,
 };
+
+fn cellSizeInit() void {
+    CELL_WIDTH = @as(f32, @floatFromInt(rl.getScreenWidth() - 2 * OFFSET)) / @as(f32, @floatFromInt(NB_COLS));
+    CELL_HEIGHT = @as(f32, @floatFromInt(rl.getScreenHeight() - 2 * OFFSET)) / @as(f32, @floatFromInt(NB_ROWS));
+}
 
 pub const Grid = struct {
     x: f32,
@@ -27,6 +34,8 @@ pub const Grid = struct {
 
     pub fn init(allocator: std.mem.Allocator) !@This() {
         const cells = try allocator.alloc([]Cell, NB_ROWS);
+
+        cellSizeInit();
 
         for (cells, 0..) |*row, i| {
             row.* = try allocator.alloc(Cell, NB_COLS);
