@@ -11,10 +11,10 @@ pub fn main() anyerror!void {
 
     window.windowInit();
 
-    _ = try Grid.init(allocator);
+    const grid: Grid = try Grid.init(allocator);
 
     while (!rl.windowShouldClose()) {
-        window.drawScene();
+        window.drawScene(grid);
     }
 
     rl.closeWindow();

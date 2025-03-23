@@ -4,8 +4,8 @@ const rl = @import("raylib");
 const GRID_X: f32 = 50;
 const GRID_Y: f32 = 50;
 
-const NB_ROWS: usize = 10;
-const NB_COLS: usize = 10;
+const NB_ROWS: usize = 20;
+const NB_COLS: usize = 25;
 
 const CELL_WIDTH: f32 = 32;
 const CELL_HEIGHT: f32 = 32;
