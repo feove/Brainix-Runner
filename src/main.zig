@@ -1,21 +1,21 @@
 const rl = @import("raylib");
+const std = @import("std");
+const Grid = @import("game/grid.zig").Grid;
+const window = @import("render/window.zig");
 
+var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+const allocator = gpa.allocator();
 pub fn main() anyerror!void {
-    const screenWidth = 800;
-    const screenHeight = 450;
 
-    rl.initWindow(screenWidth, screenHeight, "basic window");
-    defer rl.closeWindow();
+    //---Inits------------
 
-    rl.setTargetFPS(60);
+    window.windowInit();
+
+    _ = try Grid.init(allocator);
 
     while (!rl.windowShouldClose()) {
-        // Update
-
-        // Draw
-        rl.beginDrawing();
-        defer rl.endDrawing();
-
-        rl.clearBackground(.light_gray);
+        window.drawScene();
     }
+
+    rl.closeWindow();
 }
