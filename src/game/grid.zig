@@ -17,19 +17,11 @@ pub const Cell = struct {
     height: f32,
 };
 
-const I32_Rec = struct {
-    x: i32,
-    y: i32,
-    width: i32,
-    height: i32,
-};
-
 pub const Grid = struct {
     x: f32,
     y: f32,
     nb_rows: usize,
     nb_cols: usize,
-    //rec: I32_Rec,
 
     cells: [][]Cell,
 
