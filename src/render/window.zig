@@ -21,8 +21,8 @@ pub fn drawScene(grid: Grid) void {
 
             const x: i32 = @intFromFloat(grid.cells[r][c].x);
             const y: i32 = @intFromFloat(grid.cells[r][c].y);
-            const width: i32 = @intFromFloat(grid.cells[r][c].width);
-            const height: i32 = @intFromFloat(grid.cells[r][c].height);
+            const width: i32 = @intFromFloat(grid.cell_width);
+            const height: i32 = @intFromFloat(grid.cell_height);
 
             rl.drawRectangleLines(x, y, width, height, rl.Color.black);
         }

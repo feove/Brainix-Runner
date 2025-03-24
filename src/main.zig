@@ -9,7 +9,7 @@ pub fn main() anyerror!void {
 
     //---Inits------------
 
-    window.windowInit(800, 800);
+    window.windowInit(1000, 800);
 
     const grid: Grid = try Grid.init(allocator);
 

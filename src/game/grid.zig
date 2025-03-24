@@ -15,8 +15,6 @@ var CELL_HEIGHT: f32 = undefined;
 pub const Cell = struct {
     x: f32,
     y: f32,
-    width: f32,
-    height: f32,
 };
 
 fn cellSizeInit() void {
@@ -29,6 +27,8 @@ pub const Grid = struct {
     y: f32,
     nb_rows: usize,
     nb_cols: usize,
+    cell_width: f32,
+    cell_height: f32,
 
     cells: [][]Cell,
 
@@ -44,8 +44,6 @@ pub const Grid = struct {
                 cell.* = Cell{
                     .x = GRID_X + @as(f32, @floatFromInt(j)) * CELL_WIDTH,
                     .y = GRID_Y + @as(f32, @floatFromInt(i)) * CELL_HEIGHT,
-                    .width = CELL_WIDTH,
-                    .height = CELL_HEIGHT,
                 };
             }
         }
@@ -56,6 +54,8 @@ pub const Grid = struct {
             .nb_rows = NB_ROWS,
             .nb_cols = NB_COLS,
             .cells = cells,
+            .cell_width = CELL_WIDTH,
+            .cell_height = CELL_HEIGHT,
         };
     }
 
