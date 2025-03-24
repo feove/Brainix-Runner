@@ -5,6 +5,7 @@ const window = @import("render/window.zig");
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
+
 pub fn main() anyerror!void {
 
     //---Inits------------
@@ -14,8 +15,10 @@ pub fn main() anyerror!void {
     const grid: Grid = try Grid.init(allocator);
 
     while (!rl.windowShouldClose()) {
-        if (rl.isWindowResized()) {
-            window.windowInit(rl.getScreenWidth(), rl.getScreenHeight());
+
+        //Test FullScreen feature
+        if (rl.isKeyPressed(rl.KeyboardKey.f11)) {
+            rl.toggleFullscreen();
         }
 
         window.drawScene(grid);
