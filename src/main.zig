@@ -1,7 +1,8 @@
 const rl = @import("raylib");
 const std = @import("std");
-const Grid = @import("game/grid.zig").Grid;
+const game = @import("game/game.zig");
 const window = @import("render/window.zig");
+const Grid = @import("game/grid.zig").Grid;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
@@ -21,7 +22,7 @@ pub fn main() anyerror!void {
             rl.toggleFullscreen();
         }
 
-        window.render();
+        game.run();
     }
 
     rl.closeWindow();
