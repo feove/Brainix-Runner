@@ -1,6 +1,8 @@
 const std = @import("std");
 const rl = @import("raylib");
 
+pub var grid: Grid = undefined;
+
 const GRID_X: f32 = 50;
 const GRID_Y: f32 = 50;
 
@@ -29,10 +31,9 @@ pub const Grid = struct {
     nb_cols: usize,
     cell_width: f32,
     cell_height: f32,
-
     cells: [][]Cell,
 
-    pub fn init(allocator: std.mem.Allocator) !@This() {
+    pub fn init(allocator: std.mem.Allocator) !void {
         const cells = try allocator.alloc([]Cell, NB_ROWS);
 
         cellSizeInit();
@@ -48,7 +49,7 @@ pub const Grid = struct {
             }
         }
 
-        return Grid{
+        grid = Grid{
             .x = GRID_X,
             .y = GRID_Y,
             .nb_rows = NB_ROWS,
@@ -57,6 +58,10 @@ pub const Grid = struct {
             .cell_width = CELL_WIDTH,
             .cell_height = CELL_HEIGHT,
         };
+    }
+
+    pub fn selfReturn() Grid {
+        return grid;
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {

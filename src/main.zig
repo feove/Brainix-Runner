@@ -12,7 +12,7 @@ pub fn main() anyerror!void {
 
     window.windowInit(1000, 800);
 
-    const grid: Grid = try Grid.init(allocator);
+    try Grid.init(allocator);
 
     while (!rl.windowShouldClose()) {
 
@@ -21,7 +21,7 @@ pub fn main() anyerror!void {
             rl.toggleFullscreen();
         }
 
-        window.drawScene(grid);
+        window.render();
     }
 
     rl.closeWindow();
