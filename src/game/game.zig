@@ -6,4 +6,5 @@ pub fn run() void {
 
 pub fn render() void {
     scene.drawScene();
+    scene.drawElf();
 }
