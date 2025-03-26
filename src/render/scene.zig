@@ -2,6 +2,7 @@ const Grid = @import("../game/grid.zig").Grid;
 const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
 const textures = @import("textures.zig");
+const player = @import("../game/player.zig");
 
 //Tmp Drawing
 pub fn drawScene() void {
@@ -31,5 +32,5 @@ pub fn drawScene() void {
 }
 
 pub fn drawElf() void {
-    rl.drawTextureEx(textures.elf, rl.Vector2.init(420, 300), 0, 0.1, .white);
+    rl.drawTextureEx(textures.elf, rl.Vector2.init(player.elf.x, player.elf.y), 0, 0.1, .white);
 }
