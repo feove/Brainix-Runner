@@ -1,6 +1,7 @@
 const rl = @import("raylib");
 const std = @import("std");
 const game = @import("game/game.zig");
+const player = @import("game/player.zig");
 const window = @import("render/window.zig");
 const Grid = @import("game/grid.zig").Grid;
 const textures = @import("render/textures.zig");
@@ -16,6 +17,7 @@ pub fn main() anyerror!void {
 
     try textures.texturesInit();
     try Grid.init(allocator);
+    player.initElf();
 
     while (!rl.windowShouldClose()) {
 
