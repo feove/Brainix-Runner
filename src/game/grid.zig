@@ -38,6 +38,8 @@ pub const Grid = struct {
     y: f32,
     nb_rows: usize,
     nb_cols: usize,
+    width: f32,
+    height: f32,
 
     cells: [][]Cell,
 
@@ -65,6 +67,8 @@ pub const Grid = struct {
             .nb_rows = NB_ROWS,
             .nb_cols = NB_COLS,
             .cells = cells,
+            .width = CELL_WIDTH * NB_COLS,
+            .height = CELL_HEIGHT * NB_ROWS,
         };
 
         grid.groundDefine(1, grid.nb_rows - 2, grid.nb_cols - 2, 1);

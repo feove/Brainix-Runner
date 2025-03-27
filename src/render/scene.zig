@@ -6,9 +6,6 @@ const player = @import("../game/player.zig");
 
 //Tmp Drawing
 pub fn drawScene() void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
-
     rl.clearBackground(.white);
 
     const grid: Grid = Grid.selfReturn();

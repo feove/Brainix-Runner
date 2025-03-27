@@ -1,12 +1,16 @@
 const scene = @import("../render/scene.zig");
 const player = @import("../game/player.zig");
+const rl = @import("raylib");
 
 pub fn run() void {
-    player.elf.controller();
     render();
 }
 
 pub fn render() void {
-    scene.drawElf();
+    rl.beginDrawing();
+    defer rl.endDrawing();
+
     scene.drawScene();
+    player.elf.controller();
+    scene.drawElf();
 }
