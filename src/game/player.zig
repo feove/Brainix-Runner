@@ -13,15 +13,14 @@ pub fn initElf() void {
         .y = 300,
         .width = Grid.selfReturn().cells[0][0].width,
         .height = Grid.selfReturn().cells[0][0].height * 2,
-        .speed = 200.0, // Movement speed
+        .speed = 200.0,
         .physics = PhysicObject{ .mass = 10, .velocity = 0 },
         .isOnGround = false,
     };
 }
 
-// Physics Constants
-const gravity: f32 = 1000.0; // Increased for a more natural feel
-const jump_force: f32 = -400.0; // More negative = stronger jump
+const gravity: f32 = 1000.0;
+const jump_force: f32 = -400.0;
 
 pub const Elf = struct {
     x: f32,
@@ -68,7 +67,7 @@ pub const Elf = struct {
 
         const ground_tolerance: f32 = 0.1;
 
-        if (new_y + self.height >= grid.y + grid.height - ground_tolerance) {
+        if (new_y + self.height > grid.y + grid.height - ground_tolerance) {
             self.isOnGround = true;
             self.physics.velocity = 0;
             return false;
