@@ -12,5 +12,5 @@ pub fn render() void {
 
     scene.drawScene();
     player.elf.controller();
-    scene.drawElf();
+    player.elf.drawElf();
 }

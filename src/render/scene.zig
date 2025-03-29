@@ -26,9 +26,6 @@ pub fn drawScene() void {
             }
         }
     }
-}
 
-pub fn drawElf() void {
-    const elf = player.elf;
-    rl.drawTextureEx(textures.elf, rl.Vector2.init(elf.x, elf.y), 0, 0.1, .white);
+    player.elf.drawElf();
 }
