@@ -50,6 +50,7 @@ pub const Elf = struct {
         if (rl.isKeyDown(rl.KeyboardKey.left)) {
             x_movement -= self.speed * dt;
         }
+        print("Elf isOnGround {}\n", .{self.isOnGround});
 
         self.elfMovement(x_movement, self.physics.velocity * dt);
     }
@@ -67,13 +68,13 @@ pub const Elf = struct {
 
         const ground_tolerance: f32 = 0.1;
 
+        self.isOnGround = false;
         if (new_y + self.height > grid.y + grid.height - ground_tolerance) {
             self.isOnGround = true;
             self.physics.velocity = 0;
             return false;
         }
 
-        self.isOnGround = false;
         return true;
     }
     fn elfMovement(self: *Elf, x: f32, y: f32) void {
