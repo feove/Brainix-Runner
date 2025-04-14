@@ -88,13 +88,17 @@ pub const Grid = struct {
                 self.cells[j][i].type = CellType.GROUND;
             }
         }
+
+        self.cells[3][3].type = CellType.GROUND;
+        self.cells[6][8].type = CellType.GROUND;
+        self.cells[7][7].type = CellType.GROUND;
     }
 
     pub fn playerCurrentCell(self: *Grid, x: f32, y: f32) CellType {
         const i: usize = @intFromFloat((x - self.x) / CELL_WIDTH);
-        const j: usize = @intFromFloat((y - self.y) / CELL_HEIGHT);
+        const j: usize = @intFromFloat((y - self.y - 30) / CELL_HEIGHT);
 
-        std.debug.print("i: {} j: {}\n", .{ i, j });
+        //std.debug.print("i: {} j: {}\n", .{ i, j });
 
         return self.cells[j][i].type;
     }

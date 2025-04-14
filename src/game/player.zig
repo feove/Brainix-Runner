@@ -21,7 +21,7 @@ pub fn initElf() void {
 }
 
 const gravity: f32 = 1000.0;
-const jump_force: f32 = -400.0;
+const jump_force: f32 = -500.0;
 
 pub const Elf = struct {
     x: f32,
