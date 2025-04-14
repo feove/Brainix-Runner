@@ -3,6 +3,7 @@ const Grid = @import("grid.zig").Grid;
 const rl = @import("raylib");
 const textures = @import("../render/textures.zig");
 const PhysicObject = @import("terrain_object.zig").PhysicObject;
+const CellType = @import("grid.zig").CellType;
 const print = @import("std").debug.print;
 
 pub var elf: Elf = undefined;
@@ -33,9 +34,14 @@ pub const Elf = struct {
 
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime();
+        var grid: Grid = Grid.selfReturn();
+
+        self.isOnGround = grid.playerCurrentCell(self.x, self.y + self.height) == CellType.GROUND;
 
         if (!self.isOnGround) {
             self.physics.velocity += gravity * dt;
+        } else {
+            self.physics.velocity = 0;
         }
 
         if (rl.isKeyPressed(rl.KeyboardKey.space) and self.isOnGround) {
@@ -50,7 +56,6 @@ pub const Elf = struct {
         if (rl.isKeyDown(rl.KeyboardKey.left)) {
             x_movement -= self.speed * dt;
         }
-        print("Elf isOnGround {}\n", .{self.isOnGround});
 
         self.elfMovement(x_movement, self.physics.velocity * dt);
     }
@@ -68,7 +73,6 @@ pub const Elf = struct {
 
         const ground_tolerance: f32 = 0.1;
 
-        self.isOnGround = false;
         if (new_y + self.height > grid.y + grid.height - ground_tolerance) {
             self.isOnGround = true;
             self.physics.velocity = 0;

@@ -90,6 +90,15 @@ pub const Grid = struct {
         }
     }
 
+    pub fn playerCurrentCell(self: *Grid, x: f32, y: f32) CellType {
+        const i: usize = @intFromFloat((x - self.x) / CELL_WIDTH);
+        const j: usize = @intFromFloat((y - self.y) / CELL_HEIGHT);
+
+        std.debug.print("i: {} j: {}\n", .{ i, j });
+
+        return self.cells[j][i].type;
+    }
+
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {
         for (self.cells) |row| {
             allocator.free(row);
