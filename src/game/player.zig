@@ -10,18 +10,22 @@ const print = @import("std").debug.print;
 pub var elf: Elf = undefined;
 
 pub fn initElf() void {
+    const tex = textures.elf;
+    const scale_factor: f32 = 0.1;
+
     elf = Elf{
         .x = 400,
         .y = 300,
-        .width = Grid.selfReturn().cells[0][0].width,
-        .height = Grid.selfReturn().cells[0][0].height * 2,
+        .width = @as(f32, @floatFromInt(tex.width)) * scale_factor,
+        .height = @as(f32, @floatFromInt(tex.height)) * scale_factor,
         .speed = 200.0,
-        .physics = PhysicObject{ .mass = 10, .velocity = 0 },
+        .physics = PhysicObject{ .mass = 20 },
         .isOnGround = false,
+        .hitBox = HitBox{},
     };
 }
 
-const gravity: f32 = 1000.0;
+const gravity: f32 = 1500.0;
 const jump_force: f32 = -500.0;
 
 pub const Elf = struct {
@@ -32,16 +36,17 @@ pub const Elf = struct {
     speed: f32,
     physics: PhysicObject,
     isOnGround: bool,
+    hitBox: HitBox,
 
-    fn IsOnGround(grid: *Grid, self: *Elf) bool {
-        return grid.*.playerCellAround(self.x + self.width / 2, self.y + self.height, CellAround.BOTTOM) == CellType.GROUND;
+    pub fn selfReturn() Elf {
+        return elf;
     }
 
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime();
         var grid: Grid = Grid.selfReturn();
 
-        self.isOnGround = IsOnGround(&grid, self);
+        self.isOnGround = self.hitBox.bottomCellType == CellType.GROUND;
 
         if (!self.isOnGround) {
             self.physics.velocity += gravity * dt;
@@ -55,7 +60,7 @@ pub const Elf = struct {
         }
 
         var x_movement: f32 = 0;
-        if (rl.isKeyDown(rl.KeyboardKey.right) and grid.playerCellAround(self.x + self.width, self.y + self.height / 2, CellAround.RIGHT) != CellType.GROUND) {
+        if (rl.isKeyDown(rl.KeyboardKey.right)) {
             x_movement += self.speed * dt;
         }
         if (rl.isKeyDown(rl.KeyboardKey.left)) {
@@ -63,6 +68,8 @@ pub const Elf = struct {
         }
 
         self.elfMovement(x_movement, self.physics.velocity * dt);
+
+        self.hitBox.hitBoxUpdate(&grid, &elf);
     }
 
     fn canMoveHorizontal(self: *Elf, x_offset: f32) bool {
@@ -71,6 +78,7 @@ pub const Elf = struct {
         const new_x = self.x + x_offset;
         return new_x >= grid.x and new_x + self.width <= grid.x + grid.width;
     }
+
     fn canMoveVertical(self: *Elf, y_offset: f32) bool {
         const grid: Grid = Grid.selfReturn();
 
@@ -86,6 +94,7 @@ pub const Elf = struct {
 
         return true;
     }
+
     fn elfMovement(self: *Elf, x: f32, y: f32) void {
         if (canMoveHorizontal(self, x)) {
             self.x += x;
@@ -109,5 +118,30 @@ pub const Elf = struct {
 
     pub fn drawElf(self: *Elf) void {
         rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
+    }
+};
+
+const HitBox = struct {
+    topCellType: CellType = CellType.EMPTY,
+    bottomCellType: CellType = CellType.EMPTY,
+    leftCellType: CellType = CellType.EMPTY,
+    rightCellType: CellType = CellType.EMPTY,
+
+    pub fn hitBoxDrawing(x: f32, y: f32, width: f32, height: f32) void {
+        const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
+
+        rl.drawRectangleLinesEx(rectangle, 4.0, .red);
+    }
+
+    //fn i_and_j_assign(i: *usize, j: *usize) void {
+    //  i.* = @intFromFloat((elf.x - self.x) / CELL_WIDTH);
+
+    //}
+
+    pub fn hitBoxUpdate(self: *HitBox, grid: *Grid, player: *Elf) void {
+        const i: usize = @intFromFloat((player.x + player.width / 2 - grid.x) / grid.cells[0][0].width);
+        const j: usize = @intFromFloat((player.y + player.height - grid.y) / grid.cells[0][0].height);
+
+        self.bottomCellType = grid.cells[j][i].type;
     }
 };

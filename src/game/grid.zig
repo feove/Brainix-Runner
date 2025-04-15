@@ -1,5 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
+const Elf = @import("player.zig").Elf;
+const print = @import("std").debug.print;
 
 pub var grid: Grid = undefined;
 
@@ -26,6 +28,7 @@ pub const CellAround = enum {
     RIGHT,
     LEFT,
     BOTTOM,
+    NONE,
 };
 
 pub const Cell = struct {
@@ -100,31 +103,6 @@ pub const Grid = struct {
         //self.cells[3][3].type = CellType.GROUND;
         self.cells[6][8].type = CellType.GROUND;
         self.cells[7][7].type = CellType.GROUND;
-    }
-
-    fn i_and_j_assign(self: *Grid, i: *usize, j: *usize, x: f32, y: f32, x_offset: f32, y_offset: f32) void {
-        i.* = @intFromFloat((x - self.x + x_offset) / CELL_WIDTH);
-        j.* = @intFromFloat((y - self.y + y_offset) / CELL_HEIGHT);
-    }
-
-    pub fn playerCellAround(self: *Grid, x: f32, y: f32, cellAround: CellAround) CellType {
-        var i: usize = 0;
-        var j: usize = 0;
-
-        switch (cellAround) {
-            CellAround.UP => i_and_j_assign(self, &i, &j, x, y, 0, 0),
-            CellAround.BOTTOM => i_and_j_assign(self, &i, &j, x, y, 0, -30),
-            CellAround.LEFT => i_and_j_assign(self, &i, &j, x, y, 0, 0),
-            CellAround.RIGHT => i_and_j_assign(self, &i, &j, x, y, 0, 0),
-        }
-
-        std.debug.print("i : {any} || j : {any}\n", .{ i, j });
-        // Bounds check
-        if (j >= self.cells.len or i >= self.cells[0].len) {
-            return CellType.EMPTY;
-        }
-
-        return self.cells[j][i].type;
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {
