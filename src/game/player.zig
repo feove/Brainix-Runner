@@ -70,6 +70,7 @@ pub const Elf = struct {
         self.elfMovement(x_movement, self.physics.velocity * dt);
 
         self.hitBox.hitBoxUpdate(&grid, &elf);
+        self.hitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
 
     fn canMoveHorizontal(self: *Elf, x_offset: f32) bool {
@@ -95,8 +96,16 @@ pub const Elf = struct {
         return true;
     }
 
+    fn unlockCollision() void {
+        if (elf.hitBox.rightCellType == CellType.GROUND) {
+            elf.x -= 1;
+        }
+    }
+
     fn elfMovement(self: *Elf, x: f32, y: f32) void {
-        if (canMoveHorizontal(self, x)) {
+        unlockCollision();
+
+        if (canMoveHorizontal(self, x) and self.hitBox.rightCellType != CellType.GROUND) {
             self.x += x;
         }
 
@@ -127,9 +136,9 @@ const HitBox = struct {
     leftCellType: CellType = CellType.EMPTY,
     rightCellType: CellType = CellType.EMPTY,
 
-    pub fn hitBoxDrawing(x: f32, y: f32, width: f32, height: f32) void {
+    pub fn hitBoxDrawing(self: *HitBox, x: f32, y: f32, width: f32, height: f32) void {
         const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
-
+        print("{any}\n", .{self.leftCellType});
         rl.drawRectangleLinesEx(rectangle, 4.0, .red);
     }
 
@@ -144,5 +153,8 @@ const HitBox = struct {
 
         i_and_j_assign(grid, player.x + player.width, player.y + player.height, &i, &j);
         self.bottomCellType = grid.cells[j][i].type;
+
+        i_and_j_assign(grid, player.x + player.width + 10, player.y + player.height / 2, &i, &j);
+        self.rightCellType = grid.cells[j][i].type;
     }
 };
