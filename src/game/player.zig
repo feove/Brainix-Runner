@@ -133,15 +133,16 @@ const HitBox = struct {
         rl.drawRectangleLinesEx(rectangle, 4.0, .red);
     }
 
-    //fn i_and_j_assign(i: *usize, j: *usize) void {
-    //  i.* = @intFromFloat((elf.x - self.x) / CELL_WIDTH);
-
-    //}
+    fn i_and_j_assign(grid: *Grid, x: f32, y: f32, i: *usize, j: *usize) void {
+        i.* = @intFromFloat((x - grid.x) / grid.cells[0][0].width);
+        j.* = @intFromFloat((y - grid.y) / grid.cells[0][0].height);
+    }
 
     pub fn hitBoxUpdate(self: *HitBox, grid: *Grid, player: *Elf) void {
-        const i: usize = @intFromFloat((player.x + player.width / 2 - grid.x) / grid.cells[0][0].width);
-        const j: usize = @intFromFloat((player.y + player.height - grid.y) / grid.cells[0][0].height);
+        var i: usize = undefined;
+        var j: usize = undefined;
 
+        i_and_j_assign(grid, player.x + player.width, player.y + player.height, &i, &j);
         self.bottomCellType = grid.cells[j][i].type;
     }
 };
