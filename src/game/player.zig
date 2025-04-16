@@ -22,6 +22,7 @@ pub fn initElf() void {
         .physics = PhysicObject{ .mass = 20 },
         .isOnGround = false,
         .hitBox = HitBox{},
+        .repulsive_force = 150.0,
     };
 }
 
@@ -37,6 +38,7 @@ pub const Elf = struct {
     physics: PhysicObject,
     isOnGround: bool,
     hitBox: HitBox,
+    repulsive_force: f32,
 
     pub fn selfReturn() Elf {
         return elf;
@@ -85,7 +87,7 @@ pub const Elf = struct {
 
         const new_y = self.y + y_offset;
 
-        const ground_tolerance: f32 = 0.1;
+        const ground_tolerance: f32 = 20;
 
         if (new_y + self.height > grid.y + grid.height - ground_tolerance) {
             self.isOnGround = true;
@@ -96,21 +98,27 @@ pub const Elf = struct {
         return true;
     }
 
-    fn unlockCollision() void {
-        if (elf.hitBox.rightCellType == CellType.GROUND) {
-            elf.x -= 1;
-        }
-    }
-
     fn elfMovement(self: *Elf, x: f32, y: f32) void {
-        unlockCollision();
+        const dt: f32 = rl.getFrameTime();
 
-        if (canMoveHorizontal(self, x) and self.hitBox.rightCellType != CellType.GROUND) {
-            self.x += x;
+        if (canMoveHorizontal(self, x)) {
+            if (self.hitBox.rightCellType == CellType.GROUND and x > 0) {
+                self.x -= self.repulsive_force * dt;
+            } else if (self.hitBox.leftCellType == CellType.GROUND and x < 0) {
+                self.x += self.repulsive_force * dt;
+            } else {
+                self.x += x;
+            }
         }
 
         if (canMoveVertical(self, y)) {
-            self.y += y;
+            if (self.hitBox.topCellType == CellType.GROUND and y < 0) {
+                self.y += self.repulsive_force * dt;
+            } else if (self.hitBox.bottomCellType == CellType.GROUND and y > 0) {
+                self.y -= self.repulsive_force * 0.4 * dt;
+            } else {
+                self.y += y;
+            }
         }
     }
 
@@ -137,9 +145,10 @@ const HitBox = struct {
     rightCellType: CellType = CellType.EMPTY,
 
     pub fn hitBoxDrawing(self: *HitBox, x: f32, y: f32, width: f32, height: f32) void {
+        print("{any}\n", .{self.rightCellType});
+
         const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
-        print("{any}\n", .{self.leftCellType});
-        rl.drawRectangleLinesEx(rectangle, 4.0, .red);
+        rl.drawRectangleLinesEx(rectangle, 5, .red);
     }
 
     fn i_and_j_assign(grid: *Grid, x: f32, y: f32, i: *usize, j: *usize) void {
@@ -151,10 +160,77 @@ const HitBox = struct {
         var i: usize = undefined;
         var j: usize = undefined;
 
-        i_and_j_assign(grid, player.x + player.width, player.y + player.height, &i, &j);
-        self.bottomCellType = grid.cells[j][i].type;
+        self.bottomCellType = cellDetection(
+            grid,
+            player.x,
+            player.y + player.height,
+            player.x + player.width,
+            3,
+            0,
+            1,
+            player.width,
+            &i,
+            &j,
+        );
 
-        i_and_j_assign(grid, player.x + player.width + 10, player.y + player.height / 2, &i, &j);
-        self.rightCellType = grid.cells[j][i].type;
+        self.topCellType = cellDetection(
+            grid,
+            player.x,
+            player.y,
+            player.x + player.width,
+            3,
+            0,
+            1,
+            player.width,
+            &i,
+            &j,
+        );
+
+        self.rightCellType = cellDetection(
+            grid,
+            player.x + player.width,
+            player.y,
+            player.y + player.height,
+            0,
+            3,
+            player.height,
+            1,
+            &i,
+            &j,
+        );
+
+        self.leftCellType = cellDetection(
+            grid,
+            player.x,
+            player.y,
+            player.y + player.height,
+            0,
+            3,
+            player.height,
+            1,
+            &i,
+            &j,
+        );
+    }
+
+    fn cellDetection(grid: *Grid, x: f32, y: f32, length: f32, incx: f32, incy: f32, xrst: f32, yrst: f32, i: *usize, j: *usize) CellType {
+        var currentCell = CellType.AIR;
+        var xp = x;
+        var yp = y;
+
+        while (xp * xrst < length or yp * yrst < length) {
+            i_and_j_assign(grid, xp, yp, i, j);
+
+            currentCell = grid.cells[j.*][i.*].type;
+
+            if (currentCell != CellType.AIR) {
+                return currentCell;
+            }
+
+            xp += incx;
+            yp += incy;
+        }
+
+        return CellType.AIR;
     }
 };
