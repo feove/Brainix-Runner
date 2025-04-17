@@ -1,3 +1,7 @@
+
+
+
+
 pub const PhysicObject = struct {
     mass: f32,
     velocity: f32 = 0,
@@ -10,3 +14,6 @@ pub const PhysicObject = struct {
         self.velocity += self.acceleration * dt;
     }
 };
+
+
+

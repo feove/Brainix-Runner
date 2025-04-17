@@ -90,7 +90,7 @@ pub const Elf = struct {
 
         const ground_tolerance: f32 = 20;
 
-        if (new_y + self.height >= grid.y + grid.height - ground_tolerance) {
+        if (new_y + self.height >= grid.y + grid.height + ground_tolerance) {
             return false;
         }
         self.isOnGround = true;

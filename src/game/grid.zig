@@ -96,7 +96,7 @@ pub const Grid = struct {
     }
 
     pub fn cellManagement() void {
-        // const hud = HUD.selfReturn();
+       // const hud = HUD.selfReturn();
 
         if (HUD.cursorInGrid()) {
             print("INSIDE\n", .{});

@@ -12,7 +12,7 @@ pub const HUD = struct {
 
     pub fn refresh(self: *HUD) void {
         self.mouseX = rl.getMouseX();
-        self.mouseY = rl.getMouseX();
+        self.mouseY = rl.getMouseY();
     }
 
     pub fn cursorInGrid() bool {
@@ -23,7 +23,7 @@ pub const HUD = struct {
         const grid_height = @as(i32, @intFromFloat(grid.height));
 
         const inAxeX: bool = hud.mouseX > grid_x and hud.mouseX < grid_x + grid_width;
-        const inAxeY: bool = hud.mouseY > grid_y and hud.mouseY < grid_y + grid_height;
+        const inAxeY: bool = hud.mouseY > grid_y and hud.mouseY < grid_y + grid_height; 
 
         return inAxeX and inAxeY;
     }
