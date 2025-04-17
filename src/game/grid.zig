@@ -38,6 +38,8 @@ pub const Cell = struct {
     width: f32,
     height: f32,
     type: CellType = CellType.AIR,
+    padding: i32 = 5,
+    isSelected: bool = false,
 };
 
 fn cellSizeInit() void {
@@ -54,6 +56,7 @@ pub const Grid = struct {
     height: f32,
 
     cells: [][]Cell,
+    cacheCell: ?Cell = null,
 
     pub fn selfReturn() Grid {
         return grid;
@@ -95,13 +98,33 @@ pub const Grid = struct {
         grid.groundDefine(1, grid.nb_rows - 2, grid.nb_cols - 2, 1);
     }
 
+    fn cellMove(i: usize, j: usize) void {
+        if (grid.cacheCell == null) {
+            grid.cacheCell = grid.cells[j][i];
+            grid.cells[j][i].type = CellType.AIR;
+            return;
+        }
+        const tmpCell: Cell = grid.cells[j][i];
+        grid.cells[j][i].type = grid.cacheCell.?.type;
+        grid.cacheCell = tmpCell;
+    }
+
     pub fn cellManagement() void {
-       // const hud = HUD.selfReturn();
+        // const hud = HUD.selfReturn();
 
         if (HUD.cursorInGrid()) {
-            print("INSIDE\n", .{});
-        } else {
-            print("OUTSIDE\n", .{});
+            for (0..grid.nb_cols) |i| {
+                for (0..grid.nb_rows) |j| {
+                    grid.cells[j][i].isSelected = false;
+                    if (HUD.cursorInCell(grid.cells[j][i])) {
+                        //print("Cursor inside Cell[{any}][{any}]\n", .{ i, j });
+                        grid.cells[j][i].isSelected = true;
+                        if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
+                            cellMove(i, j);
+                        }
+                    }
+                }
+            }
         }
     }
 

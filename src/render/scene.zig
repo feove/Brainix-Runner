@@ -14,15 +14,20 @@ pub fn drawScene() void {
         for (0..grid.nb_cols) |c| {
             const cell = grid.cells[r][c];
 
-            const x: i32 = @intFromFloat(cell.x);
-            const y: i32 = @intFromFloat(cell.y);
-            const width: i32 = @intFromFloat(cell.width);
-            const height: i32 = @intFromFloat(cell.height);
+            const p = cell.padding;
+            const x: i32 = @as(i32, @intFromFloat(cell.x)) + p;
+            const y: i32 = @as(i32, @intFromFloat(cell.y)) + p;
+            const width: i32 = @as(i32, @intFromFloat(cell.width)) - 2 * p;
+            const height: i32 = @as(i32, @intFromFloat(cell.height)) - 2 * p;
 
             switch (cell.type) {
-                CellType.AIR => rl.drawRectangleLines(x, y, width, height, .black),
+                CellType.AIR => rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .black),
                 CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
                 else => unreachable,
+            }
+
+            if (cell.isSelected) {
+                rl.drawRectangleLines(x, y, width, height, .gray);
             }
         }
     }
