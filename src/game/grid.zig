@@ -56,7 +56,7 @@ pub const Grid = struct {
     height: f32,
 
     cells: [][]Cell,
-    cacheCell: ?Cell = null,
+    cacheCell: CellType = CellType.AIR,
 
     pub fn selfReturn() Grid {
         return grid;
@@ -99,13 +99,8 @@ pub const Grid = struct {
     }
 
     fn cellMove(i: usize, j: usize) void {
-        if (grid.cacheCell == null) {
-            grid.cacheCell = grid.cells[j][i];
-            grid.cells[j][i].type = CellType.AIR;
-            return;
-        }
-        const tmpCell: Cell = grid.cells[j][i];
-        grid.cells[j][i].type = grid.cacheCell.?.type;
+        const tmpCell: CellType = grid.cells[j][i].type;
+        grid.cells[j][i].type = grid.cacheCell;
         grid.cacheCell = tmpCell;
     }
 
