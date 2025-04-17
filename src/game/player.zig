@@ -18,11 +18,11 @@ pub fn initElf() void {
         .y = 300,
         .width = @as(f32, @floatFromInt(tex.width)) * scale_factor,
         .height = @as(f32, @floatFromInt(tex.height)) * scale_factor,
-        .speed = 200.0,
+        .speed = 300.0,
         .physics = PhysicObject{ .mass = 20 },
         .isOnGround = false,
         .hitBox = HitBox{},
-        .repulsive_force = 150.0,
+        .repulsive_force = 500.0,
     };
 }
 
@@ -72,7 +72,8 @@ pub const Elf = struct {
         self.elfMovement(x_movement, self.physics.velocity * dt);
 
         self.hitBox.hitBoxUpdate(&grid, &elf);
-        self.hitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
+
+        HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
 
     fn canMoveHorizontal(self: *Elf, x_offset: f32) bool {
@@ -89,11 +90,10 @@ pub const Elf = struct {
 
         const ground_tolerance: f32 = 20;
 
-        if (new_y + self.height > grid.y + grid.height - ground_tolerance) {
-            self.isOnGround = true;
-            self.physics.velocity = 0;
+        if (new_y + self.height >= grid.y + grid.height - ground_tolerance) {
             return false;
         }
+        self.isOnGround = true;
 
         return true;
     }
@@ -103,7 +103,8 @@ pub const Elf = struct {
 
         if (canMoveHorizontal(self, x)) {
             if (self.hitBox.rightCellType == CellType.GROUND and x > 0) {
-                self.x -= self.repulsive_force * dt;
+                self.x -= self.repulsive_force * dt; //Useless
+
             } else if (self.hitBox.leftCellType == CellType.GROUND and x < 0) {
                 self.x += self.repulsive_force * dt;
             } else {
@@ -113,7 +114,7 @@ pub const Elf = struct {
 
         if (canMoveVertical(self, y)) {
             if (self.hitBox.topCellType == CellType.GROUND and y < 0) {
-                self.y += self.repulsive_force * dt;
+                self.physics.velocity += self.repulsive_force;
             } else if (self.hitBox.bottomCellType == CellType.GROUND and y > 0) {
                 self.y -= self.repulsive_force * 0.4 * dt;
             } else {
@@ -144,9 +145,7 @@ const HitBox = struct {
     leftCellType: CellType = CellType.EMPTY,
     rightCellType: CellType = CellType.EMPTY,
 
-    pub fn hitBoxDrawing(self: *HitBox, x: f32, y: f32, width: f32, height: f32) void {
-        print("{any}\n", .{self.rightCellType});
-
+    pub fn hitBoxDrawing(x: f32, y: f32, width: f32, height: f32) void {
         const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
         rl.drawRectangleLinesEx(rectangle, 5, .red);
     }

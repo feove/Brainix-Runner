@@ -1,6 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
 const Elf = @import("player.zig").Elf;
+const HUD = @import("utils.zig").HUD;
 const print = @import("std").debug.print;
 
 pub var grid: Grid = undefined;
@@ -54,6 +55,15 @@ pub const Grid = struct {
 
     cells: [][]Cell,
 
+    pub fn selfReturn() Grid {
+        return grid;
+    }
+
+    pub fn interactions(self: *Grid) void {
+        cellManagement();
+        _ = self;
+    }
+
     pub fn init(allocator: std.mem.Allocator) !void {
         const cells = try allocator.alloc([]Cell, NB_ROWS);
 
@@ -85,8 +95,14 @@ pub const Grid = struct {
         grid.groundDefine(1, grid.nb_rows - 2, grid.nb_cols - 2, 1);
     }
 
-    pub fn selfReturn() Grid {
-        return grid;
+    pub fn cellManagement() void {
+        // const hud = HUD.selfReturn();
+
+        if (HUD.cursorInGrid()) {
+            print("INSIDE\n", .{});
+        } else {
+            print("OUTSIDE\n", .{});
+        }
     }
 
     pub fn groundDefine(self: *Grid, x: usize, y: usize, width: usize, height: usize) void {
