@@ -105,6 +105,13 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime();
         const grid = Grid.selfReturn();
 
+        if (self.y + self.height >= grid.y + grid.height - 5) {
+            self.x = initGrid.x;
+            self.y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y;
+            self.physics.auto_moving = AutoMovements.RIGHT;
+            return;
+        }
+
         if (canMoveHorizontal(self, x)) {
             if ((self.hitBox.rightCellType == CellType.GROUND and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt; //Useless
