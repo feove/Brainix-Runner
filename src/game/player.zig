@@ -3,22 +3,25 @@ const Grid = @import("grid.zig").Grid;
 const rl = @import("raylib");
 const textures = @import("../render/textures.zig");
 const PhysicObject = @import("terrain_object.zig").PhysicObject;
+const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
 const print = @import("std").debug.print;
 
 pub var elf: Elf = undefined;
+var initGrid: Grid = undefined;
 
 pub fn initElf() void {
     const tex = textures.elf;
     const scale_factor: f32 = 0.1;
+    initGrid = Grid.selfReturn();
 
     elf = Elf{
-        .x = 400,
-        .y = 300,
+        .x = initGrid.x,
+        .y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y,
         .width = @as(f32, @floatFromInt(tex.width)) * scale_factor,
         .height = @as(f32, @floatFromInt(tex.height)) * scale_factor,
-        .speed = 300.0,
+        .speed = 200.0,
         .physics = PhysicObject{ .mass = 20 },
         .isOnGround = false,
         .hitBox = HitBox{},
@@ -57,15 +60,15 @@ pub const Elf = struct {
         }
 
         if (rl.isKeyPressed(rl.KeyboardKey.space) and self.isOnGround) {
-            self.physics.velocity = jump_force;
+            self.physics.applyJump(jump_force);
             self.isOnGround = false;
         }
 
         var x_movement: f32 = 0;
-        if (rl.isKeyDown(rl.KeyboardKey.right)) {
+        if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
             x_movement += self.speed * dt;
         }
-        if (rl.isKeyDown(rl.KeyboardKey.left)) {
+        if (rl.isKeyDown(rl.KeyboardKey.left) or self.physics.auto_moving == AutoMovements.LEFT) {
             x_movement -= self.speed * dt;
         }
 
@@ -100,13 +103,15 @@ pub const Elf = struct {
 
     fn elfMovement(self: *Elf, x: f32, y: f32) void {
         const dt: f32 = rl.getFrameTime();
+        const grid = Grid.selfReturn();
 
         if (canMoveHorizontal(self, x)) {
-            if (self.hitBox.rightCellType == CellType.GROUND and x > 0) {
+            if ((self.hitBox.rightCellType == CellType.GROUND and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt; //Useless
-
-            } else if (self.hitBox.leftCellType == CellType.GROUND and x < 0) {
+                self.physics.auto_moving = AutoMovements.LEFT;
+            } else if ((self.hitBox.leftCellType == CellType.GROUND and x < 0) or self.x - 10 <= grid.x) {
                 self.x += self.repulsive_force * dt;
+                self.physics.auto_moving = AutoMovements.RIGHT;
             } else {
                 self.x += x;
             }

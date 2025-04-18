@@ -95,7 +95,7 @@ pub const Grid = struct {
             .height = CELL_HEIGHT * NB_ROWS,
         };
 
-        grid.groundDefine(1, grid.nb_rows - 2, grid.nb_cols - 2, 1);
+        grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
     }
 
     fn cellMove(i: usize, j: usize) void {
@@ -134,10 +134,10 @@ pub const Grid = struct {
             }
         }
 
-        self.cells[4][7].type = CellType.GROUND;
-        self.cells[6][8].type = CellType.GROUND;
-        self.cells[7][7].type = CellType.GROUND;
-        self.cells[7][3].type = CellType.GROUND;
+        //self.cells[4][7].type = CellType.GROUND;
+        // self.cells[6][8].type = CellType.GROUND;
+        //self.cells[7][7].type = CellType.GROUND;
+        //self.cells[7][3].type = CellType.GROUND;
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {
