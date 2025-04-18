@@ -44,7 +44,7 @@ pub const Cell = struct {
 
 fn cellSizeInit() void {
     CELL_WIDTH = @as(f32, @floatFromInt(rl.getScreenWidth() - 2 * OFFSET)) / @as(f32, @floatFromInt(NB_COLS));
-    CELL_HEIGHT = @as(f32, @floatFromInt(rl.getScreenHeight() - 2 * OFFSET)) / @as(f32, @floatFromInt(NB_ROWS));
+    CELL_HEIGHT = @as(f32, @floatFromInt(rl.getScreenHeight() - 3 * OFFSET)) / @as(f32, @floatFromInt(NB_ROWS));
 }
 
 pub const Grid = struct {

@@ -20,6 +20,7 @@ pub fn drawScene() void {
             const width: i32 = @as(i32, @intFromFloat(cell.width)) - 2 * p;
             const height: i32 = @as(i32, @intFromFloat(cell.height)) - 2 * p;
 
+            rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .black);
             switch (cell.type) {
                 CellType.AIR => rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .black),
                 CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
