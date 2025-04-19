@@ -3,6 +3,7 @@ const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
 const textures = @import("textures.zig");
 const player = @import("../game/player.zig");
+const Inventory = @import("../game/inventory.zig").Inventory;
 
 //Tmp Drawing
 pub fn drawScene() void {
@@ -21,6 +22,7 @@ pub fn drawScene() void {
             const height: i32 = @as(i32, @intFromFloat(cell.height)) - 2 * p;
 
             rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .black);
+
             switch (cell.type) {
                 CellType.AIR => rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .black),
                 CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
@@ -33,5 +35,17 @@ pub fn drawScene() void {
         }
     }
 
+    drawInventory();
     player.elf.drawElf();
+}
+
+fn drawInventory() void {
+    const inv = Inventory.selfReturn();
+
+    const x: i32 = @as(i32, @intFromFloat(inv.pos.x));
+    const y: i32 = @as(i32, @intFromFloat(inv.pos.y));
+    const width: i32 = @as(i32, @intFromFloat(inv.width));
+    const height: i32 = @as(i32, @intFromFloat(inv.height));
+
+    rl.drawRectangleLines(x, y, width, height, .black);
 }
