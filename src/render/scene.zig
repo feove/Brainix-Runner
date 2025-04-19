@@ -42,10 +42,18 @@ pub fn drawScene() void {
 fn drawInventory() void {
     const inv = Inventory.selfReturn();
 
-    const x: i32 = @as(i32, @intFromFloat(inv.pos.x));
-    const y: i32 = @as(i32, @intFromFloat(inv.pos.y));
-    const width: i32 = @as(i32, @intFromFloat(inv.width));
-    const height: i32 = @as(i32, @intFromFloat(inv.height));
+    const x_inv: i32 = @as(i32, @intFromFloat(inv.pos.x));
+    const y_inv: i32 = @as(i32, @intFromFloat(inv.pos.y));
+    const width_inv: i32 = @as(i32, @intFromFloat(inv.width));
+    const height_inv: i32 = @as(i32, @intFromFloat(inv.height));
 
-    rl.drawRectangleLines(x, y, width, height, .black);
+    rl.drawRectangleLines(x_inv, y_inv, width_inv, height_inv, .black);
+
+    for (0..inv.size) |i| {
+        const x: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.x));
+        const y: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.y));
+        const width: i32 = @as(i32, @intFromFloat(inv.slots[i].width));
+        const height: i32 = @as(i32, @intFromFloat(inv.slots[i].height));
+        rl.drawRectangle(x, y, width, height, .blue);
+    }
 }

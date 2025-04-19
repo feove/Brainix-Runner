@@ -18,7 +18,7 @@ pub fn main() anyerror!void {
 
     try textures.texturesInit();
     try Grid.init(allocator);
-    Inventory.init();
+    try Inventory.init(allocator);
     player.initElf();
 
     while (!rl.windowShouldClose()) {
