@@ -68,7 +68,7 @@ fn drawInventory() void {
             CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
             CellType.OBSTACLE => rl.drawRectangle(x, y, width, height, .orange),
             CellType.AIR => rl.drawRectangle(x, y, width, height, .white),
-            CellType.EMPTY => rl.drawRectangle(x, y, width, height, .white),
+            CellType.EMPTY => rl.drawRectangle(x, y, width, height, .gray),
         }
         if (i != inv.size - 1) {
             rl.drawLine(x + width + 2 * p, y_inv, x + width + 2 * p, y_inv + height_inv, .black);
