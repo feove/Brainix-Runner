@@ -70,6 +70,10 @@ fn drawInventory() void {
             Item.PAD => rl.drawRectangle(x, y, width, height, .orange),
             Item.EMPTY => rl.drawRectangle(x, y, width, height, .white),
         }
+        if (i != inv.size - 1) {
+            rl.drawLine(x + width + 2 * p, y_inv, x + width + 2 * p, y_inv + height_inv, .black);
+        }
+
         if (slot.isSelected) {
             rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .gray);
         }
