@@ -28,6 +28,7 @@ fn drawGrid() void {
             const y: i32 = @as(i32, @intFromFloat(cell.y + p_f32));
             const width: i32 = @as(i32, @intFromFloat(cell.width - 2 * p_f32));
             const height: i32 = @as(i32, @intFromFloat(cell.height - 2 * p_f32));
+            const height_qrt: i32 = @as(i32, @intFromFloat(cell.height / 4 - 2 * p_f32));
 
             //empty cell
             rl.drawRectangleLines(x - p_i32, y - p_i32, width + 2 * p_i32, height + 2 * p_i32, .black);
@@ -35,6 +36,11 @@ fn drawGrid() void {
             switch (cell.type) {
                 CellType.AIR => rl.drawRectangleLines(x - p_i32, y - p_i32, width + 2 * p_i32, height + 2 * p_i32, .black),
                 CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
+                CellType.OBSTACLE => rl.drawRectangle(x, y, width, height, .orange),
+                CellType.PAD => {
+                    rl.drawRectangle(x, y + height - height_qrt, width, height_qrt, .yellow);
+                    rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
+                },
                 else => unreachable,
             }
 
@@ -63,12 +69,17 @@ fn drawInventory() void {
         const y: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.y));
         const width: i32 = @as(i32, @intFromFloat(inv.slots[i].width));
         const height: i32 = @as(i32, @intFromFloat(inv.slots[i].height));
+        const height_qrt: i32 = @as(i32, @intFromFloat(inv.slots[i].height / 4));
 
         switch (inv.slots[i].type) {
             CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
             CellType.OBSTACLE => rl.drawRectangle(x, y, width, height, .orange),
             CellType.AIR => rl.drawRectangle(x, y, width, height, .white),
             CellType.EMPTY => rl.drawRectangle(x, y, width, height, .gray),
+            CellType.PAD => {
+                rl.drawRectangle(x, y + height - height_qrt, width, height_qrt, .yellow);
+                rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
+            },
         }
         if (i != inv.size - 1) {
             rl.drawLine(x + width + 2 * p, y_inv, x + width + 2 * p, y_inv + height_inv, .black);

@@ -61,7 +61,7 @@ pub const Inventory = struct {
                 .pos = .init(x + i_cast * SLOT_WIDTH + SLOT_PADDING, y + SLOT_PADDING),
                 .width = SLOT_WIDTH - 2 * SLOT_PADDING,
                 .height = SLOT_HEIGHT - 2 * SLOT_PADDING,
-                .type = CellType.GROUND,
+                .type = CellType.PAD,
             };
         }
 

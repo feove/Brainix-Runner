@@ -22,6 +22,7 @@ pub const CellType = enum {
     AIR,
     GROUND,
     OBSTACLE,
+    PAD,
     EMPTY,
 };
 
@@ -121,7 +122,7 @@ pub const Grid = struct {
                         }
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                            if (inv.cellFromInventory != CellType.EMPTY) {
+                            if (inv.cellFromInventory != CellType.EMPTY and grid.cells[j][i].type == CellType.AIR) {
                                 grid.cells[j][i].type = inv.cellFromInventory;
                                 Inventory.clearCellFromInventory();
                             }

@@ -30,7 +30,7 @@ pub fn initElf() void {
 }
 
 const gravity: f32 = 1500.0;
-const jump_force: f32 = -500.0;
+const jump_force: f32 = -800.0;
 
 pub const Elf = struct {
     x: f32,
@@ -59,9 +59,12 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        if (rl.isKeyPressed(rl.KeyboardKey.space) and self.isOnGround) {
-            self.physics.applyJump(jump_force);
-            self.isOnGround = false;
+        var sides = [_]CellType{ elf.hitBox.leftCellType, elf.hitBox.rightCellType };
+        if ((rl.isKeyPressed(rl.KeyboardKey.space) or HitBox.isInCollision(sides[0..], CellType.PAD))) {
+            if (self.isOnGround) {
+                self.physics.applyJump(jump_force);
+                self.isOnGround = false;
+            }
         }
 
         var x_movement: f32 = 0;
@@ -165,6 +168,13 @@ const HitBox = struct {
     fn i_and_j_assign(grid: *Grid, x: f32, y: f32, i: *usize, j: *usize) void {
         i.* = @intFromFloat((x - grid.x) / grid.cells[0][0].width);
         j.* = @intFromFloat((y - grid.y) / grid.cells[0][0].height);
+    }
+
+    fn isInCollision(sides: []const CellType, celltype: CellType) bool {
+        for (sides) |side| {
+            if (side != celltype) return false;
+        }
+        return true;
     }
 
     pub fn hitBoxUpdate(self: *HitBox, grid: *Grid, player: *Elf) void {
