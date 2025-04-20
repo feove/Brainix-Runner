@@ -2,6 +2,7 @@ const std = @import("std");
 const rl = @import("raylib");
 const Elf = @import("player.zig").Elf;
 const HUD = @import("utils.zig").HUD;
+const Inventory = @import("inventory.zig").Inventory;
 const print = @import("std").debug.print;
 
 pub var grid: Grid = undefined;
@@ -106,6 +107,7 @@ pub const Grid = struct {
 
     pub fn cellManagement() void {
         // const hud = HUD.selfReturn();
+        const inv = Inventory.selfReturn();
 
         if (HUD.cursorInGrid()) {
             for (0..grid.nb_cols) |i| {
@@ -116,6 +118,13 @@ pub const Grid = struct {
                         grid.cells[j][i].isSelected = true;
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
                             cellMove(i, j);
+                        }
+
+                        if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
+                            if (inv.cellFromInventory != CellType.EMPTY) {
+                                grid.cells[j][i].type = inv.cellFromInventory;
+                                Inventory.clearCellFromInventory();
+                            }
                         }
                     }
                 }

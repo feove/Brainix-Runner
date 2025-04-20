@@ -4,7 +4,6 @@ const rl = @import("raylib");
 const textures = @import("textures.zig");
 const player = @import("../game/player.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
-const Item = @import("../game/inventory.zig").Item;
 
 //Tmp Drawing
 pub fn drawScene() void {
@@ -66,9 +65,10 @@ fn drawInventory() void {
         const height: i32 = @as(i32, @intFromFloat(inv.slots[i].height));
 
         switch (inv.slots[i].type) {
-            Item.BLOCK => rl.drawRectangle(x, y, width, height, .blue),
-            Item.PAD => rl.drawRectangle(x, y, width, height, .orange),
-            Item.EMPTY => rl.drawRectangle(x, y, width, height, .white),
+            CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
+            CellType.OBSTACLE => rl.drawRectangle(x, y, width, height, .orange),
+            CellType.AIR => rl.drawRectangle(x, y, width, height, .white),
+            CellType.EMPTY => rl.drawRectangle(x, y, width, height, .white),
         }
         if (i != inv.size - 1) {
             rl.drawLine(x + width + 2 * p, y_inv, x + width + 2 * p, y_inv + height_inv, .black);

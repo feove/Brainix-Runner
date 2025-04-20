@@ -1,5 +1,6 @@
 const rl = @import("raylib");
 const Grid = @import("grid.zig").Grid;
+const CellType = @import("grid.zig").CellType;
 const std = @import("std");
 const HUD = @import("utils.zig").HUD;
 
@@ -18,17 +19,11 @@ fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
     SLOT_HEIGHT = (cell_height * SLOT_WIDTH) / cell_width;
 }
 
-pub const Item = enum {
-    PAD,
-    BLOCK,
-    EMPTY,
-};
-
 pub const InvCell = struct {
     pos: rl.Vector2,
     width: f32,
     height: f32,
-    type: Item,
+    type: CellType,
     padding: f32 = SLOT_PADDING,
     isSelected: bool = false,
 };
@@ -38,6 +33,7 @@ pub const Inventory = struct {
     width: f32,
     height: f32,
     size: usize,
+    cellFromInventory: CellType = CellType.EMPTY,
 
     slots: []InvCell,
 
@@ -65,7 +61,7 @@ pub const Inventory = struct {
                 .pos = .init(x + i_cast * SLOT_WIDTH + SLOT_PADDING, y + SLOT_PADDING),
                 .width = SLOT_WIDTH - 2 * SLOT_PADDING,
                 .height = SLOT_HEIGHT - 2 * SLOT_PADDING,
-                .type = Item.PAD,
+                .type = CellType.GROUND,
             };
         }
 
@@ -78,20 +74,23 @@ pub const Inventory = struct {
     }
 
     fn slotManagement() void {
-        //const hud: HUD = HUD.selfReturn();
-
         if (HUD.cursorInInventory()) {
             for (0..SLOT_NB) |i| {
                 inv.slots[i].isSelected = false;
                 if (HUD.cursorInSlot(inv.slots[i])) {
                     inv.slots[i].isSelected = true;
+
+                    if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
+                        inv.cellFromInventory = inv.slots[i].type;
+                        inv.slots[i].type = CellType.EMPTY;
+                    }
                 }
             }
-            //std.debug.print("INSIDE\n", .{});
-
         }
+    }
 
-        //std.debug.print("OUTSIDE\n", .{});
+    pub fn clearCellFromInventory() void {
+        inv.cellFromInventory = CellType.EMPTY;
     }
 
     pub fn interactions(self: *Inventory) void {
