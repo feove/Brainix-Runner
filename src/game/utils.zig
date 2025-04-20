@@ -1,42 +1,51 @@
 const rl = @import("raylib");
 const Grid = @import("grid.zig").Grid;
 const Cell = @import("grid.zig").Cell;
+const Inventory = @import("inventory.zig").Inventory;
+const InvCell = @import("inventory.zig").InvCell;
 pub var hud = HUD{};
 
 pub const HUD = struct {
-    mouseX: i32 = undefined,
-    mouseY: i32 = undefined,
+    mouseX: f32 = undefined,
+    mouseY: f32 = undefined,
 
     pub fn selfReturn() HUD {
         return hud;
     }
 
     pub fn refresh(self: *HUD) void {
-        self.mouseX = rl.getMouseX();
-        self.mouseY = rl.getMouseY();
+        self.mouseX = @as(f32, @floatFromInt(rl.getMouseX()));
+        self.mouseY = @as(f32, @floatFromInt(rl.getMouseY()));
     }
 
     pub fn cursorInGrid() bool {
         const grid: Grid = Grid.selfReturn();
-        const grid_x = @as(i32, @intFromFloat(grid.x));
-        const grid_y = @as(i32, @intFromFloat(grid.y));
-        const grid_width = @as(i32, @intFromFloat(grid.cells[0][0].width)) * @as(i32, @intCast(grid.nb_rows));
-        const grid_height = @as(i32, @intFromFloat(grid.height));
 
-        const inAxeX: bool = hud.mouseX > grid_x and hud.mouseX < grid_x + grid_width;
-        const inAxeY: bool = hud.mouseY > grid_y and hud.mouseY < grid_y + grid_height;
+        const inAxeX: bool = hud.mouseX > grid.x and hud.mouseX < grid.x + grid.cells[0][0].width * grid.width;
+        const inAxeY: bool = hud.mouseY > grid.y and hud.mouseY < grid.y + grid.height;
 
         return inAxeX and inAxeY;
     }
 
     pub fn cursorInCell(cell: Cell) bool {
-        const cell_x: i32 = @as(i32, @intFromFloat(cell.x));
-        const cell_y: i32 = @as(i32, @intFromFloat(cell.y));
-        const cell_width: i32 = @as(i32, @intFromFloat(cell.width));
-        const cell_height: i32 = @as(i32, @intFromFloat(cell.height));
+        const inAxeX: bool = hud.mouseX > cell.x + cell.padding and hud.mouseX < cell.x + cell.width - cell.padding;
+        const inAxeY: bool = hud.mouseY > cell.y + cell.padding and hud.mouseY < cell.y + cell.height - cell.padding;
 
-        const inAxeX: bool = hud.mouseX > cell_x + cell.padding and hud.mouseX < cell_x + cell_width - cell.padding;
-        const inAxeY: bool = hud.mouseY > cell_y + cell.padding and hud.mouseY < cell_y + cell_height - cell.padding;
+        return inAxeX and inAxeY;
+    }
+
+    pub fn cursorInInventory() bool {
+        const inv: Inventory = Inventory.selfReturn();
+
+        const inAxeX: bool = hud.mouseX > inv.pos.x and hud.mouseX < inv.pos.x + inv.width;
+        const inAxeY: bool = hud.mouseY > inv.pos.y and hud.mouseY < inv.pos.y + inv.height;
+
+        return inAxeX and inAxeY;
+    }
+
+    pub fn cursorInSlot(slot: InvCell) bool {
+        const inAxeX: bool = hud.mouseX > slot.pos.x and hud.mouseX < slot.pos.x + slot.width;
+        const inAxeY: bool = hud.mouseY > slot.pos.y and hud.mouseY < slot.pos.y + slot.height;
 
         return inAxeX and inAxeY;
     }

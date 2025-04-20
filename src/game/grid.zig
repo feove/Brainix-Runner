@@ -38,7 +38,7 @@ pub const Cell = struct {
     width: f32,
     height: f32,
     type: CellType = CellType.AIR,
-    padding: i32 = 5,
+    padding: f32 = 5,
     isSelected: bool = false,
 };
 
@@ -114,7 +114,7 @@ pub const Grid = struct {
                     if (HUD.cursorInCell(grid.cells[j][i])) {
                         //print("Cursor inside Cell[{any}][{any}]\n", .{ i, j });
                         grid.cells[j][i].isSelected = true;
-                        if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
+                        if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
                             cellMove(i, j);
                         }
                     }

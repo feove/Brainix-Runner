@@ -1,6 +1,7 @@
 const scene = @import("../render/scene.zig");
 const player = @import("../game/player.zig");
-const board = @import("../game/grid.zig");
+const terrain = @import("../game/grid.zig");
+const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
 const rl = @import("raylib");
 
@@ -13,8 +14,14 @@ pub fn render() void {
     defer rl.endDrawing();
 
     scene.drawScene();
-    board.grid.interactions();
+
+    //Interactions
+    terrain.grid.interactions();
+    inventory.inv.interactions();
+
     player.elf.controller();
     player.elf.drawElf();
+
+    //Update Cursor's position
     utils.hud.refresh();
 }

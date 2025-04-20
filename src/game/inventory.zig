@@ -1,6 +1,8 @@
 const rl = @import("raylib");
 const Grid = @import("grid.zig").Grid;
 const std = @import("std");
+const HUD = @import("utils.zig").HUD;
+
 pub var inv: Inventory = undefined;
 
 const SLOT_NB: usize = 4;
@@ -8,7 +10,7 @@ const SLOT_NB: usize = 4;
 var SLOT_WIDTH: f32 = undefined;
 var SLOT_HEIGHT: f32 = undefined;
 
-const SLOT_PADDING: f32 = 5;
+const SLOT_PADDING: f32 = 10;
 const INV_MARGIN: f32 = 10;
 
 fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
@@ -16,16 +18,19 @@ fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
     SLOT_HEIGHT = (cell_height * SLOT_WIDTH) / cell_width;
 }
 
-const Item = enum {
+pub const Item = enum {
     PAD,
     BLOCK,
+    EMPTY,
 };
 
-const InvCell = struct {
+pub const InvCell = struct {
     pos: rl.Vector2,
     width: f32,
     height: f32,
     type: Item,
+    padding: f32 = SLOT_PADDING,
+    isSelected: bool = false,
 };
 
 pub const Inventory = struct {
@@ -35,6 +40,10 @@ pub const Inventory = struct {
     size: usize,
 
     slots: []InvCell,
+
+    pub fn selfReturn() Inventory {
+        return inv;
+    }
 
     pub fn init(allocator: std.mem.Allocator) !void {
         const grid: Grid = Grid.selfReturn();
@@ -56,7 +65,7 @@ pub const Inventory = struct {
                 .pos = .init(x + i_cast * SLOT_WIDTH + SLOT_PADDING, y + SLOT_PADDING),
                 .width = SLOT_WIDTH - 2 * SLOT_PADDING,
                 .height = SLOT_HEIGHT - 2 * SLOT_PADDING,
-                .type = Item.BLOCK,
+                .type = Item.PAD,
             };
         }
 
@@ -68,7 +77,25 @@ pub const Inventory = struct {
         inv.slots = slots;
     }
 
-    pub fn selfReturn() Inventory {
-        return inv;
+    fn slotManagement() void {
+        //const hud: HUD = HUD.selfReturn();
+
+        if (HUD.cursorInInventory()) {
+            for (0..SLOT_NB) |i| {
+                inv.slots[i].isSelected = false;
+                if (HUD.cursorInSlot(inv.slots[i])) {
+                    inv.slots[i].isSelected = true;
+                }
+            }
+            //std.debug.print("INSIDE\n", .{});
+
+        }
+
+        //std.debug.print("OUTSIDE\n", .{});
+    }
+
+    pub fn interactions(self: *Inventory) void {
+        slotManagement();
+        _ = self;
     }
 };
