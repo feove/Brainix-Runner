@@ -74,9 +74,12 @@ pub const Inventory = struct {
         inv.height = inventory_height;
         inv.size = SLOT_NB;
         inv.slots = slots;
+        Inventory.clearCellFromInventory();
     }
 
     fn slotManagement() void {
+        var grid: Grid = Grid.selfReturn();
+
         if (HUD.cursorInInventory()) {
             for (0..SLOT_NB) |i| {
                 inv.slots[i].isSelected = false;
@@ -84,8 +87,25 @@ pub const Inventory = struct {
                     inv.slots[i].isSelected = true;
 
                     if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                        inv.cellFromInventory = inv.slots[i].type;
-                        inv.slots[i].type = CellType.EMPTY;
+                        if (inv.cellFromInventory == CellType.EMPTY) {
+
+                            //Drop Item in Inventory from terrain
+                            if (inv.slots[i].type == CellType.EMPTY) {
+                                inv.slots[i].type = grid.cacheCell;
+                                grid.cacheCell = CellType.EMPTY;
+                                continue;
+                            }
+
+                            //Take Item fom Inventory
+                            inv.cellFromInventory = inv.slots[i].type;
+                            inv.slots[i].type = CellType.EMPTY;
+                            //continue;
+                        } else {
+                            if (inv.slots[i].type == CellType.EMPTY) {
+                                inv.slots[i].type = inv.cellFromInventory;
+                                inv.cellFromInventory = CellType.EMPTY;
+                            }
+                        }
                     }
                 }
             }

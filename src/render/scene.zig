@@ -61,7 +61,7 @@ fn drawInventory() void {
 
     rl.drawRectangleLines(x_inv, y_inv, width_inv, height_inv, .black);
 
-    //const p = @as(i32, @intFromFloat(inv.slots[0].padding / 2));
+    //const p = @as(i32, @intFromFloat(inv.slots[0].padding));
 
     for (0..inv.size) |i| {
         const slot = inv.slots[i];
@@ -73,24 +73,21 @@ fn drawInventory() void {
             CellType.EMPTY => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
             CellType.PAD => {
                 drawCell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow);
-                //rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
             },
         }
         if (i != inv.size - 1) {
-            rl.drawLine(slot.pos.x + slot.width + 2 * p, y_inv, slot.pos.x + slot.width + 2 * p, y_inv + height_inv, .black);
-
-            // drawCell(slot.pos.x + slot.width + 2 * slot.padding / 2, slot.pos.y, slot.width, slot.height, 0, false, .gray);
+            drawLines(slot.pos.x + slot.width + slot.padding, inv.pos.y, slot.pos.x + slot.width + slot.padding, inv.pos.y + inv.height);
         }
 
-        //if (slot.isSelected) {
-        //   rl.drawRectangleLines(slot.pos.x - p, slot.pos.y - p, slot.width + 2 * p, slot.height + 2 * p, .gray);
-        // }
+        if (slot.isSelected) {
+            drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
+        }
     }
 }
 
 //Casting de cons
-fn drawCell(x_f32: f32, y_f32: f32, width_f32: f32, height_f32: f32, padding: ?i32, fill: bool, color: rl.Color) void {
-    const p = padding orelse 0;
+fn drawCell(x_f32: f32, y_f32: f32, width_f32: f32, height_f32: f32, padding: f32, fill: bool, color: rl.Color) void {
+    const p: i32 = @as(i32, @intFromFloat(padding));
     const x: i32 = @as(i32, @intFromFloat(x_f32));
     const y: i32 = @as(i32, @intFromFloat(y_f32));
     const width: i32 = @as(i32, @intFromFloat(width_f32));
@@ -106,4 +103,6 @@ fn drawLines(xs_f32: f32, ys_f32: f32, xe_f32: f32, ye_f32: f32) void {
     const ys: i32 = @as(i32, @intFromFloat(ys_f32));
     const xe: i32 = @as(i32, @intFromFloat(xe_f32));
     const ye: i32 = @as(i32, @intFromFloat(ye_f32));
+
+    rl.drawLine(xs, ys, xe, ye, .black);
 }
