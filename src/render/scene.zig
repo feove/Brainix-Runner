@@ -1,3 +1,4 @@
+const print = @import("std").debug.print;
 const Grid = @import("../game/grid.zig").Grid;
 const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
@@ -41,7 +42,7 @@ fn drawGrid() void {
                     rl.drawRectangle(x, y + height - height_qrt, width, height_qrt, .yellow);
                     rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
                 },
-                else => unreachable,
+                else => print("EMPTY CELL\n", .{}),
             }
 
             if (cell.isSelected) {

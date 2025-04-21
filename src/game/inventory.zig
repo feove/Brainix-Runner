@@ -78,7 +78,7 @@ pub const Inventory = struct {
     }
 
     fn slotManagement() void {
-        var grid: Grid = Grid.selfReturn();
+        //const grid: Grid = Grid.selfReturn();
 
         if (HUD.cursorInInventory()) {
             for (0..SLOT_NB) |i| {
@@ -89,22 +89,15 @@ pub const Inventory = struct {
                     if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
                         if (inv.cellFromInventory == CellType.EMPTY) {
 
-                            //Drop Item in Inventory from terrain
-                            if (inv.slots[i].type == CellType.EMPTY) {
-                                inv.slots[i].type = grid.cacheCell;
-                                grid.cacheCell = CellType.EMPTY;
-                                continue;
-                            }
-
                             //Take Item fom Inventory
                             inv.cellFromInventory = inv.slots[i].type;
                             inv.slots[i].type = CellType.EMPTY;
-                            //continue;
-                        } else {
-                            if (inv.slots[i].type == CellType.EMPTY) {
-                                inv.slots[i].type = inv.cellFromInventory;
-                                inv.cellFromInventory = CellType.EMPTY;
-                            }
+                            continue;
+                        }
+
+                        if (inv.slots[i].type == CellType.EMPTY) {
+                            inv.slots[i].type = inv.cellFromInventory;
+                            inv.cellFromInventory = CellType.EMPTY;
                         }
                     }
                 }
@@ -112,8 +105,32 @@ pub const Inventory = struct {
         }
     }
 
+    //  if (inv.cellFromInventory == CellType.EMPTY) {
+
+    //     //Drop Item in Inventory from terrain
+    //     if (inv.slots[i].type == CellType.EMPTY) {
+    //         inv.slots[i].type = grid.cacheCell;
+    //         grid.cacheCell = CellType.EMPTY;
+    //         continue;
+    //     }
+
+    //     //Take Item fom Inventory
+    //     inv.cellFromInventory = inv.slots[i].type;
+    //     inv.slots[i].type = CellType.EMPTY;
+    //     //continue;
+    // } else {
+    //     if (inv.slots[i].type == CellType.EMPTY) {
+    //         inv.slots[i].type = inv.cellFromInventory;
+    //         inv.cellFromInventory = CellType.EMPTY;
+    //     }
+    // }
+
     pub fn clearCellFromInventory() void {
         inv.cellFromInventory = CellType.EMPTY;
+    }
+
+    pub fn setCellFromInventory(cell: CellType) void {
+        inv.cellFromInventory = cell;
     }
 
     pub fn interactions(self: *Inventory) void {

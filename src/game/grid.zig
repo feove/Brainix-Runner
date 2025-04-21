@@ -58,7 +58,7 @@ pub const Grid = struct {
     height: f32,
 
     cells: [][]Cell,
-    cacheCell: CellType = CellType.AIR,
+    cacheCell: CellType = CellType.EMPTY,
 
     pub fn selfReturn() Grid {
         return grid;
@@ -100,9 +100,9 @@ pub const Grid = struct {
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
     }
 
-    fn cellMove(i: usize, j: usize) void {
+    fn removeCell(i: usize, j: usize) void {
         const tmpCell: CellType = grid.cells[j][i].type;
-        grid.cells[j][i].type = grid.cacheCell;
+        grid.cells[j][i].type = CellType.AIR;
         grid.cacheCell = tmpCell;
     }
 
@@ -114,17 +114,30 @@ pub const Grid = struct {
             for (0..grid.nb_cols) |i| {
                 for (0..grid.nb_rows) |j| {
                     grid.cells[j][i].isSelected = false;
+
+                    //If cursor in cell
                     if (HUD.cursorInCell(grid.cells[j][i])) {
-                        //print("Cursor inside Cell[{any}][{any}]\n", .{ i, j });
                         grid.cells[j][i].isSelected = true;
+
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
-                            cellMove(i, j);
+                            removeCell(i, j);
                         }
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                            if (inv.cellFromInventory != CellType.EMPTY and grid.cells[j][i].type == CellType.AIR) {
-                                grid.cells[j][i].type = inv.cellFromInventory;
-                                Inventory.clearCellFromInventory();
+
+                            //Place Item on terrain from Inventory
+                            if (inv.cellFromInventory != CellType.EMPTY) {
+                                if (grid.cells[j][i].type == CellType.AIR) {
+                                    grid.cells[j][i].type = inv.cellFromInventory;
+                                    Inventory.clearCellFromInventory();
+                                }
+                                continue;
+                            }
+
+                            //Take item from terrain
+                            if (grid.cells[j][i].type != CellType.AIR and grid.cells[j][i].type != CellType.EMPTY) {
+                                Inventory.setCellFromInventory(grid.cells[j][i].type);
+                                grid.cells[j][i].type = CellType.AIR;
                             }
                         }
                     }
