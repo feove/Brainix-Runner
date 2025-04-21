@@ -22,31 +22,18 @@ fn drawGrid() void {
         for (0..grid.nb_cols) |c| {
             const cell = grid.cells[r][c];
 
-            const p_f32 = cell.padding;
-            const p_i32 = @as(i32, @intFromFloat(cell.padding));
-
-            const x: i32 = @as(i32, @intFromFloat(cell.x + p_f32));
-            const y: i32 = @as(i32, @intFromFloat(cell.y + p_f32));
-            const width: i32 = @as(i32, @intFromFloat(cell.width - 2 * p_f32));
-            const height: i32 = @as(i32, @intFromFloat(cell.height - 2 * p_f32));
-            const height_qrt: i32 = @as(i32, @intFromFloat(cell.height / 4 - 2 * p_f32));
-
-            //empty cell
-            rl.drawRectangleLines(x - p_i32, y - p_i32, width + 2 * p_i32, height + 2 * p_i32, .black);
+            drawCell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
 
             switch (cell.type) {
-                CellType.AIR => rl.drawRectangleLines(x - p_i32, y - p_i32, width + 2 * p_i32, height + 2 * p_i32, .black),
-                CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
-                CellType.OBSTACLE => rl.drawRectangle(x, y, width, height, .orange),
-                CellType.PAD => {
-                    rl.drawRectangle(x, y + height - height_qrt, width, height_qrt, .yellow);
-                    rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
-                },
+                CellType.AIR => drawCell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
+                CellType.GROUND => drawCell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
+                CellType.OBSTACLE => drawCell(cell.x, cell.y, cell.width, cell.height, 0, true, .orange),
+                CellType.PAD => drawCell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                 else => print("EMPTY CELL\n", .{}),
             }
 
             if (cell.isSelected) {
-                rl.drawRectangleLines(x, y, width, height, .gray);
+                drawCell(cell.x, cell.y, cell.width, cell.height, cell.padding, false, .black);
             }
         }
     }
@@ -55,14 +42,8 @@ fn drawGrid() void {
 fn drawInventory() void {
     const inv = Inventory.selfReturn();
 
-    const x_inv: i32 = @as(i32, @intFromFloat(inv.pos.x));
-    const y_inv: i32 = @as(i32, @intFromFloat(inv.pos.y));
-    const width_inv: i32 = @as(i32, @intFromFloat(inv.width));
-    const height_inv: i32 = @as(i32, @intFromFloat(inv.height));
-
-    rl.drawRectangleLines(x_inv, y_inv, width_inv, height_inv, .black);
-
-    //const p = @as(i32, @intFromFloat(inv.slots[0].padding));
+    //Draw Inventory Borders
+    drawCell(inv.pos.x, inv.pos.y, inv.width, inv.height, 0, false, .black);
 
     for (0..inv.size) |i| {
         const slot = inv.slots[i];
@@ -72,9 +53,7 @@ fn drawInventory() void {
             CellType.OBSTACLE => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .orange),
             CellType.AIR => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
             CellType.EMPTY => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
-            CellType.PAD => {
-                drawCell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow);
-            },
+            CellType.PAD => drawCell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),
         }
         if (i != inv.size - 1) {
             drawLines(slot.pos.x + slot.width + slot.padding, inv.pos.y, slot.pos.x + slot.width + slot.padding, inv.pos.y + inv.height);

@@ -59,7 +59,8 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        var sides = [_]CellType{ elf.hitBox.leftCellType, elf.hitBox.rightCellType, elf.hitBox.bottomCellType };
+        var sides = [_]CellType{elf.hitBox.kneesCellType};
+
         if ((rl.isKeyPressed(rl.KeyboardKey.space) or HitBox.isInCollision(sides[0..], CellType.PAD))) {
             if (self.isOnGround) {
                 self.physics.applyJump(jump_force);
@@ -165,6 +166,7 @@ const HitBox = struct {
     bottomCellType: CellType = CellType.EMPTY,
     leftCellType: CellType = CellType.EMPTY,
     rightCellType: CellType = CellType.EMPTY,
+    kneesCellType: CellType = CellType.EMPTY,
 
     pub fn hitBoxDrawing(x: f32, y: f32, width: f32, height: f32) void {
         const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
@@ -186,6 +188,8 @@ const HitBox = struct {
     pub fn hitBoxUpdate(self: *HitBox, grid: *Grid, player: *Elf) void {
         var i: usize = undefined;
         var j: usize = undefined;
+
+        print("{any}\n", .{self.kneesCellType});
 
         self.bottomCellType = cellDetection(
             grid,
@@ -235,6 +239,19 @@ const HitBox = struct {
             3,
             player.height,
             1,
+            &i,
+            &j,
+        );
+
+        self.kneesCellType = cellDetection(
+            grid,
+            player.x + 15,
+            player.y + player.height - 10,
+            player.x + player.width - 15,
+            3,
+            0,
+            1,
+            player.width,
             &i,
             &j,
         );
