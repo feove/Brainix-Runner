@@ -59,7 +59,7 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        var sides = [_]CellType{ elf.hitBox.leftCellType, elf.hitBox.rightCellType };
+        var sides = [_]CellType{ elf.hitBox.leftCellType, elf.hitBox.rightCellType, elf.hitBox.bottomCellType };
         if ((rl.isKeyPressed(rl.KeyboardKey.space) or HitBox.isInCollision(sides[0..], CellType.PAD))) {
             if (self.isOnGround) {
                 self.physics.applyJump(jump_force);
@@ -120,7 +120,7 @@ pub const Elf = struct {
                 self.x -= self.repulsive_force * dt; //Useless
                 self.physics.auto_moving = AutoMovements.LEFT;
             } else if ((self.hitBox.leftCellType == CellType.GROUND and x < 0) or self.x - 10 <= grid.x) {
-                self.x += self.repulsive_force * dt;
+                self.x += self.repulsive_force * dt; //Useless
                 self.physics.auto_moving = AutoMovements.RIGHT;
             } else {
                 self.x += x;
@@ -128,7 +128,13 @@ pub const Elf = struct {
         }
 
         if (canMoveVertical(self, y)) {
-            if (self.hitBox.topCellType == CellType.GROUND and y < 0) {
+            if (self.y <= grid.y) {
+                self.y += 5;
+                self.physics.velocity += self.repulsive_force;
+                return;
+            }
+
+            if ((self.hitBox.topCellType == CellType.GROUND and y < 0)) {
                 self.physics.velocity += self.repulsive_force;
             } else if (self.hitBox.bottomCellType == CellType.GROUND and y > 0) {
                 self.y -= self.repulsive_force * 0.4 * dt;
@@ -172,9 +178,9 @@ const HitBox = struct {
 
     fn isInCollision(sides: []const CellType, celltype: CellType) bool {
         for (sides) |side| {
-            if (side != celltype) return false;
+            if (side == celltype) return true;
         }
-        return true;
+        return false;
     }
 
     pub fn hitBoxUpdate(self: *HitBox, grid: *Grid, player: *Elf) void {

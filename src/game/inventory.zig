@@ -65,6 +65,9 @@ pub const Inventory = struct {
             };
         }
 
+        //Harcode
+        slots[1].type = CellType.GROUND;
+
         inv.pos.x = x;
         inv.pos.y = y;
         inv.width = inventory_width;

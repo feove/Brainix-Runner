@@ -61,32 +61,49 @@ fn drawInventory() void {
 
     rl.drawRectangleLines(x_inv, y_inv, width_inv, height_inv, .black);
 
-    const p = @as(i32, @intFromFloat(inv.slots[0].padding / 2));
+    //const p = @as(i32, @intFromFloat(inv.slots[0].padding / 2));
 
     for (0..inv.size) |i| {
         const slot = inv.slots[i];
-        const x: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.x));
-        const y: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.y));
-        const width: i32 = @as(i32, @intFromFloat(inv.slots[i].width));
-        const height: i32 = @as(i32, @intFromFloat(inv.slots[i].height));
-        const height_qrt: i32 = @as(i32, @intFromFloat(inv.slots[i].height / 4));
 
         switch (inv.slots[i].type) {
-            CellType.GROUND => rl.drawRectangle(x, y, width, height, .blue),
-            CellType.OBSTACLE => rl.drawRectangle(x, y, width, height, .orange),
-            CellType.AIR => rl.drawRectangle(x, y, width, height, .white),
-            CellType.EMPTY => rl.drawRectangle(x, y, width, height, .gray),
+            CellType.GROUND => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .blue),
+            CellType.OBSTACLE => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .orange),
+            CellType.AIR => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
+            CellType.EMPTY => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
             CellType.PAD => {
-                rl.drawRectangle(x, y + height - height_qrt, width, height_qrt, .yellow);
-                rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
+                drawCell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow);
+                //rl.drawRectangleLines(x, y + height - height_qrt, width, height_qrt, .black);
             },
         }
         if (i != inv.size - 1) {
-            rl.drawLine(x + width + 2 * p, y_inv, x + width + 2 * p, y_inv + height_inv, .black);
+            rl.drawLine(slot.pos.x + slot.width + 2 * p, y_inv, slot.pos.x + slot.width + 2 * p, y_inv + height_inv, .black);
+
+            // drawCell(slot.pos.x + slot.width + 2 * slot.padding / 2, slot.pos.y, slot.width, slot.height, 0, false, .gray);
         }
 
-        if (slot.isSelected) {
-            rl.drawRectangleLines(x - p, y - p, width + 2 * p, height + 2 * p, .gray);
-        }
+        //if (slot.isSelected) {
+        //   rl.drawRectangleLines(slot.pos.x - p, slot.pos.y - p, slot.width + 2 * p, slot.height + 2 * p, .gray);
+        // }
     }
+}
+
+//Casting de cons
+fn drawCell(x_f32: f32, y_f32: f32, width_f32: f32, height_f32: f32, padding: ?i32, fill: bool, color: rl.Color) void {
+    const p = padding orelse 0;
+    const x: i32 = @as(i32, @intFromFloat(x_f32));
+    const y: i32 = @as(i32, @intFromFloat(y_f32));
+    const width: i32 = @as(i32, @intFromFloat(width_f32));
+    const height: i32 = @as(i32, @intFromFloat(height_f32));
+    if (fill) {
+        rl.drawRectangle(x + p, y + p, width - 2 * p, height - 2 * p, color);
+    }
+    rl.drawRectangleLines(x + p, y + p, width - 2 * p, height - 2 * p, .black);
+}
+
+fn drawLines(xs_f32: f32, ys_f32: f32, xe_f32: f32, ye_f32: f32) void {
+    const xs: i32 = @as(i32, @intFromFloat(xs_f32));
+    const ys: i32 = @as(i32, @intFromFloat(ys_f32));
+    const xe: i32 = @as(i32, @intFromFloat(xe_f32));
+    const ye: i32 = @as(i32, @intFromFloat(ye_f32));
 }

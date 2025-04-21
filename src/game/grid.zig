@@ -157,3 +157,5 @@ pub const Grid = struct {
         allocator.free(self.cells);
     }
 };
+
+//Need PAD only over ground condition
