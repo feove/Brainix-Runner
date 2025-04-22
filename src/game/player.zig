@@ -51,7 +51,7 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime();
         var grid: Grid = Grid.selfReturn();
 
-        self.isOnGround = self.hitBox.bottomCellType == CellType.GROUND;
+        self.isOnGround = self.hitBox.bottomLeggs == CellType.GROUND;
 
         if (!self.isOnGround) {
             self.physics.velocity += gravity * dt;
@@ -59,9 +59,9 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        var sides = [_]CellType{elf.hitBox.kneesCellType};
-
-        if ((rl.isKeyPressed(rl.KeyboardKey.space) or HitBox.isInCollision(sides[0..], CellType.PAD))) {
+        //var sides = [_]CellType{ elf.hitBox.leftCellType, elf.hitBox.rightCellType };
+        //HitBox.isInCollision(sides[0..], CellType.PAD)
+        if ((rl.isKeyPressed(rl.KeyboardKey.space))) {
             if (self.isOnGround) {
                 self.physics.applyJump(jump_force);
                 self.isOnGround = false;
@@ -80,7 +80,7 @@ pub const Elf = struct {
 
         self.hitBox.hitBoxUpdate(&grid, &elf);
 
-        HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
+        //HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
 
     fn canMoveHorizontal(self: *Elf, x_offset: f32) bool {
@@ -117,10 +117,10 @@ pub const Elf = struct {
         }
 
         if (canMoveHorizontal(self, x)) {
-            if ((self.hitBox.rightCellType == CellType.GROUND and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
+            if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.rightLeggs == CellType.GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt; //Useless
                 self.physics.auto_moving = AutoMovements.LEFT;
-            } else if ((self.hitBox.leftCellType == CellType.GROUND and x < 0) or self.x - 10 <= grid.x) {
+            } else if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.leftLeggs == CellType.GROUND) and x < 0) or self.x - 10 <= grid.x) {
                 self.x += self.repulsive_force * dt; //Useless
                 self.physics.auto_moving = AutoMovements.RIGHT;
             } else {
@@ -135,9 +135,9 @@ pub const Elf = struct {
                 return;
             }
 
-            if ((self.hitBox.topCellType == CellType.GROUND and y < 0)) {
+            if ((self.hitBox.topBody == CellType.GROUND and y < 0)) {
                 self.physics.velocity += self.repulsive_force;
-            } else if (self.hitBox.bottomCellType == CellType.GROUND and y > 0) {
+            } else if (self.hitBox.bottomLeggs == CellType.GROUND and y > 0) {
                 self.y -= self.repulsive_force * 0.4 * dt;
             } else {
                 self.y += y;
@@ -162,11 +162,13 @@ pub const Elf = struct {
 };
 
 const HitBox = struct {
-    topCellType: CellType = CellType.EMPTY,
-    bottomCellType: CellType = CellType.EMPTY,
-    leftCellType: CellType = CellType.EMPTY,
-    rightCellType: CellType = CellType.EMPTY,
-    kneesCellType: CellType = CellType.EMPTY,
+    topBody: CellType = CellType.EMPTY,
+    rightBody: CellType = CellType.EMPTY,
+    leftBody: CellType = CellType.EMPTY,
+
+    leftLeggs: CellType = CellType.EMPTY,
+    rightLeggs: CellType = CellType.EMPTY,
+    bottomLeggs: CellType = CellType.GROUND,
 
     pub fn hitBoxDrawing(x: f32, y: f32, width: f32, height: f32) void {
         const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
@@ -188,93 +190,98 @@ const HitBox = struct {
     pub fn hitBoxUpdate(self: *HitBox, grid: *Grid, player: *Elf) void {
         var i: usize = undefined;
         var j: usize = undefined;
+        const p: f32 = grid.cells[0][0].padding;
 
-        print("{any}\n", .{self.kneesCellType});
+        const x: f32 = player.x;
+        const y: f32 = player.y;
+        const width: f32 = player.width;
+        const height = player.height;
 
-        self.bottomCellType = cellDetection(
-            grid,
-            player.x,
-            player.y + player.height,
-            player.x + player.width,
-            3,
-            0,
-            1,
-            player.width,
-            &i,
-            &j,
-        );
+        //rl.drawRectangleRec(.init(player.x + player.width, player.y + p, p, player.height), .red);
 
-        self.topCellType = cellDetection(
-            grid,
-            player.x,
-            player.y,
-            player.x + player.width,
-            3,
-            0,
-            1,
-            player.width,
-            &i,
-            &j,
-        );
+        self.topBody = horizontal_detection(grid, x, y, width, p, &i, &j);
 
-        self.rightCellType = cellDetection(
-            grid,
-            player.x + player.width,
-            player.y,
-            player.y + player.height,
-            0,
-            3,
-            player.height,
-            1,
-            &i,
-            &j,
-        );
+        self.rightBody = body_vertical_detection(grid, x + width, y, height, p, &i, &j);
 
-        self.leftCellType = cellDetection(
-            grid,
-            player.x,
-            player.y,
-            player.y + player.height,
-            0,
-            3,
-            player.height,
-            1,
-            &i,
-            &j,
-        );
+        self.rightLeggs = leggs_vertical_detection(grid, x + width, y + height - p, height, p, &i, &j);
 
-        self.kneesCellType = cellDetection(
-            grid,
-            player.x + 15,
-            player.y + player.height - 10,
-            player.x + player.width - 15,
-            3,
-            0,
-            1,
-            player.width,
-            &i,
-            &j,
-        );
+        self.leftBody = body_vertical_detection(grid, x - p, y, height, p, &i, &j);
+
+        self.leftLeggs = leggs_vertical_detection(grid, x - p, y + height - p, height, p, &i, &j);
+
+        self.bottomLeggs = horizontal_detection(grid, x, y + height, width, p, &i, &j);
+
+        //rl.drawRectangleRec(.init(player.x + player.width, y + height, p, height), .red);
+
+        // _ = self;
+        //_ = grid;
+        // _ = player;
     }
 
-    fn cellDetection(grid: *Grid, x: f32, y: f32, length: f32, incx: f32, incy: f32, xrst: f32, yrst: f32, i: *usize, j: *usize) CellType {
-        var currentCell = CellType.AIR;
-        var xp = x;
-        var yp = y;
+    fn leggs_vertical_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
+        var index: f32 = 0;
 
-        while (xp * xrst < length or yp * yrst < length) {
-            i_and_j_assign(grid, xp, yp, i, j);
+        i_and_j_assign(grid, x, y + index, i, j);
+        var j_prev = j.*;
 
-            currentCell = grid.cells[j.*][i.*].type;
+        while (index < len) {
+            j_prev = j.*;
+            i_and_j_assign(grid, x, y - index, i, j);
+
+            if (j.* < j_prev) {
+                break;
+            }
+
+            const currentCell = grid.cells[j.*][i.*].type;
+
+            if (currentCell != CellType.AIR) {
+                return currentCell;
+            }
+            rl.drawRectangleRec(.init(x, y - index, 5, 3), .red);
+            index += inc;
+        }
+        return CellType.AIR;
+    }
+
+    fn body_vertical_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
+        var index: f32 = 0;
+
+        i_and_j_assign(grid, x, y + index, i, j);
+        var j_prev = j.*;
+
+        while (index < len) {
+            j_prev = j.*;
+            i_and_j_assign(grid, x, y + index, i, j);
+
+            if (j.* > j_prev) {
+                break;
+            }
+
+            const currentCell = grid.cells[j.*][i.*].type;
+
+            if (currentCell != CellType.AIR) {
+                return currentCell;
+            }
+            rl.drawRectangleRec(.init(x, y + index, 5, 3), .red);
+            index += inc;
+        }
+        return CellType.AIR;
+    }
+
+    fn horizontal_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
+        var p: f32 = 0;
+        while (p < len) {
+            i_and_j_assign(grid, x + p, y, i, j);
+
+            const currentCell = grid.cells[j.*][i.*].type;
 
             if (currentCell != CellType.AIR) {
                 return currentCell;
             }
 
-            xp += incx;
-            yp += incy;
+            rl.drawRectangleRec(.init(x + p, y, 5, 3), .red);
+            p += inc;
         }
-
         return CellType.AIR;
     }
 };
