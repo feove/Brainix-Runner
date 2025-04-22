@@ -59,9 +59,9 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        //var sides = [_]CellType{ elf.hitBox.leftCellType, elf.hitBox.rightCellType };
-        //HitBox.isInCollision(sides[0..], CellType.PAD)
-        if ((rl.isKeyPressed(rl.KeyboardKey.space))) {
+        var sides = [_]CellType{ elf.hitBox.leftLeggs, elf.hitBox.rightLeggs, elf.hitBox.bottomLeggs };
+
+        if ((rl.isKeyPressed(rl.KeyboardKey.space)) or HitBox.isInCollision(sides[0..], CellType.PAD)) {
             if (self.isOnGround) {
                 self.physics.applyJump(jump_force);
                 self.isOnGround = false;
@@ -120,7 +120,7 @@ pub const Elf = struct {
             if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.rightLeggs == CellType.GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt; //Useless
                 self.physics.auto_moving = AutoMovements.LEFT;
-            } else if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.leftLeggs == CellType.GROUND) and x < 0) or self.x - 10 <= grid.x) {
+            } else if (((self.hitBox.leftBody == CellType.GROUND or self.hitBox.leftLeggs == CellType.GROUND) and x < 0) or self.x - 10 <= grid.x) {
                 self.x += self.repulsive_force * dt; //Useless
                 self.physics.auto_moving = AutoMovements.RIGHT;
             } else {
