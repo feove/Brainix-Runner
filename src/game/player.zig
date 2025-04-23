@@ -59,16 +59,9 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        var sides = [_]CellType{
-            elf.hitBox.middleLeggs,
-        };
+        self.padCollision();
 
-        if ((rl.isKeyPressed(rl.KeyboardKey.space)) or HitBox.isInCollision(sides[0..], CellType.PAD)) {
-            if (self.isOnGround) {
-                self.physics.applyJump(jump_force);
-                self.isOnGround = false;
-            }
-        }
+        self.spikeCollision();
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -111,6 +104,7 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime();
         const grid = Grid.selfReturn();
 
+        //If Void Falling
         if (self.y + self.height >= grid.y + grid.height - 5) {
             self.x = initGrid.x;
             self.y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y;
@@ -158,6 +152,32 @@ pub const Elf = struct {
         return inLeftRightBoundaries and inVerticalBoundaries;
     }
 
+    //Must be in HitBox Struc
+    fn padCollision(self: *Elf) void {
+        const PadDetectionSides = [_]CellType{
+            elf.hitBox.middleLeggs,
+        };
+
+        if ((rl.isKeyPressed(rl.KeyboardKey.space)) or HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
+            if (self.isOnGround) {
+                self.physics.applyJump(jump_force);
+                self.isOnGround = false;
+            }
+        }
+    }
+
+    fn spikeCollision(self: *Elf) void {
+        const SpikeDetectionSides = [_]CellType{
+            elf.hitBox.middleLeggs,
+        };
+
+        if (HitBox.isInCollision(SpikeDetectionSides[0..], CellType.SPIKE)) {
+            self.x = initGrid.x;
+            self.y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y;
+            self.physics.auto_moving = AutoMovements.RIGHT;
+        }
+    }
+
     pub fn drawElf(self: *Elf) void {
         rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
     }
@@ -200,8 +220,6 @@ const HitBox = struct {
         const width: f32 = player.width;
         const height = player.height;
 
-        rl.drawRectangleRec(.init(x + p, y + height / 2, width - 2 * p, p), .red);
-
         self.bottomLeggs = horizontal_detection(grid, x, y + height, width, p, &i, &j);
 
         self.topBody = horizontal_detection(grid, x, y, width, p, &i, &j);
@@ -210,7 +228,7 @@ const HitBox = struct {
 
         self.rightLeggs = leggs_vertical_detection(grid, x + width, y + height - p, height, p, &i, &j);
 
-        self.middleLeggs = horizontal_detection(grid, x + p, y + height / 2, width - 2 * p, p, &i, &j);
+        self.middleLeggs = horizontal_detection(grid, x + 2 * p, y + height / 2, width - 4 * p, p, &i, &j);
 
         self.leftBody = body_vertical_detection(grid, x - p, y, height, p, &i, &j);
 

@@ -67,6 +67,7 @@ pub const Inventory = struct {
 
         //Harcode
         slots[1].type = CellType.GROUND;
+        slots[2].type = CellType.SPIKE;
 
         inv.pos.x = x;
         inv.pos.y = y;
@@ -104,26 +105,6 @@ pub const Inventory = struct {
             }
         }
     }
-
-    //  if (inv.cellFromInventory == CellType.EMPTY) {
-
-    //     //Drop Item in Inventory from terrain
-    //     if (inv.slots[i].type == CellType.EMPTY) {
-    //         inv.slots[i].type = grid.cacheCell;
-    //         grid.cacheCell = CellType.EMPTY;
-    //         continue;
-    //     }
-
-    //     //Take Item fom Inventory
-    //     inv.cellFromInventory = inv.slots[i].type;
-    //     inv.slots[i].type = CellType.EMPTY;
-    //     //continue;
-    // } else {
-    //     if (inv.slots[i].type == CellType.EMPTY) {
-    //         inv.slots[i].type = inv.cellFromInventory;
-    //         inv.cellFromInventory = CellType.EMPTY;
-    //     }
-    // }
 
     pub fn clearCellFromInventory() void {
         inv.cellFromInventory = CellType.EMPTY;

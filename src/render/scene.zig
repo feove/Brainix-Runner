@@ -22,18 +22,18 @@ fn drawGrid() void {
         for (0..grid.nb_cols) |c| {
             const cell = grid.cells[r][c];
 
-            drawCell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
+            drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
 
             switch (cell.type) {
-                CellType.AIR => drawCell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
-                CellType.GROUND => drawCell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
-                CellType.OBSTACLE => drawCell(cell.x, cell.y, cell.width, cell.height, 0, true, .orange),
-                CellType.PAD => drawCell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
-                else => print("EMPTY CELL\n", .{}),
+                CellType.AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
+                CellType.GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
+                CellType.SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .orange),
+                CellType.PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
+                else => print("EMPTY cell\n", .{}),
             }
 
             if (cell.isSelected) {
-                drawCell(cell.x, cell.y, cell.width, cell.height, cell.padding, false, .black);
+                drawcell(cell.x, cell.y, cell.width, cell.height, cell.padding, false, .black);
             }
         }
     }
@@ -43,30 +43,30 @@ fn drawInventory() void {
     const inv = Inventory.selfReturn();
 
     //Draw Inventory Borders
-    drawCell(inv.pos.x, inv.pos.y, inv.width, inv.height, 0, false, .black);
+    drawcell(inv.pos.x, inv.pos.y, inv.width, inv.height, 0, false, .black);
 
     for (0..inv.size) |i| {
         const slot = inv.slots[i];
 
-        switch (inv.slots[i].type) {
-            CellType.GROUND => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .blue),
-            CellType.OBSTACLE => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .orange),
-            CellType.AIR => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
-            CellType.EMPTY => drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
-            CellType.PAD => drawCell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),
+        switch (slot.type) {
+            CellType.GROUND => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .blue),
+            CellType.SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .orange),
+            CellType.AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
+            CellType.EMPTY => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
+            CellType.PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),
         }
         if (i != inv.size - 1) {
             drawLines(slot.pos.x + slot.width + slot.padding, inv.pos.y, slot.pos.x + slot.width + slot.padding, inv.pos.y + inv.height);
         }
 
         if (slot.isSelected) {
-            drawCell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
+            drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
         }
     }
 }
 
 //Casting de cons
-fn drawCell(x_f32: f32, y_f32: f32, width_f32: f32, height_f32: f32, padding: f32, fill: bool, color: rl.Color) void {
+fn drawcell(x_f32: f32, y_f32: f32, width_f32: f32, height_f32: f32, padding: f32, fill: bool, color: rl.Color) void {
     const p: i32 = @as(i32, @intFromFloat(padding));
     const x: i32 = @as(i32, @intFromFloat(x_f32));
     const y: i32 = @as(i32, @intFromFloat(y_f32));
@@ -85,4 +85,9 @@ fn drawLines(xs_f32: f32, ys_f32: f32, xe_f32: f32, ye_f32: f32) void {
     const ye: i32 = @as(i32, @intFromFloat(ye_f32));
 
     rl.drawLine(xs, ys, xe, ye, .black);
+}
+
+fn drawSpike(x: f32, y: f32, width: f32, height: f32, padding: f32, color: rl.Color) void {
+    rl.drawTriangle(.init(x + width / 2, y + 2 * padding), .init(x + 2 * padding, y + height), .init(x + width - 2 * padding, y + height), color);
+    rl.drawTriangleLines(.init(x + width / 2, y + 2 * padding), .init(x + 2 * padding, y + height), .init(x + width - 2 * padding, y + height), .black);
 }

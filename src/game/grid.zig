@@ -21,7 +21,7 @@ var CELL_HEIGHT: f32 = undefined;
 pub const CellType = enum {
     AIR,
     GROUND,
-    OBSTACLE,
+    SPIKE,
     PAD,
     EMPTY,
 };
