@@ -20,6 +20,7 @@ pub fn main() anyerror!void {
     try Grid.init(allocator);
     try Inventory.init(allocator);
     player.initElf();
+    window.clear();
 
     while (!rl.windowShouldClose()) {
 
