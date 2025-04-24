@@ -7,9 +7,10 @@ const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
 const print = @import("std").debug.print;
+const Object = @import("terrain_object.zig").Object;
 
 pub var elf: Elf = undefined;
-var initGrid: Grid = undefined;
+pub var initGrid: Grid = undefined;
 
 pub fn initElf() void {
     const tex = textures.elf;
@@ -42,6 +43,7 @@ pub const Elf = struct {
     isOnGround: bool,
     hitBox: HitBox,
     repulsive_force: f32,
+    jump_force: f32 = jump_force,
 
     pub fn selfReturn() Elf {
         return elf;
@@ -59,9 +61,9 @@ pub const Elf = struct {
             self.physics.velocity = 0;
         }
 
-        self.padCollision();
+        Object.padAction(&elf, .init(-1.0, -1.0));
 
-        self.spikeCollision();
+        Object.spikeAction(&elf, .init(initGrid.x, initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y));
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -152,41 +154,16 @@ pub const Elf = struct {
         return inLeftRightBoundaries and inVerticalBoundaries;
     }
 
-    //Must be in HitBox Struc
-    fn padCollision(self: *Elf) void {
-        const PadDetectionSides = [_]CellType{
-            elf.hitBox.middleLeggs,
-        };
-
-        if ((rl.isKeyPressed(rl.KeyboardKey.space)) or HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
-            if (self.isOnGround) {
-                self.physics.applyJump(jump_force);
-                self.isOnGround = false;
-            }
-        }
-    }
-
-    fn spikeCollision(self: *Elf) void {
-        const SpikeDetectionSides = [_]CellType{
-            elf.hitBox.middleLeggs,
-        };
-
-        if (HitBox.isInCollision(SpikeDetectionSides[0..], CellType.SPIKE)) {
-            self.x = initGrid.x;
-            self.y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y;
-            self.physics.auto_moving = AutoMovements.RIGHT;
-        }
-    }
-
     pub fn drawElf(self: *Elf) void {
         rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
     }
 };
 
-const HitBox = struct {
+pub const HitBox = struct {
     topBody: CellType = CellType.EMPTY,
     rightBody: CellType = CellType.EMPTY,
     leftBody: CellType = CellType.EMPTY,
+    middleBody: CellType = CellType.EMPTY,
 
     middleLeggs: CellType = CellType.EMPTY,
     leftLeggs: CellType = CellType.EMPTY,
@@ -203,7 +180,7 @@ const HitBox = struct {
         j.* = @intFromFloat((y - grid.y) / grid.cells[0][0].height);
     }
 
-    fn isInCollision(sides: []const CellType, celltype: CellType) bool {
+    pub fn isInCollision(sides: []const CellType, celltype: CellType) bool {
         for (sides) |side| {
             if (side == celltype) return true;
         }
@@ -220,19 +197,21 @@ const HitBox = struct {
         const width: f32 = player.width;
         const height = player.height;
 
-        self.bottomLeggs = horizontal_detection(grid, x, y + height, width, p, &i, &j);
-
         self.topBody = horizontal_detection(grid, x, y, width, p, &i, &j);
 
         self.rightBody = body_vertical_detection(grid, x + width, y, height, p, &i, &j);
 
         self.rightLeggs = leggs_vertical_detection(grid, x + width, y + height - p, height, p, &i, &j);
 
-        self.middleLeggs = horizontal_detection(grid, x + 2 * p, y + height / 2, width - 4 * p, p, &i, &j);
+        self.middleBody = horizontal_detection(grid, x + 2 * p, y + p, width - 4 * p, p, &i, &j);
+
+        self.middleLeggs = horizontal_detection(grid, x + 3 * p, y + height / 2, width - 6 * p, p, &i, &j);
 
         self.leftBody = body_vertical_detection(grid, x - p, y, height, p, &i, &j);
 
         self.leftLeggs = leggs_vertical_detection(grid, x - p, y + height - p, height, p, &i, &j);
+
+        self.bottomLeggs = horizontal_detection(grid, x, y + height, width, p, &i, &j);
     }
 
     fn leggs_vertical_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
