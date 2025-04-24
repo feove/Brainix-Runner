@@ -3,6 +3,7 @@ const rl = @import("raylib");
 const CellType = @import("grid.zig").CellType;
 const Elf = @import("player.zig").Elf;
 const HitBox = @import("player.zig").HitBox;
+const Grid = @import("grid.zig").Grid;
 
 pub const AutoMovements = enum {
     RIGHT,
@@ -32,6 +33,12 @@ pub const PhysicObject = struct {
 pub const Object = struct {
     x: usize,
     y: usize,
+    type: CellType,
+
+    //Setting function
+    pub fn set(self: *Object, grid: *Grid) void {
+        grid.cells[self.y][self.x].type = self.type;
+    }
 
     pub fn padAction(elf: *Elf, respawn_point: rl.Vector2) void {
         const PadDetectionSides = [_]CellType{

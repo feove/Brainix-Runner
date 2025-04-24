@@ -3,6 +3,7 @@ const player = @import("../game/player.zig");
 const terrain = @import("../game/grid.zig");
 const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
+const objects = @import("../game/level/events.zig");
 const rl = @import("raylib");
 
 pub fn run() void {
@@ -24,4 +25,6 @@ pub fn render() void {
 
     //Update Cursor's position
     utils.hud.refresh();
+
+    objects.level.refresh();
 }

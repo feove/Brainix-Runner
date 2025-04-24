@@ -157,10 +157,9 @@ pub const Grid = struct {
             }
         }
 
-        //self.cells[4][7].type = CellType.GROUND;
-        // self.cells[6][8].type = CellType.GROUND;
-        //self.cells[7][7].type = CellType.GROUND;
-        //self.cells[7][3].type = CellType.GROUND;
+        //self.cells[7][6].type = CellType.SPIKE;
+        // self.cells[7][4].type = CellType.GROUND;
+
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {
