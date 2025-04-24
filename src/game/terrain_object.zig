@@ -4,6 +4,8 @@ const CellType = @import("grid.zig").CellType;
 const Elf = @import("player.zig").Elf;
 const HitBox = @import("player.zig").HitBox;
 const Grid = @import("grid.zig").Grid;
+const PlayerState = @import("player.zig").PlayerState;
+const event = @import("level/events.zig");
 
 pub const AutoMovements = enum {
     RIGHT,
@@ -40,6 +42,7 @@ pub const Object = struct {
         grid.cells[self.y][self.x].type = self.type;
     }
 
+    //Need PAD only over ground condition
     pub fn padAction(elf: *Elf, respawn_point: rl.Vector2) void {
         const PadDetectionSides = [_]CellType{
             elf.hitBox.middleLeggs,
@@ -50,6 +53,7 @@ pub const Object = struct {
                 elf.physics.applyJump(elf.jump_force);
                 elf.isOnGround = false;
             }
+            elf.speed = 1000;
         }
 
         _ = respawn_point;
@@ -65,6 +69,8 @@ pub const Object = struct {
             elf.x = respawn_point.x;
             elf.y = respawn_point.y;
             elf.physics.auto_moving = AutoMovements.RIGHT;
+            elf.state = PlayerState.DEAD; //For Later
+            event.playerEventstatus = event.PlayerEventStatus.IDLE_AREA;
         }
     }
 };

@@ -6,11 +6,19 @@ const PhysicObject = @import("terrain_object.zig").PhysicObject;
 const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
+const event = @import("level/events.zig");
 const print = @import("std").debug.print;
 const Object = @import("terrain_object.zig").Object;
 
 pub var elf: Elf = undefined;
 pub var initGrid: Grid = undefined;
+const ELF_DEFAULT_SPEED: f32 = 200.0;
+
+pub const PlayerState = enum {
+    ALIVE,
+    RESPAWNING,
+    DEAD,
+};
 
 pub fn initElf() void {
     const tex = textures.elf;
@@ -22,7 +30,7 @@ pub fn initElf() void {
         .y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y,
         .width = @as(f32, @floatFromInt(tex.width)) * scale_factor,
         .height = @as(f32, @floatFromInt(tex.height)) * scale_factor,
-        .speed = 200.0,
+        .speed = ELF_DEFAULT_SPEED,
         .physics = PhysicObject{ .mass = 20 },
         .isOnGround = false,
         .hitBox = HitBox{},
@@ -44,9 +52,14 @@ pub const Elf = struct {
     hitBox: HitBox,
     repulsive_force: f32,
     jump_force: f32 = jump_force,
+    state: PlayerState = PlayerState.ALIVE,
 
     pub fn selfReturn() Elf {
         return elf;
+    }
+
+    pub fn setDefaultSpeed(self: *Elf) void {
+        self.speed = ELF_DEFAULT_SPEED;
     }
 
     pub fn controller(self: *Elf) void {
@@ -105,6 +118,8 @@ pub const Elf = struct {
     fn elfMovement(self: *Elf, x: f32, y: f32) void {
         const dt: f32 = rl.getFrameTime();
         const grid = Grid.selfReturn();
+
+        event.Event.slow_motion_effect(&elf);
 
         //If Void Falling
         if (self.y + self.height >= grid.y + grid.height - 5) {

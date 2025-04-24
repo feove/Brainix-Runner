@@ -8,6 +8,8 @@ const Object = @import("../terrain_object.zig").Object;
 const print = std.debug.print;
 
 pub var level: Level = undefined;
+pub var slow_motion_active: bool = false;
+pub var slow_motion_start_time: f64 = 0;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 
@@ -73,6 +75,42 @@ pub const Event = struct {
     objects: []Object,
     areas: Areas,
     object_nb: usize,
+    slow_motion_time: f32 = 3,
+
+    //Setting Event's Objects over the grid
+    fn objectsSetUp(event: *Event, objects: []Object) void {
+        var grid: Grid = Grid.selfReturn();
+        for (0..event.object_nb) |i| {
+            Object.set(&objects[i], &grid);
+        }
+    }
+
+    //Slow Motion effect
+    pub fn slow_motion_effect(elf: *Elf) void {
+        var area: Areas = level.events[level.i_event].areas;
+        const current_time = rl.getTime();
+        if (!slow_motion_active) {
+            if (area.player_in_area(elf, area.trigger_area)) {
+                playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
+                elf.speed = 50;
+                slow_motion_active = true;
+                slow_motion_start_time = current_time;
+            }
+        }
+
+        if (slow_motion_active) {
+            const elapsed = current_time - slow_motion_start_time;
+            if (elapsed >= 0.5) {
+                elf.setDefaultSpeed();
+                slow_motion_active = false;
+                playerEventstatus = PlayerEventStatus.IDLE_AREA;
+            }
+        }
+
+        if (playerEventstatus != PlayerEventStatus.SLOW_MOTION_AREA) {
+            elf.setDefaultSpeed();
+        }
+    }
 };
 
 pub const Level = struct {
@@ -94,8 +132,8 @@ pub const Level = struct {
         events[0].objects = objects;
 
         events[0].areas = Areas{
-            .trigger_area = usize_assign_to_f32(objects[0].x - 3, objects[0].y - 2, 2, 2),
-            .completed_area = usize_assign_to_f32(objects[0].x + 2, objects[0].y - 1, 1, 2),
+            .trigger_area = usize_assign_to_f32(objects[0].x - 3, objects[0].y, 1, 1),
+            .completed_area = usize_assign_to_f32(objects[0].x + 1, objects[0].y - 2, 1, 1),
         };
 
         events[0].object_nb = 1;
@@ -110,7 +148,10 @@ pub const Level = struct {
         var elf: Elf = Elf.selfReturn();
         var area: Areas = level.events[level.i_event].areas;
         _ = self;
-        playerEventstatus = PlayerEventStatus.IDLE_AREA;
+
+        if (playerEventstatus != PlayerEventStatus.SLOW_MOTION_AREA) {
+            playerEventstatus = PlayerEventStatus.IDLE_AREA;
+        }
 
         if (area.player_in_area(&elf, area.trigger_area)) {
             playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
@@ -150,8 +191,10 @@ pub const Level = struct {
         switch (playerEventstatus) {
             PlayerEventStatus.IDLE_AREA => print("IDLE\n", .{}),
             PlayerEventStatus.SLOW_MOTION_AREA => {
-                elf.speed = 100;
+                elf.speed = 10;
+                print("SLOW MOTION AREA\n", .{});
                 //set objects
+                level.events[level.i_event].objectsSetUp(level.events[level.i_event].objects);
             },
             PlayerEventStatus.RESTRICTED_AREA => print("RESTRICTED AREA\n", .{}),
             PlayerEventStatus.COMPLETED_AREA => {
@@ -170,7 +213,14 @@ pub const Level = struct {
         const c_w: f32 = event.areas.completed_area.w;
         const c_h: f32 = event.areas.completed_area.z;
 
+        const t_x: f32 = event.areas.trigger_area.x;
+        const t_y: f32 = event.areas.trigger_area.y;
+        const t_w: f32 = event.areas.completed_area.w;
+        const t_h: f32 = event.areas.completed_area.z;
+
         rl.drawRectangleRec(.init(c_x, c_y, c_w, c_h), rl.Color.alpha(.green, 250));
+
+        rl.drawRectangleRec(.init(t_x, t_y, t_w, t_h), rl.Color.alpha(.yellow, 250));
 
         const grid: Grid = Grid.selfReturn();
         const cell: Cell = grid.cells[event.objects[0].y][event.objects[0].x];

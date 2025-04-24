@@ -157,7 +157,7 @@ pub const Grid = struct {
             }
         }
 
-        self.cells[7][6].type = CellType.SPIKE;
+        //self.cells[7][6].type = CellType.SPIKE;
         // self.cells[7][4].type = CellType.GROUND;
 
     }
