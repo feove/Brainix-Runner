@@ -14,8 +14,6 @@ pub fn render() void {
     rl.beginDrawing();
     defer rl.endDrawing();
 
-    scene.drawScene();
-
     //Interactions
     terrain.grid.interactions();
     inventory.inv.interactions();
@@ -27,4 +25,6 @@ pub fn render() void {
     utils.hud.refresh();
 
     objects.level.refresh();
+
+    scene.drawScene();
 }
