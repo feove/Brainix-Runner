@@ -30,6 +30,9 @@ pub const PhysicObject = struct {
 };
 
 pub const Object = struct {
+    x: usize,
+    y: usize,
+
     pub fn padAction(elf: *Elf, respawn_point: rl.Vector2) void {
         const PadDetectionSides = [_]CellType{
             elf.hitBox.middleLeggs,
