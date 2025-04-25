@@ -97,7 +97,19 @@ pub const Grid = struct {
             .height = CELL_HEIGHT * NB_ROWS,
         };
 
+        reset();
+    }
+
+    pub fn reset() void {
+        for (0..NB_ROWS) |j| {
+            for (0..NB_COLS) |i| {
+                grid.cells[j][i].type = CellType.AIR;
+            }
+        }
+
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
+
+        grid.setExitDoor(9, 6);
     }
 
     fn removeCell(i: usize, j: usize) void {
@@ -146,7 +158,7 @@ pub const Grid = struct {
         }
     }
 
-    pub fn groundDefine(self: *Grid, x: usize, y: usize, width: usize, height: usize) void {
+    fn groundDefine(self: *Grid, x: usize, y: usize, width: usize, height: usize) void {
         if (x + width > self.nb_cols or y + height > self.nb_rows) {
             return;
         }
@@ -162,6 +174,15 @@ pub const Grid = struct {
 
     }
 
+    fn setExitDoor(self: *Grid, x: usize, y: usize) void {
+        if (x > self.nb_cols or y + 1 > self.nb_rows) {
+            return;
+        }
+
+        self.cells[y][x].type = CellType.GROUND;
+        self.cells[y + 1][x].type = CellType.GROUND;
+    }
+
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {
         for (self.cells) |row| {
             allocator.free(row);
@@ -169,5 +190,3 @@ pub const Grid = struct {
         allocator.free(self.cells);
     }
 };
-
-//Need PAD only over ground condition

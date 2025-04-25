@@ -88,6 +88,8 @@ pub const Elf = struct {
 
         self.elfMovement(x_movement, self.physics.velocity * dt);
 
+        updatePlayerStatement();
+
         self.hitBox.hitBoxUpdate(&grid, &elf);
 
         //HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
@@ -167,6 +169,13 @@ pub const Elf = struct {
         const inVerticalBoundaries = self.y + self.height + y_offset <= grid.y + grid.height;
 
         return inLeftRightBoundaries and inVerticalBoundaries;
+    }
+
+    fn updatePlayerStatement() void {
+        if (elf.state == PlayerState.DEAD) {
+            Grid.reset();
+            elf.state = PlayerState.ALIVE;
+        }
     }
 
     pub fn drawElf(self: *Elf) void {

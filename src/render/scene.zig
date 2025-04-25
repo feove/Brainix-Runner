@@ -27,7 +27,7 @@ fn drawGrid() void {
             switch (cell.type) {
                 CellType.AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
                 CellType.GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
-                CellType.SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .orange),
+                CellType.SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                 CellType.PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                 else => print("EMPTY cell\n", .{}),
             }
@@ -50,7 +50,7 @@ fn drawInventory() void {
 
         switch (slot.type) {
             CellType.GROUND => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .blue),
-            CellType.SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .orange),
+            CellType.SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             CellType.AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
             CellType.EMPTY => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
             CellType.PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),

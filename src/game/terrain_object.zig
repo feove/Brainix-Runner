@@ -37,9 +37,12 @@ pub const Object = struct {
     y: usize,
     type: CellType,
 
-    //Setting function
     pub fn set(self: *Object, grid: *Grid) void {
         grid.cells[self.y][self.x].type = self.type;
+    }
+
+    pub fn remove(self: *Object, grid: *Grid) void {
+        grid.cells[self.y][self.x].type = CellType.AIR;
     }
 
     //Need PAD only over ground condition
@@ -50,12 +53,13 @@ pub const Object = struct {
 
         if ((rl.isKeyPressed(rl.KeyboardKey.space)) or HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
             if (elf.isOnGround) {
+                elf.speed = 1500;
                 elf.physics.applyJump(elf.jump_force);
                 elf.isOnGround = false;
+            } else {
+                elf.setDefaultSpeed();
             }
-            elf.speed = 1000;
         }
-
         _ = respawn_point;
     }
 

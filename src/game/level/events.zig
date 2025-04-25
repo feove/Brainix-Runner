@@ -5,11 +5,13 @@ const Grid = @import("../grid.zig").Grid;
 const Cell = @import("../grid.zig").Cell;
 const CellType = @import("../grid.zig").CellType;
 const Object = @import("../terrain_object.zig").Object;
+const Inventory = @import("../inventory.zig").Inventory;
 const print = std.debug.print;
 
 pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
 pub var slow_motion_start_time: f64 = 0;
+pub var inv_objects_used = false;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 
@@ -72,7 +74,9 @@ pub const Areas = struct {
 };
 
 pub const Event = struct {
-    objects: []Object,
+    grid_objects: []Object,
+    inv_objects: []Object,
+    size_inv_objects: usize,
     areas: Areas,
     object_nb: usize,
     slow_motion_time: f32 = 3,
@@ -82,6 +86,13 @@ pub const Event = struct {
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
             Object.set(&objects[i], &grid);
+        }
+    }
+
+    fn objectsCleaning(event: *Event, objects: []Object) void {
+        var grid: Grid = Grid.selfReturn();
+        for (0..event.object_nb) |i| {
+            Object.remove(&objects[i], &grid);
         }
     }
 
@@ -106,10 +117,6 @@ pub const Event = struct {
                 playerEventstatus = PlayerEventStatus.IDLE_AREA;
             }
         }
-
-        if (playerEventstatus != PlayerEventStatus.SLOW_MOTION_AREA) {
-            elf.setDefaultSpeed();
-        }
     }
 };
 
@@ -121,24 +128,36 @@ pub const Level = struct {
     pub fn init(allocator: std.mem.Allocator) !void {
         var events = try allocator.alloc(Event, LEVEL_NB);
 
-        //Add First Event (SPIKE)
-        const objects = try allocator.alloc(Object, OBJECT_NB);
-        objects[0] = Object{
-            .x = 6,
+        //Add First Event (ONE SPIKE)
+        const grid_objects = try allocator.alloc(Object, OBJECT_NB);
+        grid_objects[0] = Object{
+            .x = 5,
             .y = 7,
             .type = CellType.SPIKE,
         };
 
-        events[0].objects = objects;
+        const inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
+        inv_objects[0] = Object{
+            .x = 0,
+            .y = 0,
+            .type = CellType.PAD,
+        };
+        events[0].size_inv_objects = 1;
+
+        events[0].grid_objects = grid_objects;
+
+        events[0].inv_objects = inv_objects;
 
         events[0].areas = Areas{
-            .trigger_area = usize_assign_to_f32(objects[0].x - 3, objects[0].y, 1, 1),
-            .completed_area = usize_assign_to_f32(objects[0].x + 1, objects[0].y - 2, 1, 1),
+            .trigger_area = usize_assign_to_f32(grid_objects[0].x - 2, grid_objects[0].y, 1, 1),
+            .completed_area = usize_assign_to_f32(grid_objects[0].x + 2, grid_objects[0].y, 1, 1),
         };
 
         events[0].object_nb = 1;
 
-        //level assignement
+        //Add Second Event (SPIKES AND BLOCKS)
+
+        //level assign
         level.events = events;
         level.event_nb = EVENT_NB;
         level.i_event = CURRENT_EVENT;
@@ -184,24 +203,41 @@ pub const Level = struct {
         const w: f32 = tr_cell.x - bl_cell.x;
         const h: f32 = bl_cell.y - tl_cell.y;
 
-        return rl.Vector4.init(x, y, h, w); //I should replace with return .init(x,y,w,h); to test;
+        return .init(x, y, h, w); //I should replace with return .init(x,y,h, w); to test;
     }
 
     fn playerStatement(elf: *Elf) void {
+        var event: Event = level.events[level.i_event];
+
         switch (playerEventstatus) {
-            PlayerEventStatus.IDLE_AREA => print("IDLE\n", .{}),
-            PlayerEventStatus.SLOW_MOTION_AREA => {
-                elf.speed = 10;
-                print("SLOW MOTION AREA\n", .{});
-                //set objects
-                level.events[level.i_event].objectsSetUp(level.events[level.i_event].objects);
+            PlayerEventStatus.IDLE_AREA => {
+                print("IDLE\n", .{});
+                elf.setDefaultSpeed();
+                Inventory.clear();
+                inv_objects_used = false;
+            },
+            PlayerEventStatus.SLOW_MOTION_AREA => { //After triggered
+                //print("SLOW MOTION AREA\n", .{});
+
+                if (inv_objects_used == false) {
+                    Inventory.slotSetting(event.inv_objects, event.size_inv_objects);
+                    inv_objects_used = true;
+                }
+
+                event.objectsSetUp(event.grid_objects);
             },
             PlayerEventStatus.RESTRICTED_AREA => print("RESTRICTED AREA\n", .{}),
             PlayerEventStatus.COMPLETED_AREA => {
-                print("COMPLETED AREA\n", .{});
+                event.objectsCleaning(event.grid_objects);
+
+                Inventory.clear();
+                Grid.reset();
+
                 if (level.i_event < level.event_nb - 1) {
                     level.i_event += 1;
                 }
+
+                print("COMPLETED AREA\n", .{});
             },
         }
     }
@@ -218,12 +254,13 @@ pub const Level = struct {
         const t_w: f32 = event.areas.completed_area.w;
         const t_h: f32 = event.areas.completed_area.z;
 
+        const grid: Grid = Grid.selfReturn();
+
         rl.drawRectangleRec(.init(c_x, c_y, c_w, c_h), rl.Color.alpha(.green, 250));
 
         rl.drawRectangleRec(.init(t_x, t_y, t_w, t_h), rl.Color.alpha(.yellow, 250));
 
-        const grid: Grid = Grid.selfReturn();
-        const cell: Cell = grid.cells[event.objects[0].y][event.objects[0].x];
-        rl.drawRectangleRec(.init(cell.x, cell.y, cell.width, cell.height), .pink);
+        const cell: Cell = grid.cells[event.grid_objects[0].y][event.grid_objects[0].x];
+        rl.drawRectangleRec(.init(cell.x, cell.y, cell.width, cell.height), .beige);
     }
 };

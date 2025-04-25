@@ -3,6 +3,7 @@ const Grid = @import("grid.zig").Grid;
 const CellType = @import("grid.zig").CellType;
 const std = @import("std");
 const HUD = @import("utils.zig").HUD;
+const Object = @import("terrain_object.zig").Object;
 
 pub var inv: Inventory = undefined;
 
@@ -61,13 +62,13 @@ pub const Inventory = struct {
                 .pos = .init(x + i_cast * SLOT_WIDTH + SLOT_PADDING, y + SLOT_PADDING),
                 .width = SLOT_WIDTH - 2 * SLOT_PADDING,
                 .height = SLOT_HEIGHT - 2 * SLOT_PADDING,
-                .type = CellType.PAD,
+                .type = CellType.EMPTY,
             };
         }
 
         //Harcode
-        slots[1].type = CellType.GROUND;
-        slots[2].type = CellType.SPIKE;
+        //slots[1].type = CellType.GROUND;
+        //slots[2].type = CellType.SPIKE;
 
         inv.pos.x = x;
         inv.pos.y = y;
@@ -76,6 +77,29 @@ pub const Inventory = struct {
         inv.size = SLOT_NB;
         inv.slots = slots;
         Inventory.clearCellFromInventory();
+    }
+
+    pub fn slotSetting(objects: []Object, slot_nb: usize) void {
+        if (invEmpty()) {
+            for (0..slot_nb) |i| {
+                inv.slots[i].type = objects[i].type;
+            }
+        }
+    }
+
+    pub fn clear() void {
+        for (0..SLOT_NB) |i| {
+            inv.slots[i].type = CellType.EMPTY;
+        }
+    }
+
+    fn invEmpty() bool {
+        for (0..SLOT_NB) |i| {
+            if (inv.slots[i].type != CellType.EMPTY) {
+                return false;
+            }
+        }
+        return true;
     }
 
     fn slotManagement() void {
