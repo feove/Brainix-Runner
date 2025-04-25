@@ -76,7 +76,6 @@ pub const Areas = struct {
 pub const Event = struct {
     grid_objects: []Object,
     inv_objects: []Object,
-    size_inv_objects: usize,
     areas: Areas,
     object_nb: usize,
     slow_motion_time: f32 = 3,
@@ -127,6 +126,7 @@ pub const Level = struct {
 
     pub fn init(allocator: std.mem.Allocator) !void {
         var events = try allocator.alloc(Event, LEVEL_NB);
+        // var types: []CellType = undefined;
 
         //Add First Event (ONE SPIKE)
         const grid_objects = try allocator.alloc(Object, OBJECT_NB);
@@ -137,12 +137,13 @@ pub const Level = struct {
         };
 
         const inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
+
+        //types = { CellType.PAD, CellType.EMPTY, CellType.EMPTY, CellType.GROUND};
+        //Inventory.addObject(types, CellType.PAD);
+
         inv_objects[0] = Object{
-            .x = 0,
-            .y = 0,
             .type = CellType.PAD,
         };
-        events[0].size_inv_objects = 1;
 
         events[0].grid_objects = grid_objects;
 
@@ -220,7 +221,7 @@ pub const Level = struct {
                 //print("SLOW MOTION AREA\n", .{});
 
                 if (inv_objects_used == false) {
-                    Inventory.slotSetting(event.inv_objects, event.size_inv_objects);
+                    Inventory.slotSetting(event.inv_objects);
                     inv_objects_used = true;
                 }
 

@@ -79,9 +79,9 @@ pub const Inventory = struct {
         Inventory.clearCellFromInventory();
     }
 
-    pub fn slotSetting(objects: []Object, slot_nb: usize) void {
+    pub fn slotSetting(objects: []Object) void {
         if (invEmpty()) {
-            for (0..slot_nb) |i| {
+            for (0..SLOT_NB) |i| {
                 inv.slots[i].type = objects[i].type;
             }
         }
@@ -100,6 +100,14 @@ pub const Inventory = struct {
             }
         }
         return true;
+    }
+
+    pub fn addObject(types: []CellType) void {
+        for (0..SLOT_NB) |i| {
+            if (inv.slots[i].type == CellType.EMPTY) {
+                inv.slots[i].type = types[i];
+            }
+        }
     }
 
     fn slotManagement() void {

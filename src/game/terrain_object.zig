@@ -33,9 +33,9 @@ pub const PhysicObject = struct {
 };
 
 pub const Object = struct {
-    x: usize,
-    y: usize,
-    type: CellType,
+    x: usize = 0,
+    y: usize = 0,
+    type: CellType = CellType.EMPTY,
 
     pub fn set(self: *Object, grid: *Grid) void {
         grid.cells[self.y][self.x].type = self.type;
