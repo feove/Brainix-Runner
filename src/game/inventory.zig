@@ -102,14 +102,6 @@ pub const Inventory = struct {
         return true;
     }
 
-    pub fn addObject(types: []CellType) void {
-        for (0..SLOT_NB) |i| {
-            if (inv.slots[i].type == CellType.EMPTY) {
-                inv.slots[i].type = types[i];
-            }
-        }
-    }
-
     fn slotManagement() void {
         //const grid: Grid = Grid.selfReturn();
 

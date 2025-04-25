@@ -12,8 +12,10 @@ pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
 pub var slow_motion_start_time: f64 = 0;
 pub var inv_objects_used = false;
+pub var can_trigger: bool = true;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
+pub var levelStatement = LevelStatement.STARTING;
 
 const LEVEL_NB: usize = 1;
 const OBJECT_NB: usize = 1;
@@ -25,6 +27,12 @@ pub const PlayerEventStatus = enum {
     SLOW_MOTION_AREA,
     RESTRICTED_AREA,
     COMPLETED_AREA,
+};
+
+const LevelStatement = enum {
+    STARTING,
+    ONGOING,
+    COMPLETED,
 };
 
 pub const Areas = struct {
@@ -78,9 +86,8 @@ pub const Event = struct {
     inv_objects: []Object,
     areas: Areas,
     object_nb: usize,
-    slow_motion_time: f32 = 3,
+    slow_motion_time: f32 = 3, //Unused
 
-    //Setting Event's Objects over the grid
     fn objectsSetUp(event: *Event, objects: []Object) void {
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
@@ -95,24 +102,26 @@ pub const Event = struct {
         }
     }
 
-    //Slow Motion effect
     pub fn slow_motion_effect(elf: *Elf) void {
-        var area: Areas = level.events[level.i_event].areas;
         const current_time = rl.getTime();
+
         if (!slow_motion_active) {
-            if (area.player_in_area(elf, area.trigger_area)) {
-                playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
-                elf.speed = 50;
+            if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and can_trigger) {
+                elf.setSlowMotiontSpeed();
+                print("\n1 SPEED: {d}\n", .{elf.speed});
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
+                can_trigger = false;
+                return;
             }
         }
 
         if (slow_motion_active) {
             const elapsed = current_time - slow_motion_start_time;
-            if (elapsed >= 0.5) {
-                elf.setDefaultSpeed();
+
+            if (elapsed >= 2) {
                 slow_motion_active = false;
+                elf.setDefaultSpeed();
                 playerEventstatus = PlayerEventStatus.IDLE_AREA;
             }
         }
@@ -126,9 +135,11 @@ pub const Level = struct {
 
     pub fn init(allocator: std.mem.Allocator) !void {
         var events = try allocator.alloc(Event, LEVEL_NB);
-        // var types: []CellType = undefined;
 
         //Add First Event (ONE SPIKE)
+
+        events[0].object_nb = 1;
+
         const grid_objects = try allocator.alloc(Object, OBJECT_NB);
         grid_objects[0] = Object{
             .x = 5,
@@ -136,14 +147,13 @@ pub const Level = struct {
             .type = CellType.SPIKE,
         };
 
-        const inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
+        var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
 
-        //types = { CellType.PAD, CellType.EMPTY, CellType.EMPTY, CellType.GROUND};
-        //Inventory.addObject(types, CellType.PAD);
+        for (0..Inventory.selfReturn().size) |i| {
+            inv_objects[i] = Object{};
+        }
 
-        inv_objects[0] = Object{
-            .type = CellType.PAD,
-        };
+        inv_objects[0].type = CellType.PAD;
 
         events[0].grid_objects = grid_objects;
 
@@ -154,8 +164,6 @@ pub const Level = struct {
             .completed_area = usize_assign_to_f32(grid_objects[0].x + 2, grid_objects[0].y, 1, 1),
         };
 
-        events[0].object_nb = 1;
-
         //Add Second Event (SPIKES AND BLOCKS)
 
         //level assign
@@ -165,13 +173,12 @@ pub const Level = struct {
     }
 
     pub fn refresh(self: *Level) void {
+        if (levelStatement == LevelStatement.COMPLETED) {
+            return;
+        }
         var elf: Elf = Elf.selfReturn();
         var area: Areas = level.events[level.i_event].areas;
         _ = self;
-
-        if (playerEventstatus != PlayerEventStatus.SLOW_MOTION_AREA) {
-            playerEventstatus = PlayerEventStatus.IDLE_AREA;
-        }
 
         if (area.player_in_area(&elf, area.trigger_area)) {
             playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
@@ -187,7 +194,7 @@ pub const Level = struct {
 
         playerStatement(&elf);
 
-        eventDrawing(0);
+        eventDrawing(level.i_event);
     }
 
     fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
@@ -204,21 +211,20 @@ pub const Level = struct {
         const w: f32 = tr_cell.x - bl_cell.x;
         const h: f32 = bl_cell.y - tl_cell.y;
 
-        return .init(x, y, h, w); //I should replace with return .init(x,y,h, w); to test;
+        return .init(x, y, h, w); //flex
     }
 
     fn playerStatement(elf: *Elf) void {
         var event: Event = level.events[level.i_event];
-
+        _ = elf;
         switch (playerEventstatus) {
             PlayerEventStatus.IDLE_AREA => {
-                print("IDLE\n", .{});
-                elf.setDefaultSpeed();
+                //print("IDLE\n", .{});
+                can_trigger = true;
                 Inventory.clear();
                 inv_objects_used = false;
             },
-            PlayerEventStatus.SLOW_MOTION_AREA => { //After triggered
-                //print("SLOW MOTION AREA\n", .{});
+            PlayerEventStatus.SLOW_MOTION_AREA => { //(After triggered)
 
                 if (inv_objects_used == false) {
                     Inventory.slotSetting(event.inv_objects);
@@ -226,6 +232,9 @@ pub const Level = struct {
                 }
 
                 event.objectsSetUp(event.grid_objects);
+
+                //Event.slow_motion_effect(elf);
+
             },
             PlayerEventStatus.RESTRICTED_AREA => print("RESTRICTED AREA\n", .{}),
             PlayerEventStatus.COMPLETED_AREA => {
@@ -234,9 +243,12 @@ pub const Level = struct {
                 Inventory.clear();
                 Grid.reset();
 
-                if (level.i_event < level.event_nb - 1) {
-                    level.i_event += 1;
+                if (level.i_event == level.event_nb - 1) {
+                    levelStatement = LevelStatement.COMPLETED;
+                    return;
                 }
+
+                level.i_event += 1;
 
                 print("COMPLETED AREA\n", .{});
             },

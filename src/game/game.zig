@@ -5,6 +5,7 @@ const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
 const objects = @import("../game/level/events.zig");
 const rl = @import("raylib");
+const print = @import("std").debug.print;
 
 pub fn run() void {
     render();
@@ -17,7 +18,6 @@ pub fn render() void {
     //Interactions
     terrain.grid.interactions();
     inventory.inv.interactions();
-
     player.elf.controller();
     player.elf.drawElf();
 

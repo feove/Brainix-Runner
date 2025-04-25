@@ -12,7 +12,9 @@ const Object = @import("terrain_object.zig").Object;
 
 pub var elf: Elf = undefined;
 pub var initGrid: Grid = undefined;
+
 const ELF_DEFAULT_SPEED: f32 = 200.0;
+const SLOW_MOTION_SPEED: f32 = 50.0;
 
 pub const PlayerState = enum {
     ALIVE,
@@ -60,6 +62,14 @@ pub const Elf = struct {
 
     pub fn setDefaultSpeed(self: *Elf) void {
         self.speed = ELF_DEFAULT_SPEED;
+    }
+
+    pub fn setSlowMotiontSpeed(self: *Elf) void {
+        self.speed = SLOW_MOTION_SPEED;
+    }
+
+    pub fn setSpeedBoost(self: *Elf) void {
+        self.speed = 1500;
     }
 
     pub fn controller(self: *Elf) void {
@@ -121,7 +131,10 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime();
         const grid = Grid.selfReturn();
 
-        event.Event.slow_motion_effect(&elf);
+        if (event.playerEventstatus == event.PlayerEventStatus.SLOW_MOTION_AREA) {
+            event.Event.slow_motion_effect(self);
+        }
+        //event.Event.slow_motion_effect(&elf);
 
         //If Void Falling
         if (self.y + self.height >= grid.y + grid.height - 5) {

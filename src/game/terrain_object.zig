@@ -28,6 +28,7 @@ pub const PhysicObject = struct {
 
     pub fn applyJump(self: *PhysicObject, jump_force: f32) void {
         self.velocity = jump_force;
+        //Add a Horizontal force to Right if (auto_moving: AutoMovements = AutoMovements.RIGHT) or left
         self.jump = false;
     }
 };
@@ -51,13 +52,11 @@ pub const Object = struct {
             elf.hitBox.middleLeggs,
         };
 
-        if ((rl.isKeyPressed(rl.KeyboardKey.space)) or HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
+        //(rl.isKeyPressed(rl.KeyboardKey.space)) or
+        if (HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
             if (elf.isOnGround) {
-                elf.speed = 1500;
                 elf.physics.applyJump(elf.jump_force);
                 elf.isOnGround = false;
-            } else {
-                elf.setDefaultSpeed();
             }
         }
         _ = respawn_point;
