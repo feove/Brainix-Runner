@@ -12,7 +12,6 @@ pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
 pub var slow_motion_start_time: f64 = 0;
 pub var inv_objects_used = false;
-pub var can_trigger: bool = true;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
@@ -87,6 +86,7 @@ pub const Event = struct {
     areas: Areas,
     object_nb: usize,
     slow_motion_time: f32 = 3, //Unused
+    has_been_triggered: bool = false,
 
     fn objectsSetUp(event: *Event, objects: []Object) void {
         var grid: Grid = Grid.selfReturn();
@@ -106,12 +106,12 @@ pub const Event = struct {
         const current_time = rl.getTime();
 
         if (!slow_motion_active) {
-            if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and can_trigger) {
+            if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and !level.events[level.i_event].has_been_triggered) {
+                print("TRIGGERED \n", .{});
                 elf.setSlowMotiontSpeed();
-                print("\n1 SPEED: {d}\n", .{elf.speed});
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
-                can_trigger = false;
+                level.events[level.i_event].has_been_triggered = true;
                 return;
             }
         }
@@ -121,6 +121,7 @@ pub const Event = struct {
 
             if (elapsed >= 2) {
                 slow_motion_active = false;
+
                 elf.setDefaultSpeed();
                 playerEventstatus = PlayerEventStatus.IDLE_AREA;
             }
@@ -220,7 +221,7 @@ pub const Level = struct {
         switch (playerEventstatus) {
             PlayerEventStatus.IDLE_AREA => {
                 //print("IDLE\n", .{});
-                can_trigger = true;
+
                 Inventory.clear();
                 inv_objects_used = false;
             },
@@ -245,6 +246,7 @@ pub const Level = struct {
 
                 if (level.i_event == level.event_nb - 1) {
                     levelStatement = LevelStatement.COMPLETED;
+
                     return;
                 }
 

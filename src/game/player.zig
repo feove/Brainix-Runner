@@ -188,6 +188,8 @@ pub const Elf = struct {
         if (elf.state == PlayerState.DEAD) {
             Grid.reset();
             elf.state = PlayerState.ALIVE;
+
+            event.level.events[event.level.i_event].has_been_triggered = false;
         }
     }
 
