@@ -12,8 +12,9 @@ const Object = @import("terrain_object.zig").Object;
 
 pub var elf: Elf = undefined;
 pub var initGrid: Grid = undefined;
+pub var time_divisor: f32 = 1.0;
 
-const ELF_DEFAULT_SPEED: f32 = 200.0;
+const ELF_DEFAULT_SPEED: f32 = 150.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
 pub const PlayerState = enum {
@@ -73,15 +74,18 @@ pub const Elf = struct {
     }
 
     pub fn controller(self: *Elf) void {
-        const dt: f32 = rl.getFrameTime();
+        const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();
+
+        //print("{d}\n", .{self.time_divisor});
 
         self.isOnGround = self.hitBox.bottomLeggs == CellType.GROUND;
 
         if (!self.isOnGround) {
-            self.physics.velocity += gravity * dt;
+            self.physics.velocity_y += gravity * dt;
         } else {
-            self.physics.velocity = 0;
+            self.physics.velocity_y = 0;
+            self.physics.velocity_x = 0;
         }
 
         Object.padAction(&elf, .init(-1.0, -1.0));
@@ -90,13 +94,14 @@ pub const Elf = struct {
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
-            x_movement += self.speed * dt;
+            x_movement += self.speed * dt + self.physics.velocity_x;
         }
         if (rl.isKeyDown(rl.KeyboardKey.left) or self.physics.auto_moving == AutoMovements.LEFT) {
-            x_movement -= self.speed * dt;
+            x_movement -= self.speed * dt - self.physics.velocity_x;
         }
+        //print("x_movement : {d}\n", .{x_movement});
 
-        self.elfMovement(x_movement, self.physics.velocity * dt);
+        self.elfMovement(x_movement, self.physics.velocity_y * dt);
 
         updatePlayerStatement();
 
@@ -131,11 +136,6 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime();
         const grid = Grid.selfReturn();
 
-        if (event.playerEventstatus == event.PlayerEventStatus.SLOW_MOTION_AREA) {
-            event.Event.slow_motion_effect(self);
-        }
-        //event.Event.slow_motion_effect(&elf);
-
         //If Void Falling
         if (self.y + self.height >= grid.y + grid.height - 5) {
             self.x = initGrid.x;
@@ -146,10 +146,11 @@ pub const Elf = struct {
 
         if (canMoveHorizontal(self, x)) {
             if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.rightLeggs == CellType.GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
-                self.x -= self.repulsive_force * dt; //Useless
+                self.x -= self.repulsive_force * dt;
+
                 self.physics.auto_moving = AutoMovements.LEFT;
             } else if (((self.hitBox.leftBody == CellType.GROUND or self.hitBox.leftLeggs == CellType.GROUND) and x < 0) or self.x - 10 <= grid.x) {
-                self.x += self.repulsive_force * dt; //Useless
+                self.x += self.repulsive_force * dt;
                 self.physics.auto_moving = AutoMovements.RIGHT;
             } else {
                 self.x += x;
@@ -159,12 +160,12 @@ pub const Elf = struct {
         if (canMoveVertical(self, y)) {
             if (self.y <= grid.y) {
                 self.y += 5;
-                self.physics.velocity += self.repulsive_force;
+                self.physics.velocity_y += self.repulsive_force;
                 return;
             }
 
             if ((self.hitBox.topBody == CellType.GROUND and y < 0)) {
-                self.physics.velocity += self.repulsive_force;
+                self.physics.velocity_y += self.repulsive_force;
             } else if (self.hitBox.bottomLeggs == CellType.GROUND and y > 0) {
                 self.y -= self.repulsive_force * 0.4 * dt;
             } else {

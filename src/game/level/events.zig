@@ -1,6 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
 const Elf = @import("../player.zig").Elf;
+const player = @import("../player.zig");
 const Grid = @import("../grid.zig").Grid;
 const Cell = @import("../grid.zig").Cell;
 const CellType = @import("../grid.zig").CellType;
@@ -104,11 +105,11 @@ pub const Event = struct {
 
     pub fn slow_motion_effect(elf: *Elf) void {
         const current_time = rl.getTime();
-
+        _ = elf;
         if (!slow_motion_active) {
             if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and !level.events[level.i_event].has_been_triggered) {
                 print("TRIGGERED \n", .{});
-                elf.setSlowMotiontSpeed();
+                player.time_divisor = 3;
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
                 level.events[level.i_event].has_been_triggered = true;
@@ -119,10 +120,10 @@ pub const Event = struct {
         if (slow_motion_active) {
             const elapsed = current_time - slow_motion_start_time;
 
-            if (elapsed >= 2) {
+            if (elapsed >= 1) {
                 slow_motion_active = false;
+                player.time_divisor = 1;
 
-                elf.setDefaultSpeed();
                 playerEventstatus = PlayerEventStatus.IDLE_AREA;
             }
         }
@@ -217,7 +218,7 @@ pub const Level = struct {
 
     fn playerStatement(elf: *Elf) void {
         var event: Event = level.events[level.i_event];
-        _ = elf;
+
         switch (playerEventstatus) {
             PlayerEventStatus.IDLE_AREA => {
                 //print("IDLE\n", .{});
@@ -233,6 +234,8 @@ pub const Level = struct {
                 }
 
                 event.objectsSetUp(event.grid_objects);
+
+                Event.slow_motion_effect(elf);
 
                 //Event.slow_motion_effect(elf);
 

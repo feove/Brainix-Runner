@@ -14,7 +14,8 @@ pub const AutoMovements = enum {
 
 pub const PhysicObject = struct {
     mass: f32,
-    velocity: f32 = 0,
+    velocity_y: f32 = 0,
+    velocity_x: f32 = 0,
     acceleration: f32 = 0,
     auto_moving: AutoMovements = AutoMovements.RIGHT,
     jump: bool = false,
@@ -23,12 +24,19 @@ pub const PhysicObject = struct {
 
     pub fn applyPhysics(self: *PhysicObject, dt: f32) void {
         self.acceleration = self.mass * gravity;
-        self.velocity += self.acceleration * dt;
+        self.velocity_y += self.acceleration * dt;
     }
 
     pub fn applyJump(self: *PhysicObject, jump_force: f32) void {
-        self.velocity = jump_force;
-        //Add a Horizontal force to Right if (auto_moving: AutoMovements = AutoMovements.RIGHT) or left
+        self.velocity_y = jump_force;
+
+        const horizontal_boost: f32 = 0.05;
+
+        self.velocity_x = switch (self.auto_moving) {
+            AutoMovements.RIGHT => horizontal_boost,
+            AutoMovements.LEFT => -horizontal_boost,
+        };
+
         self.jump = false;
     }
 };
