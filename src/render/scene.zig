@@ -29,7 +29,7 @@ fn drawGrid() void {
                 CellType.GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
                 CellType.SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                 CellType.PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
-                else => print("EMPTY cell\n", .{}),
+                else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
             }
 
             if (cell.isSelected) {
