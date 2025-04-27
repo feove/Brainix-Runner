@@ -209,7 +209,7 @@ pub const Level = struct {
         }
     }
 
-    fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
+    pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
         const grid: Grid = Grid.selfReturn();
 
         //Need to check out of band of j + height and i + width
@@ -236,13 +236,13 @@ pub const Level = struct {
 
         playerStatement(&elf);
 
-        // eventDrawing(level.i_event);
+        eventDrawing(level.i_event);
     }
 
     fn areaSetting(elf: *Elf) void {
         var area: Areas = level.events[level.i_event].areas;
 
-        if (area.player_in_area(elf, area.trigger_area)) {
+        if (area.player_in_area(elf, area.trigger_area) and !level.events[level.i_event].already_triggered) {
             playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
         }
 
@@ -305,11 +305,11 @@ pub const Level = struct {
     }
 
     fn eventDrawing(event_num: usize) void {
-        if (levelStatement == LevelStatement.COMPLETED) {
+        if (levelStatement == LevelStatement.COMPLETED or level.events[level.i_event].already_triggered) {
             return;
         }
-
         const event: Event = level.events[event_num];
+
         const c_x: f32 = event.areas.completed_area.x;
         const c_y: f32 = event.areas.completed_area.y;
         const c_w: f32 = event.areas.completed_area.w;

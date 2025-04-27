@@ -8,6 +8,7 @@ const Object = @import("../terrain_object.zig").Object;
 const Areas = @import("events.zig").Areas;
 const Inventory = @import("../inventory.zig").Inventory;
 const Event = @import("events.zig").Event;
+const Level = @import("events.zig").Level;
 
 pub const EventConfig = struct {
     events: []Event,
@@ -35,11 +36,13 @@ pub const EventConfig = struct {
             const event_number = entry.key_ptr;
 
             if (event_number.*[event_number.len - 1] == '0' + @as(u8, @intCast(id))) {
-                const object_nb: usize = @as(usize, @intCast(entry.value_ptr.object.get("object_nb").?.integer));
-                const slow_motion_time: f32 = @as(f32, @floatCast(entry.value_ptr.object.get("slow_motion_time").?.float));
-                const time_divisor: f32 = @as(f32, @floatCast(entry.value_ptr.object.get("time_divisor").?.float));
+                const el = entry.value_ptr.object;
+                const object_nb: usize = @as(usize, @intCast(el.get("object_nb").?.integer));
+                const slow_motion_time: f32 = @as(f32, @floatCast(el.get("slow_motion_time").?.float));
+                const time_divisor: f32 = @as(f32, @floatCast(el.get("time_divisor").?.float));
+                const already_triggered: bool = el.get("already_triggered").?.bool;
 
-                const inv_json = entry.value_ptr.object.get("inv_objects").?.array;
+                const inv_json = el.get("inv_objects").?.array;
 
                 var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
                 for (0..Inventory.selfReturn().size) |i| {
@@ -54,6 +57,8 @@ pub const EventConfig = struct {
                 events[id].slow_motion_time = slow_motion_time;
                 events[id].time_divisor = time_divisor;
                 events[id].inv_objects = inv_objects;
+                events[id].already_triggered = already_triggered;
+
                 // std.debug.print("\nobject_nb : {d}\n", .{object_nb});
                 // std.debug.print("\nslow_motion_time : {}\n", .{slow_motion_time});
             }
@@ -63,6 +68,7 @@ pub const EventConfig = struct {
 
         var grid_objects = try allocator.alloc(Object, 1);
         grid_objects[0] = Object{ .x = 5, .y = 7, .type = CellType.SPIKE };
+        events[0].grid_objects = grid_objects;
 
         // var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
         // for (0..Inventory.selfReturn().size) |i| {
@@ -70,11 +76,9 @@ pub const EventConfig = struct {
         // }
         // Object.add(&inv_objects, CellType.PAD);
 
-        events[0].grid_objects = grid_objects;
-
         events[0].areas = Areas{
-            .trigger_area = .init(6, 6, 1, 1),
-            .completed_area = .init(8, 6, 1, 1),
+            .trigger_area = Level.usize_assign_to_f32(3, 7, 1, 1),
+            .completed_area = Level.usize_assign_to_f32(8, 7, 1, 1),
         };
 
         eventConfig.events = events;
