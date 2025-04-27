@@ -26,14 +26,6 @@ pub const CellType = enum {
     EMPTY,
 };
 
-pub const CellAround = enum {
-    UP,
-    RIGHT,
-    LEFT,
-    BOTTOM,
-    NONE,
-};
-
 pub const Cell = struct {
     x: f32,
     y: f32,
@@ -130,7 +122,6 @@ pub const Grid = struct {
                 for (0..grid.nb_rows) |j| {
                     grid.cells[j][i].isSelected = false;
 
-                    //If cursor in cell
                     if (HUD.cursorInCell(grid.cells[j][i])) {
                         grid.cells[j][i].isSelected = true;
 
@@ -140,7 +131,7 @@ pub const Grid = struct {
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
 
-                            //Place Item on terrain from Inventory
+                            //Place Item over terrain from Inventory
                             if (inv.cellFromInventory != CellType.EMPTY) {
                                 if (grid.cells[j][i].type == CellType.AIR) {
                                     grid.cells[j][i].type = inv.cellFromInventory;

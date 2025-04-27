@@ -8,10 +8,6 @@ const rl = @import("raylib");
 const print = @import("std").debug.print;
 
 pub fn run() void {
-    render();
-}
-
-pub fn render() void {
     rl.beginDrawing();
     defer rl.endDrawing();
 
@@ -19,12 +15,15 @@ pub fn render() void {
     terrain.grid.interactions();
     inventory.inv.interactions();
     player.elf.controller();
-    player.elf.drawElf();
 
     //Update Cursor's position
     utils.hud.refresh();
-
     objects.level.refresh();
 
+    render();
+}
+
+pub fn render() void {
+    player.elf.drawElf();
     scene.drawScene();
 }

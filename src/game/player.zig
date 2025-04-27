@@ -15,7 +15,7 @@ pub var elf: Elf = undefined;
 pub var initGrid: Grid = undefined;
 pub var time_divisor: f32 = 1.0;
 
-const ELF_DEFAULT_SPEED: f32 = 150.0;
+const ELF_DEFAULT_SPEED: f32 = 170.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
 pub const PlayerState = enum {
@@ -193,7 +193,7 @@ pub const Elf = struct {
 
             elf.state = PlayerState.ALIVE;
 
-            event.level.events[event.level.i_event].has_been_triggered = false;
+            event.level.events[event.level.i_event].already_triggered = false;
         }
     }
 

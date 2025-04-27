@@ -12,7 +12,7 @@ const print = std.debug.print;
 pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
 pub var slow_motion_start_time: f64 = 0;
-pub var inv_objects_used = false;
+var inv_objects_used = false;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
@@ -85,8 +85,9 @@ pub const Event = struct {
     inv_objects: []Object,
     areas: Areas,
     object_nb: usize,
-    slow_motion_time: f32, //Unused
-    has_been_triggered: bool = false,
+    slow_motion_time: f32,
+    time_divisor: f32,
+    already_triggered: bool = false,
 
     fn objectsSetUp(event: *Event, objects: []Object) void {
         var grid: Grid = Grid.selfReturn();
@@ -106,12 +107,11 @@ pub const Event = struct {
         const current_time = rl.getTime();
         _ = elf;
         if (!slow_motion_active) {
-            if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and !level.events[level.i_event].has_been_triggered) {
-                print("TRIGGERED \n", .{});
-                player.time_divisor = 3;
+            if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and !level.events[level.i_event].already_triggered) {
+                player.time_divisor = level.events[level.i_event].time_divisor;
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
-                level.events[level.i_event].has_been_triggered = true;
+                level.events[level.i_event].already_triggered = true;
                 return;
             }
         }
@@ -141,11 +141,7 @@ pub const Level = struct {
         events[0].object_nb = 1;
         var grid_objects = try allocator.alloc(Object, 1);
         var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
-        grid_objects[0] = Object{
-            .x = 5,
-            .y = 7,
-            .type = CellType.SPIKE,
-        };
+        grid_objects[0] = Object{ .x = 5, .y = 7, .type = CellType.SPIKE };
         for (0..Inventory.selfReturn().size) |i| {
             inv_objects[i] = Object{};
         }
@@ -153,54 +149,32 @@ pub const Level = struct {
         events[0].grid_objects = grid_objects;
         events[0].inv_objects = inv_objects;
         events[0].slow_motion_time = 2;
+        events[0].time_divisor = 3;
         events[0].areas = Areas{
             .trigger_area = usize_assign_to_f32(grid_objects[0].x - 2, grid_objects[0].y, 1, 1),
-            .completed_area = usize_assign_to_f32(grid_objects[0].x + 2, grid_objects[0].y, 1, 1),
+            .completed_area = usize_assign_to_f32(grid_objects[0].x + 3, grid_objects[0].y, 1, 1),
         };
 
         //Add Second Event (SPIKES AND BLOCKS)
-        events[1].object_nb = 6;
+        events[1].object_nb = 7;
         grid_objects = try allocator.alloc(Object, events[1].object_nb);
         inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
-        grid_objects[0] = Object{
-            .x = 6,
-            .y = 7,
-            .type = CellType.PAD,
-        };
-        grid_objects[1] = Object{
-            .x = 5,
-            .y = 7,
-            .type = CellType.GROUND,
-        };
-        grid_objects[2] = Object{
-            .x = 3,
-            .y = 6,
-            .type = CellType.SPIKE,
-        };
-        grid_objects[3] = Object{
-            .x = 4,
-            .y = 7,
-            .type = CellType.GROUND,
-        };
-        grid_objects[4] = Object{
-            .x = 4,
-            .y = 6,
-            .type = CellType.SPIKE,
-        };
-        grid_objects[5] = Object{
-            .x = 3,
-            .y = 7,
-            .type = CellType.GROUND,
-        };
-
+        grid_objects[0] = Object{ .x = 6, .y = 7, .type = CellType.PAD };
+        grid_objects[1] = Object{ .x = 5, .y = 7, .type = CellType.GROUND };
+        grid_objects[2] = Object{ .x = 3, .y = 6, .type = CellType.SPIKE };
+        grid_objects[3] = Object{ .x = 4, .y = 7, .type = CellType.GROUND };
+        grid_objects[4] = Object{ .x = 4, .y = 6, .type = CellType.SPIKE };
+        grid_objects[5] = Object{ .x = 3, .y = 7, .type = CellType.GROUND };
+        grid_objects[6] = Object{ .x = 5, .y = 6, .type = CellType.SPIKE };
         for (0..Inventory.selfReturn().size) |i| {
             inv_objects[i] = Object{};
         }
         Object.add(&inv_objects, CellType.GROUND);
 
         events[1].slow_motion_time = 2;
+        events[1].time_divisor = 3;
         events[1].areas = Areas{
-            .trigger_area = usize_assign_to_f32(grid_objects[0].x + 2, grid_objects[0].y, 1, 1),
+            .trigger_area = usize_assign_to_f32(grid_objects[0].x, grid_objects[0].y, 1, 1),
             .completed_area = usize_assign_to_f32(grid_objects[0].x - 5, grid_objects[0].y, 1, 1),
         };
         events[1].grid_objects = grid_objects;
@@ -216,7 +190,7 @@ pub const Level = struct {
         level.i_event = 0;
 
         for (0..level.event_nb) |i| {
-            level.events[i].has_been_triggered = false;
+            level.events[i].already_triggered = false;
         }
     }
 
@@ -238,28 +212,32 @@ pub const Level = struct {
     }
 
     pub fn refresh(self: *Level) void {
+        var elf: Elf = Elf.selfReturn();
+        _ = self;
         if (levelStatement == LevelStatement.COMPLETED) {
             return;
         }
-        var elf: Elf = Elf.selfReturn();
-        var area: Areas = level.events[level.i_event].areas;
-        _ = self;
-
-        if (area.player_in_area(&elf, area.trigger_area)) {
-            playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
-        }
-
-        if (area.player_in_area(&elf, area.restricted_area)) {
-            playerEventstatus = PlayerEventStatus.RESTRICTED_AREA;
-        }
-
-        if (area.player_in_area(&elf, area.completed_area)) {
-            playerEventstatus = PlayerEventStatus.COMPLETED_AREA;
-        }
+        areaSetting(&elf);
 
         playerStatement(&elf);
 
-        eventDrawing(level.i_event);
+        // eventDrawing(level.i_event);
+    }
+
+    fn areaSetting(elf: *Elf) void {
+        var area: Areas = level.events[level.i_event].areas;
+
+        if (area.player_in_area(elf, area.trigger_area)) {
+            playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
+        }
+
+        if (area.player_in_area(elf, area.restricted_area)) {
+            playerEventstatus = PlayerEventStatus.RESTRICTED_AREA;
+        }
+
+        if (area.player_in_area(elf, area.completed_area)) {
+            playerEventstatus = PlayerEventStatus.COMPLETED_AREA;
+        }
     }
 
     fn playerStatement(elf: *Elf) void {
@@ -272,9 +250,6 @@ pub const Level = struct {
     }
 
     fn idle() void {
-
-        //print("IDLE\n", .{});
-
         Inventory.clear();
         inv_objects_used = false;
     }
@@ -283,6 +258,7 @@ pub const Level = struct {
         var event: Event = level.events[level.i_event];
 
         if (inv_objects_used == false) {
+            print("TRIGGER EVENT {d} \n", .{level.i_event});
             Inventory.slotSetting(event.inv_objects);
             inv_objects_used = true;
         }
@@ -295,7 +271,7 @@ pub const Level = struct {
     fn complete() void {
         var event: Event = level.events[level.i_event];
 
-        print("COMPLETED AREA {d}\n", .{level.i_event});
+        print("COMPLETED EVENT {d}\n", .{level.i_event});
 
         event.objectsCleaning(event.grid_objects);
 
@@ -307,6 +283,7 @@ pub const Level = struct {
         level.i_event += 1;
 
         if (level.i_event == level.event_nb) {
+            print("LEVEL COMPLETED \n", .{});
             levelStatement = LevelStatement.COMPLETED;
             return;
         }
