@@ -23,7 +23,7 @@ pub fn main() anyerror!void {
     player.initElf();
     try Level.init(allocator);
 
-    window.clear();
+    // window.clear();
 
     while (!rl.windowShouldClose()) {
 

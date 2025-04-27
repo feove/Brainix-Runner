@@ -1,0 +1,43 @@
+{
+    "event_0" :{
+
+        "object_nb" : 1,
+        "slow_motion_time" : 2.0,
+        "time_divisor" : 3.0,
+        "already_triggered" :  false,
+        "grid_objects" : [
+            {
+                "x" : 5,
+                "y" : 7,
+                "type" : "SPIKE"
+            }
+        ],
+        "inv_objects" : [   
+            "PAD",
+            "EMPTY",
+            "EMPTY",
+            "EMPTY"
+        ],
+        "areas" : {
+            "triggered" : {
+                "x" : 3,
+                "y" : 7,
+                "width" : 1,
+                "height" : 1
+            },
+            "restricted" :  {
+                "x" : 0,
+                "y" : 0,
+                "width" : 0,
+                "height" : 0
+            },
+            "completed" :   {
+                "x" : 8,
+                "y" : 7,
+                "width" : 1,
+                "height" : 1
+            }
+                }
+            }
+
+}

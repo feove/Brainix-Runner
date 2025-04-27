@@ -7,6 +7,7 @@ const Cell = @import("../grid.zig").Cell;
 const CellType = @import("../grid.zig").CellType;
 const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
+const EventConfig = @import("level_reader.zig").EventConfig;
 const print = std.debug.print;
 
 pub var level: Level = undefined;
@@ -18,7 +19,7 @@ pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
 
 const OBJECT_NB: usize = 1;
-const EVENT_NB: usize = 2;
+const EVENT_NB: usize = 1;
 const CURRENT_EVENT: usize = 0;
 
 pub const PlayerEventStatus = enum {
@@ -81,10 +82,10 @@ pub const Areas = struct {
 };
 
 pub const Event = struct {
+    object_nb: usize,
     grid_objects: []Object,
     inv_objects: []Object,
     areas: Areas,
-    object_nb: usize,
     slow_motion_time: f32,
     time_divisor: f32,
     already_triggered: bool = false,
@@ -135,55 +136,69 @@ pub const Level = struct {
     i_event: usize,
 
     pub fn init(allocator: std.mem.Allocator) !void {
-        var events = try allocator.alloc(Event, EVENT_NB);
 
-        //Add First Event (ONE SPIKE)
-        events[0].object_nb = 1;
-        var grid_objects = try allocator.alloc(Object, 1);
-        var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
-        grid_objects[0] = Object{ .x = 5, .y = 7, .type = CellType.SPIKE };
-        for (0..Inventory.selfReturn().size) |i| {
-            inv_objects[i] = Object{};
-        }
-        Object.add(&inv_objects, CellType.PAD);
-        events[0].grid_objects = grid_objects;
-        events[0].inv_objects = inv_objects;
-        events[0].slow_motion_time = 2;
-        events[0].time_divisor = 3;
-        events[0].areas = Areas{
-            .trigger_area = usize_assign_to_f32(grid_objects[0].x - 2, grid_objects[0].y, 1, 1),
-            .completed_area = usize_assign_to_f32(grid_objects[0].x + 3, grid_objects[0].y, 1, 1),
-        };
-
-        //Add Second Event (SPIKES AND BLOCKS)
-        events[1].object_nb = 7;
-        grid_objects = try allocator.alloc(Object, events[1].object_nb);
-        inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
-        grid_objects[0] = Object{ .x = 6, .y = 7, .type = CellType.PAD };
-        grid_objects[1] = Object{ .x = 5, .y = 7, .type = CellType.GROUND };
-        grid_objects[2] = Object{ .x = 3, .y = 6, .type = CellType.SPIKE };
-        grid_objects[3] = Object{ .x = 4, .y = 7, .type = CellType.GROUND };
-        grid_objects[4] = Object{ .x = 4, .y = 6, .type = CellType.SPIKE };
-        grid_objects[5] = Object{ .x = 3, .y = 7, .type = CellType.GROUND };
-        grid_objects[6] = Object{ .x = 5, .y = 6, .type = CellType.SPIKE };
-        for (0..Inventory.selfReturn().size) |i| {
-            inv_objects[i] = Object{};
-        }
-        Object.add(&inv_objects, CellType.GROUND);
-
-        events[1].slow_motion_time = 2;
-        events[1].time_divisor = 3;
-        events[1].areas = Areas{
-            .trigger_area = usize_assign_to_f32(grid_objects[0].x, grid_objects[0].y, 1, 1),
-            .completed_area = usize_assign_to_f32(grid_objects[0].x - 5, grid_objects[0].y, 1, 1),
-        };
-        events[1].grid_objects = grid_objects;
-        events[1].inv_objects = inv_objects;
-
-        //level assign
-        level.events = events;
+        //Events Init
         level.event_nb = EVENT_NB;
         level.i_event = CURRENT_EVENT;
+
+        for (0..EVENT_NB) |id_event| {
+            const eventConfig: EventConfig = try EventConfig.levelReader(allocator, id_event, "levels/lvl_1.json");
+
+            level.events = eventConfig.events;
+        }
+
+        print("\n OBJ NUM : {d}\n", .{level.events[0].object_nb});
+        print("\n SLOW MOTION TIME  : {d}\n", .{level.events[0].slow_motion_time});
+        print("\n TIME DIVISOR  : {d}\n", .{level.events[0].time_divisor});
+
+        // var events = try allocator.alloc(Event, EVENT_NB);
+        // //Add First Event (ONE SPIKE)
+        // events[0].object_nb = 1;
+        // var grid_objects = try allocator.alloc(Object, 1);
+        // var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
+        // grid_objects[0] = Object{ .x = 5, .y = 7, .type = CellType.SPIKE };
+        // for (0..Inventory.selfReturn().size) |i| {
+        //     inv_objects[i] = Object{};
+        // }
+        // Object.add(&inv_objects, CellType.PAD);
+        // events[0].grid_objects = grid_objects;
+        // events[0].inv_objects = inv_objects;
+        // events[0].slow_motion_time = 2;
+        // events[0].time_divisor = 3;
+        // events[0].areas = Areas{
+        //     .trigger_area = usize_assign_to_f32(grid_objects[0].x - 2, grid_objects[0].y, 1, 1),
+        //     .completed_area = usize_assign_to_f32(grid_objects[0].x + 3, grid_objects[0].y, 1, 1),
+        // };
+
+        // //Add Second Event (SPIKES AND BLOCKS)
+        // events[1].object_nb = 7;
+        // grid_objects = try allocator.alloc(Object, events[1].object_nb);
+        // inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
+        // grid_objects[0] = Object{ .x = 6, .y = 7, .type = CellType.PAD };
+        // grid_objects[1] = Object{ .x = 5, .y = 7, .type = CellType.GROUND };
+        // grid_objects[2] = Object{ .x = 3, .y = 6, .type = CellType.SPIKE };
+        // grid_objects[3] = Object{ .x = 4, .y = 7, .type = CellType.GROUND };
+        // grid_objects[4] = Object{ .x = 4, .y = 6, .type = CellType.SPIKE };
+        // grid_objects[5] = Object{ .x = 3, .y = 7, .type = CellType.GROUND };
+        // grid_objects[6] = Object{ .x = 5, .y = 6, .type = CellType.SPIKE };
+        // for (0..Inventory.selfReturn().size) |i| {
+        //     inv_objects[i] = Object{};
+        // }
+        // Object.add(&inv_objects, CellType.GROUND);
+
+        // events[1].slow_motion_time = 2;
+        // events[1].time_divisor = 3;
+        // events[1].areas = Areas{
+        //     .trigger_area = usize_assign_to_f32(grid_objects[0].x, grid_objects[0].y, 1, 1),
+        //     .completed_area = usize_assign_to_f32(grid_objects[0].x - 5, grid_objects[0].y, 1, 1),
+        // };
+        // events[1].grid_objects = grid_objects;
+        // events[1].inv_objects = inv_objects;
+
+        // //level assign
+        // level.events = events;
+        // level.event_nb = EVENT_NB;
+        // level.i_event = CURRENT_EVENT;
     }
 
     pub fn reset() void {
