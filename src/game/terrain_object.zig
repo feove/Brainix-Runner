@@ -54,6 +54,15 @@ pub const Object = struct {
         grid.cells[self.y][self.x].type = CellType.AIR;
     }
 
+    pub fn add(self: *[]Object, cell: CellType) void {
+        for (0..self.len) |i| {
+            if (self.*[i].type == CellType.EMPTY) {
+                self.*[i].type = cell;
+                return;
+            }
+        }
+    }
+
     //Need PAD only over ground condition
     pub fn padAction(elf: *Elf, respawn_point: rl.Vector2) void {
         const PadDetectionSides = [_]CellType{
@@ -80,7 +89,7 @@ pub const Object = struct {
             elf.x = respawn_point.x;
             elf.y = respawn_point.y;
             elf.physics.auto_moving = AutoMovements.RIGHT;
-            elf.state = PlayerState.DEAD; //For Later
+            elf.state = PlayerState.DEAD;
             event.playerEventstatus = event.PlayerEventStatus.IDLE_AREA;
         }
     }

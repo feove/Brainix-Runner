@@ -93,13 +93,17 @@ pub const Inventory = struct {
         }
     }
 
-    fn invEmpty() bool {
+    pub fn invEmpty() bool {
         for (0..SLOT_NB) |i| {
             if (inv.slots[i].type != CellType.EMPTY) {
                 return false;
             }
         }
         return true;
+    }
+
+    pub fn cacheEmpty() bool {
+        return inv.cellFromInventory == CellType.EMPTY;
     }
 
     fn slotManagement() void {

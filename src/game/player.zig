@@ -6,6 +6,7 @@ const PhysicObject = @import("terrain_object.zig").PhysicObject;
 const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
+const Level = @import("level/events.zig").Level;
 const event = @import("level/events.zig");
 const print = @import("std").debug.print;
 const Object = @import("terrain_object.zig").Object;
@@ -188,6 +189,8 @@ pub const Elf = struct {
     fn updatePlayerStatement() void {
         if (elf.state == PlayerState.DEAD) {
             Grid.reset();
+            Level.reset();
+
             elf.state = PlayerState.ALIVE;
 
             event.level.events[event.level.i_event].has_been_triggered = false;

@@ -107,6 +107,9 @@ pub const Grid = struct {
             }
         }
 
+        grid.cacheCell = CellType.EMPTY;
+        Inventory.clearCellFromInventory();
+
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 
         grid.setExitDoor(9, 6);
