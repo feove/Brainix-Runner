@@ -1,4 +1,5 @@
 const std = @import("std");
+const rl = @import("raylib");
 const Elf = @import("../player.zig").Elf;
 const player = @import("../player.zig");
 const Grid = @import("../grid.zig").Grid;
@@ -13,8 +14,9 @@ const Level = @import("events.zig").Level;
 pub const EventConfig = struct {
     events: []Event,
 
-    pub fn levelReader(allocator: std.mem.Allocator, id: usize, level_pathway: []const u8) !EventConfig {
+    pub fn levelReader(allocator: std.mem.Allocator, id: usize, size: usize, level_pathway: []const u8) !EventConfig {
         var eventConfig: EventConfig = undefined;
+        _ = size;
         var events = try allocator.alloc(Event, 1);
 
         var file = try std.fs.cwd().openFile(level_pathway, .{});
@@ -42,7 +44,10 @@ pub const EventConfig = struct {
                 const time_divisor: f32 = @as(f32, @floatCast(el.get("time_divisor").?.float));
                 const already_triggered: bool = el.get("already_triggered").?.bool;
 
+                var grid_objects = try allocator.alloc(Object, object_nb);
+
                 const inv_json = el.get("inv_objects").?.array;
+                const grid_objects_json = el.get("grid_objects").?.array;
 
                 var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
                 for (0..Inventory.selfReturn().size) |i| {
@@ -53,33 +58,50 @@ pub const EventConfig = struct {
                     Object.add(&inv_objects, celltype);
                 }
 
+                for (0..object_nb) |j| {
+                    grid_objects[j] = Object{};
+                }
+                var e: usize = 0;
+                for (grid_objects_json.items) |obs| {
+                    const obj: Object = Object{
+                        .x = @as(usize, @intCast(obs.object.get("x").?.integer)),
+                        .y = @as(usize, @intCast(obs.object.get("y").?.integer)),
+                    };
+                    grid_objects[e] = obj;
+                    Object.add(&grid_objects, stringToCellType(obs.object.get("type").?.string));
+                    e += 1;
+                }
+
+                const areas = el.get("areas").?;
+                const triggered = areas.object.get("triggered").?;
+
+                const i_t: usize = @as(usize, @intCast(triggered.object.get("x").?.integer));
+                const j_t: usize = @as(usize, @intCast(triggered.object.get("y").?.integer));
+                const width_t: usize = @as(usize, @intCast(triggered.object.get("width").?.integer));
+                const height_t: usize = @as(usize, @intCast(triggered.object.get("height").?.integer));
+
+                const trigger_area: rl.Vector4 = Level.usize_assign_to_f32(i_t, j_t, width_t, height_t);
+
+                const completed = areas.object.get("completed").?;
+                const i_c = @as(usize, @intCast(completed.object.get("x").?.integer));
+                const j_c = @as(usize, @intCast(completed.object.get("y").?.integer));
+                const width_c = @as(usize, @intCast(completed.object.get("width").?.integer));
+                const height_c = @as(usize, @intCast(completed.object.get("height").?.integer));
+
+                const completed_area: rl.Vector4 = Level.usize_assign_to_f32(i_c, j_c, width_c, height_c);
+
                 events[id].object_nb = object_nb;
                 events[id].slow_motion_time = slow_motion_time;
                 events[id].time_divisor = time_divisor;
                 events[id].inv_objects = inv_objects;
                 events[id].already_triggered = already_triggered;
-
-                // std.debug.print("\nobject_nb : {d}\n", .{object_nb});
-                // std.debug.print("\nslow_motion_time : {}\n", .{slow_motion_time});
+                events[id].grid_objects = grid_objects;
+                events[id].areas = Areas{
+                    .trigger_area = trigger_area,
+                    .completed_area = completed_area,
+                };
             }
         }
-
-        //Add First Event (ONE SPIKE)
-
-        var grid_objects = try allocator.alloc(Object, 1);
-        grid_objects[0] = Object{ .x = 5, .y = 7, .type = CellType.SPIKE };
-        events[0].grid_objects = grid_objects;
-
-        // var inv_objects = try allocator.alloc(Object, Inventory.selfReturn().size);
-        // for (0..Inventory.selfReturn().size) |i| {
-        //     inv_objects[i] = Object{};
-        // }
-        // Object.add(&inv_objects, CellType.PAD);
-
-        events[0].areas = Areas{
-            .trigger_area = Level.usize_assign_to_f32(3, 7, 1, 1),
-            .completed_area = Level.usize_assign_to_f32(8, 7, 1, 1),
-        };
 
         eventConfig.events = events;
         return eventConfig;

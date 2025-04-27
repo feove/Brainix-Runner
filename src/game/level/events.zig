@@ -18,7 +18,6 @@ var inv_objects_used = false;
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
 
-const OBJECT_NB: usize = 1;
 const EVENT_NB: usize = 1;
 const CURRENT_EVENT: usize = 0;
 
@@ -142,7 +141,7 @@ pub const Level = struct {
         level.i_event = CURRENT_EVENT;
 
         for (0..EVENT_NB) |id_event| {
-            const eventConfig: EventConfig = try EventConfig.levelReader(allocator, id_event, "levels/lvl_1.json");
+            const eventConfig: EventConfig = try EventConfig.levelReader(allocator, id_event, EVENT_NB, "levels/lvl_1.json");
 
             level.events = eventConfig.events;
         }
