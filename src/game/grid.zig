@@ -34,6 +34,7 @@ pub const Cell = struct {
     type: CellType = CellType.AIR,
     padding: f32 = 5,
     isSelected: bool = false,
+    CanBeMove: bool = false,
 };
 
 fn cellSizeInit() void {
@@ -136,12 +137,10 @@ pub const Grid = struct {
                                 if (grid.cells[j][i].type == CellType.AIR) {
                                     grid.cells[j][i].type = inv.cellFromInventory;
                                     Inventory.clearCellFromInventory();
+                                    continue;
                                 }
-                                continue;
-                            }
 
-                            //Take item from terrain
-                            if (grid.cells[j][i].type != CellType.AIR and grid.cells[j][i].type != CellType.EMPTY) {
+                                //Take item from terrain
                                 Inventory.setCellFromInventory(grid.cells[j][i].type);
                                 grid.cells[j][i].type = CellType.AIR;
                             }

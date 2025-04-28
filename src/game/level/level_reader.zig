@@ -37,9 +37,6 @@ pub const EventConfig = struct {
         var id: usize = 0;
 
         while (iter.next()) |entry| {
-
-            //const event_number = entry.key_ptr;
-            // if (event_number.*[event_number.len - 1] == '0' + @as(u8, @intCast(id))) {
             const el = entry.value_ptr.object;
             const object_nb: usize = @as(usize, @intCast(el.get("object_nb").?.integer));
             const slow_motion_time: f32 = @as(f32, @floatCast(el.get("slow_motion_time").?.float));
@@ -104,7 +101,6 @@ pub const EventConfig = struct {
             };
 
             id += 1;
-            // }
         }
         eventConfig.events = &events;
         return &eventConfig;

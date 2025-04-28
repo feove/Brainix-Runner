@@ -118,7 +118,7 @@ pub const Event = struct {
 
         if (slow_motion_active) {
             const elapsed = current_time - slow_motion_start_time;
-            //or (Inventory.invEmpty() and Inventory.cacheEmpty()) better without
+            //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
             if (elapsed >= level.events[level.i_event].slow_motion_time) {
                 slow_motion_active = false;
                 player.time_divisor = 1;
@@ -180,7 +180,7 @@ pub const Level = struct {
 
         playerStatement(&elf);
 
-        //eventDrawing(level.i_event);
+        eventDrawing(level.i_event);
     }
 
     fn areaSetting(elf: *Elf) void {
