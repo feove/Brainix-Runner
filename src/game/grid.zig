@@ -25,6 +25,7 @@ pub const CellType = enum {
     SPIKE,
     PAD,
     EMPTY,
+    ANY,
 };
 
 pub const Cell = struct {
@@ -102,12 +103,12 @@ pub const Grid = struct {
     pub fn reset() void {
         for (0..NB_ROWS) |j| {
             for (0..NB_COLS) |i| {
-                grid.cells[j][i].object.type = .AIR;
+                grid.cells[j][i].object = Object{ .type = .AIR, .canPlayerTake = false };
             }
         }
 
         grid.cacheCell = .EMPTY;
-        Inventory.clearCellFromInventory();
+        Inventory.clearinv_cell();
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 
@@ -143,17 +144,18 @@ pub const Grid = struct {
                         if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
 
                             //Place Item over terrain from Inventory
-                            if (inv.cellFromInventory != .EMPTY) {
+                            if (inv.cell.type != .EMPTY) {
                                 if (grid.cells[j][i].object.type == .AIR) {
-                                    cellSet(i, j, inv.cellFromInventory);
+                                    //if (canBePlaced)
+                                    cellSet(i, j, inv.cell.type);
                                     grid.cells[j][i].object.canPlayerTake = true;
-                                    Inventory.clearCellFromInventory();
+                                    Inventory.clearinv_cell();
                                 }
                                 continue;
                             }
                             //Take item from terrain .object.playerCanTake
                             if (grid.cells[j][i].object.type != .AIR and grid.cells[j][i].object.canPlayerTake) {
-                                Inventory.setCellFromInventory(grid.cells[j][i].object.type);
+                                Inventory.setinv_cell(grid.cells[j][i].object.type);
                                 cellSet(i, j, .AIR);
                             }
                         }

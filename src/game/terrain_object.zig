@@ -41,11 +41,44 @@ pub const PhysicObject = struct {
     }
 };
 
+pub const AroundConfig = struct {
+    model: [3][3]CellType = .{
+        .{ .ANY, .ANY, .ANY },
+        .{ .ANY, .ANY, .ANY },
+        .{ .ANY, .ANY, .ANY },
+    },
+
+    fn cellAssign(cell: CellType) *AroundConfig {
+        var aroundConfig: AroundConfig = AroundConfig{};
+        var model: [3][3]CellType = aroundConfig.model;
+
+        switch (cell) {
+            .PAD => {
+                model[2][1] = .GROUND;
+            },
+            else => {},
+        }
+        aroundConfig.model = model;
+
+        return &aroundConfig;
+    }
+
+    //fn currentCellConfig(i: usize, j: usize) AroundConfig {}
+
+    pub fn cellAroundchecking(cell: CellType) bool {
+        const aroundConfig: AroundConfig = cellAssign(cell).*;
+        _ = aroundConfig;
+
+        return true;
+    }
+};
+
 pub const Object = struct {
     x: usize = 0,
     y: usize = 0,
     type: CellType = CellType.EMPTY,
     canPlayerTake: bool = false,
+    //aroundConfig: AroundConfig,
 
     pub fn set(self: *Object, grid: *Grid) void {
         grid.cells[self.y][self.x].object.type = self.type;

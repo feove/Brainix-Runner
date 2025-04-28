@@ -34,7 +34,7 @@ pub const Inventory = struct {
     width: f32,
     height: f32,
     size: usize,
-    cellFromInventory: CellType = CellType.EMPTY,
+    cell: Object = Object{ .type = .EMPTY },
 
     slots: []InvCell,
 
@@ -76,7 +76,7 @@ pub const Inventory = struct {
         inv.height = inventory_height;
         inv.size = SLOT_NB;
         inv.slots = slots;
-        Inventory.clearCellFromInventory();
+        Inventory.clearinv_cell();
     }
 
     pub fn slotSetting(objects: []Object) void {
@@ -103,7 +103,7 @@ pub const Inventory = struct {
     }
 
     pub fn cacheEmpty() bool {
-        return inv.cellFromInventory == CellType.EMPTY;
+        return inv.cell.type == CellType.EMPTY;
     }
 
     fn slotManagement() void {
@@ -116,17 +116,17 @@ pub const Inventory = struct {
                     inv.slots[i].isSelected = true;
 
                     if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                        if (inv.cellFromInventory == CellType.EMPTY) {
+                        if (inv.cell.type == CellType.EMPTY) {
 
                             //Take Item fom Inventory
-                            inv.cellFromInventory = inv.slots[i].object.type;
+                            inv.cell.type = inv.slots[i].object.type;
                             inv.slots[i].object.type = CellType.EMPTY;
                             continue;
                         }
 
                         if (inv.slots[i].object.type == CellType.EMPTY) {
-                            inv.slots[i].object.type = inv.cellFromInventory;
-                            inv.cellFromInventory = CellType.EMPTY;
+                            inv.slots[i].object.type = inv.cell.type;
+                            inv.cell.type = CellType.EMPTY;
                         }
                     }
                 }
@@ -134,12 +134,12 @@ pub const Inventory = struct {
         }
     }
 
-    pub fn clearCellFromInventory() void {
-        inv.cellFromInventory = CellType.EMPTY;
+    pub fn clearinv_cell() void {
+        inv.cell.type = CellType.EMPTY;
     }
 
-    pub fn setCellFromInventory(cell: CellType) void {
-        inv.cellFromInventory = cell;
+    pub fn setinv_cell(cell: CellType) void {
+        inv.cell.type = cell;
     }
 
     pub fn interactions(self: *Inventory) void {
