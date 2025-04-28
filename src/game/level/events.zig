@@ -13,7 +13,7 @@ const print = std.debug.print;
 pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
 pub var slow_motion_start_time: f64 = 0;
-var inv_objects_used = false;
+var slots_filled = false;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
@@ -210,16 +210,16 @@ pub const Level = struct {
 
     fn idle() void {
         Inventory.clear();
-        inv_objects_used = false;
+        slots_filled = false;
     }
 
     fn slow_motion(elf: *Elf) void {
         var event: Event = level.events[level.i_event];
 
-        if (inv_objects_used == false) {
+        if (slots_filled == false) {
             print("TRIGGER EVENT {d} \n", .{level.i_event});
             Inventory.slotSetting(event.inv_objects);
-            inv_objects_used = true;
+            slots_filled = true;
         }
 
         event.objectsSetUp(event.grid_objects);

@@ -271,7 +271,7 @@ pub const HitBox = struct {
                 break;
             }
 
-            const currentCell = grid.cells[j.*][i.*].type;
+            const currentCell = grid.cells[j.*][i.*].object.type;
 
             if (currentCell != CellType.AIR) {
                 return currentCell;
@@ -296,7 +296,7 @@ pub const HitBox = struct {
                 break;
             }
 
-            const currentCell = grid.cells[j.*][i.*].type;
+            const currentCell = grid.cells[j.*][i.*].object.type;
 
             if (currentCell != CellType.AIR) {
                 return currentCell;
@@ -309,10 +309,10 @@ pub const HitBox = struct {
 
     fn horizontal_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
         i_and_j_assign(grid, x, y, i, j);
-        const left = grid.cells[j.*][i.*].type;
+        const left = grid.cells[j.*][i.*].object.type;
 
         i_and_j_assign(grid, x + len, y, i, j);
-        const right = grid.cells[j.*][i.*].type;
+        const right = grid.cells[j.*][i.*].object.type;
 
         if (left == CellType.GROUND or right == CellType.GROUND) {
             return CellType.GROUND;
@@ -321,7 +321,7 @@ pub const HitBox = struct {
         var p: f32 = 0;
         while (p < len) {
             i_and_j_assign(grid, x + p, y, i, j);
-            const currentCell = grid.cells[j.*][i.*].type;
+            const currentCell = grid.cells[j.*][i.*].object.type;
             if (currentCell != CellType.AIR) {
                 return currentCell;
             }

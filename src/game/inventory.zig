@@ -24,7 +24,7 @@ pub const InvCell = struct {
     pos: rl.Vector2,
     width: f32,
     height: f32,
-    type: CellType,
+    object: Object,
     padding: f32 = SLOT_PADDING,
     isSelected: bool = false,
 };
@@ -62,7 +62,7 @@ pub const Inventory = struct {
                 .pos = .init(x + i_cast * SLOT_WIDTH + SLOT_PADDING, y + SLOT_PADDING),
                 .width = SLOT_WIDTH - 2 * SLOT_PADDING,
                 .height = SLOT_HEIGHT - 2 * SLOT_PADDING,
-                .type = CellType.EMPTY,
+                .object = Object{ .type = CellType.EMPTY },
             };
         }
 
@@ -82,20 +82,20 @@ pub const Inventory = struct {
     pub fn slotSetting(objects: []Object) void {
         if (invEmpty()) {
             for (0..SLOT_NB) |i| {
-                inv.slots[i].type = objects[i].type;
+                inv.slots[i].object.type = objects[i].type;
             }
         }
     }
 
     pub fn clear() void {
         for (0..SLOT_NB) |i| {
-            inv.slots[i].type = CellType.EMPTY;
+            inv.slots[i].object.type = CellType.EMPTY;
         }
     }
 
     pub fn invEmpty() bool {
         for (0..SLOT_NB) |i| {
-            if (inv.slots[i].type != CellType.EMPTY) {
+            if (inv.slots[i].object.type != CellType.EMPTY) {
                 return false;
             }
         }
@@ -119,13 +119,13 @@ pub const Inventory = struct {
                         if (inv.cellFromInventory == CellType.EMPTY) {
 
                             //Take Item fom Inventory
-                            inv.cellFromInventory = inv.slots[i].type;
-                            inv.slots[i].type = CellType.EMPTY;
+                            inv.cellFromInventory = inv.slots[i].object.type;
+                            inv.slots[i].object.type = CellType.EMPTY;
                             continue;
                         }
 
-                        if (inv.slots[i].type == CellType.EMPTY) {
-                            inv.slots[i].type = inv.cellFromInventory;
+                        if (inv.slots[i].object.type == CellType.EMPTY) {
+                            inv.slots[i].object.type = inv.cellFromInventory;
                             inv.cellFromInventory = CellType.EMPTY;
                         }
                     }

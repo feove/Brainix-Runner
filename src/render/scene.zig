@@ -24,7 +24,7 @@ fn drawGrid() void {
 
             drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
 
-            switch (cell.type) {
+            switch (cell.object.type) {
                 CellType.AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
                 CellType.GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
                 CellType.SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
@@ -48,7 +48,7 @@ fn drawInventory() void {
     for (0..inv.size) |i| {
         const slot = inv.slots[i];
 
-        switch (slot.type) {
+        switch (slot.object.type) {
             CellType.GROUND => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .blue),
             CellType.SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             CellType.AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),

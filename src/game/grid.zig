@@ -2,6 +2,7 @@ const std = @import("std");
 const rl = @import("raylib");
 const Elf = @import("player.zig").Elf;
 const HUD = @import("utils.zig").HUD;
+const Object = @import("terrain_object.zig").Object;
 const Inventory = @import("inventory.zig").Inventory;
 const print = @import("std").debug.print;
 
@@ -31,7 +32,7 @@ pub const Cell = struct {
     y: f32,
     width: f32,
     height: f32,
-    type: CellType = CellType.AIR,
+    object: Object,
     padding: f32 = 5,
     isSelected: bool = false,
     CanBeMove: bool = false,
@@ -51,7 +52,7 @@ pub const Grid = struct {
     height: f32,
 
     cells: [][]Cell,
-    cacheCell: CellType = CellType.EMPTY,
+    cacheCell: CellType = .EMPTY,
 
     pub fn selfReturn() Grid {
         return grid;
@@ -76,6 +77,11 @@ pub const Grid = struct {
                     .y = GRID_Y + @as(f32, @floatFromInt(i)) * CELL_HEIGHT,
                     .width = CELL_WIDTH,
                     .height = CELL_HEIGHT,
+                    .object = Object{
+                        .x = i,
+                        .y = j,
+                        .type = .AIR,
+                    },
                 };
             }
         }
@@ -96,11 +102,11 @@ pub const Grid = struct {
     pub fn reset() void {
         for (0..NB_ROWS) |j| {
             for (0..NB_COLS) |i| {
-                grid.cells[j][i].type = CellType.AIR;
+                grid.cells[j][i].object.type = .AIR;
             }
         }
 
-        grid.cacheCell = CellType.EMPTY;
+        grid.cacheCell = .EMPTY;
         Inventory.clearCellFromInventory();
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
@@ -109,9 +115,13 @@ pub const Grid = struct {
     }
 
     fn removeCell(i: usize, j: usize) void {
-        const tmpCell: CellType = grid.cells[j][i].type;
-        grid.cells[j][i].type = CellType.AIR;
+        const tmpCell: CellType = grid.cells[j][i].object.type;
+        grid.cells[j][i].object.type = .AIR;
         grid.cacheCell = tmpCell;
+    }
+
+    fn cellSet(i: usize, j: usize, cell: CellType) void {
+        grid.cells[j][i].object.type = cell;
     }
 
     pub fn cellManagement() void {
@@ -133,16 +143,18 @@ pub const Grid = struct {
                         if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
 
                             //Place Item over terrain from Inventory
-                            if (inv.cellFromInventory != CellType.EMPTY) {
-                                if (grid.cells[j][i].type == CellType.AIR) {
-                                    grid.cells[j][i].type = inv.cellFromInventory;
+                            if (inv.cellFromInventory != .EMPTY) {
+                                if (grid.cells[j][i].object.type == .AIR) {
+                                    cellSet(i, j, inv.cellFromInventory);
+                                    grid.cells[j][i].object.canPlayerTake = true;
                                     Inventory.clearCellFromInventory();
-                                    continue;
                                 }
-
-                                //Take item from terrain
-                                Inventory.setCellFromInventory(grid.cells[j][i].type);
-                                grid.cells[j][i].type = CellType.AIR;
+                                continue;
+                            }
+                            //Take item from terrain .object.playerCanTake
+                            if (grid.cells[j][i].object.type != .AIR and grid.cells[j][i].object.canPlayerTake) {
+                                Inventory.setCellFromInventory(grid.cells[j][i].object.type);
+                                cellSet(i, j, .AIR);
                             }
                         }
                     }
@@ -158,12 +170,12 @@ pub const Grid = struct {
 
         for (x..x + width) |i| {
             for (y..y + height) |j| {
-                self.cells[j][i].type = CellType.GROUND;
+                self.cells[j][i].object.type = .GROUND;
             }
         }
 
-        //self.cells[7][6].type = CellType.SPIKE;
-        // self.cells[7][4].type = CellType.GROUND;
+        //self.cells[7][6].type = .SPIKE;
+        // self.cells[7][4].type = .GROUND;
 
     }
 
@@ -172,8 +184,8 @@ pub const Grid = struct {
             return;
         }
 
-        self.cells[y][x].type = CellType.GROUND;
-        self.cells[y + 1][x].type = CellType.GROUND;
+        self.cells[y][x].object.type = .GROUND;
+        self.cells[y + 1][x].object.type = .GROUND;
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {

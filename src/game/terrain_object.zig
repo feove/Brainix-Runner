@@ -45,19 +45,21 @@ pub const Object = struct {
     x: usize = 0,
     y: usize = 0,
     type: CellType = CellType.EMPTY,
+    canPlayerTake: bool = false,
 
     pub fn set(self: *Object, grid: *Grid) void {
-        grid.cells[self.y][self.x].type = self.type;
+        grid.cells[self.y][self.x].object.type = self.type;
     }
 
     pub fn remove(self: *Object, grid: *Grid) void {
-        grid.cells[self.y][self.x].type = CellType.AIR;
+        grid.cells[self.y][self.x].object.type = CellType.AIR;
     }
 
     pub fn add(self: *[]Object, cell: CellType) void {
         for (0..self.len) |i| {
             if (self.*[i].type == CellType.EMPTY) {
                 self.*[i].type = cell;
+                self.*[i].canPlayerTake = true;
                 return;
             }
         }
