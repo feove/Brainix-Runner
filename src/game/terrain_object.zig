@@ -51,11 +51,22 @@ pub const AroundConfig = struct {
 
     pub fn cellAroundchecking(i: usize, j: usize, cell: CellType) bool {
         const config_requirement: AroundConfig = cellConfigRequirment(cell).*;
-        const current_config: AroundConfig = currentConfig(i, j).*;
-        print("\n\ncurrent_config {any}\n\n\n", .{current_config});
-        _ = config_requirement;
 
-        return true;
+        const current_config: AroundConfig = currentConfig(i, j).*;
+        //print("\n\ncurrent_config {any}\n\n\n", .{current_config});
+
+        for (0..3) |r| {
+            for (0..3) |c| {
+                if (config_requirement.model[c][r] == .ANY) {
+                    continue;
+                }
+
+                if (config_requirement.model[c][r] != current_config.model[c][r]) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     fn cellConfigRequirment(cell: CellType) *AroundConfig {
@@ -74,29 +85,33 @@ pub const AroundConfig = struct {
     }
 
     fn set_row(config: *AroundConfig, i: usize, cell: CellType) void {
-        for (0..3) |j| {
-            config.model[i][j] = cell;
+        for (0..3) |e| {
+            config.model[i][e] = cell;
         }
     }
 
     fn set_col(config: *AroundConfig, j: usize, cell: CellType) void {
-        for (0..3) |i| {
-            config.model[i][j] = cell;
+        for (0..3) |e| {
+            config.model[e][j] = cell;
         }
     }
 
     fn setVoidConfig(config: *AroundConfig, i: usize, j: usize) void {
         if (@as(i32, @intCast(j)) - 1 < 0) {
+            //print("OUT OF BAND j - 1 < 0\n", .{});
             set_row(config, 0, .VOID);
         }
         if (j + 1 >= Grid.selfReturn().nb_cols) {
-            set_col(config, 2, .VOID);
+            //print("OUT OF BAND j + 1 >= nb_cols\n", .{});
+            set_row(config, 2, .VOID);
         }
         if (@as(i32, @intCast(i)) - 1 < 0) {
+            //print("OUT OF BAND i - 1 < 0\n", .{});
             set_col(config, 0, .VOID);
         }
         if (i + 1 >= Grid.selfReturn().nb_rows) {
-            set_row(config, 2, .VOID);
+            // print("OUT OF BAND i + 1 > nb_rows\n", .{});
+            set_col(config, 2, .VOID);
         }
     }
     fn currentConfig(i: usize, j: usize) *AroundConfig {
@@ -104,15 +119,12 @@ pub const AroundConfig = struct {
         setVoidConfig(&config, i, j);
 
         //tl corner
-        // const r: usize = @as(usize, @intCast(@as(i32, @intCast(i)) - 1));
-        // const c: usize = @as(usize, @intCast(@as(i32, @intCast(j)) - 1));
-
-        const r = if (i > 0) i - 1 else 0;
-        const c = if (j > 0) j - 1 else 0;
+        const r = if (i == 0) i else if (i == Grid.selfReturn().nb_rows) i - 3 else i - 1;
+        const c = if (j == 0) j else if (j == Grid.selfReturn().nb_cols) j - 3 else j - 1;
 
         for (0..3) |di| {
             for (0..3) |dj| {
-                if (config.model[di][dj] == .VOID) {
+                if (config.model[dj][di] == .VOID) {
                     continue;
                 }
                 config.model[dj][di] = Grid.selfReturn().cells[c + dj][r + di].object.type;

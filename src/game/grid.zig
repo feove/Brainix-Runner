@@ -149,7 +149,9 @@ pub const Grid = struct {
                             if (inv.cell.type != .EMPTY) {
                                 if (grid.cells[j][i].object.type == .AIR) {
                                     //if (canBePlaced)
-                                    _ = AroundConfig.cellAroundchecking(i, j, grid.cells[j][i].object.type);
+                                    if (AroundConfig.cellAroundchecking(i, j, inv.cell.type)) {
+                                        return;
+                                    }
 
                                     cellSet(i, j, inv.cell.type);
                                     grid.cells[j][i].object.canPlayerTake = true;
