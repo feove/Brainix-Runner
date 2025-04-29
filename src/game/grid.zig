@@ -4,6 +4,7 @@ const Elf = @import("player.zig").Elf;
 const HUD = @import("utils.zig").HUD;
 const Object = @import("terrain_object.zig").Object;
 const Inventory = @import("inventory.zig").Inventory;
+const AroundConfig = @import("terrain_object.zig").AroundConfig;
 const print = @import("std").debug.print;
 
 pub var grid: Grid = undefined;
@@ -26,6 +27,7 @@ pub const CellType = enum {
     PAD,
     EMPTY,
     ANY,
+    VOID,
 };
 
 pub const Cell = struct {
@@ -147,6 +149,8 @@ pub const Grid = struct {
                             if (inv.cell.type != .EMPTY) {
                                 if (grid.cells[j][i].object.type == .AIR) {
                                     //if (canBePlaced)
+                                    _ = AroundConfig.cellAroundchecking(i, j, grid.cells[j][i].object.type);
+
                                     cellSet(i, j, inv.cell.type);
                                     grid.cells[j][i].object.canPlayerTake = true;
                                     Inventory.clearinv_cell();

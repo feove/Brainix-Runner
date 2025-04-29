@@ -6,6 +6,7 @@ const HitBox = @import("player.zig").HitBox;
 const Grid = @import("grid.zig").Grid;
 const PlayerState = @import("player.zig").PlayerState;
 const event = @import("level/events.zig");
+const print = std.debug.print;
 
 pub const AutoMovements = enum {
     RIGHT,
@@ -48,7 +49,16 @@ pub const AroundConfig = struct {
         .{ .ANY, .ANY, .ANY },
     },
 
-    fn cellAssign(cell: CellType) *AroundConfig {
+    pub fn cellAroundchecking(i: usize, j: usize, cell: CellType) bool {
+        const config_requirement: AroundConfig = cellConfigRequirment(cell).*;
+        const current_config: AroundConfig = currentConfig(i, j).*;
+        print("\n\ncurrent_config {any}\n\n\n", .{current_config});
+        _ = config_requirement;
+
+        return true;
+    }
+
+    fn cellConfigRequirment(cell: CellType) *AroundConfig {
         var aroundConfig: AroundConfig = AroundConfig{};
         var model: [3][3]CellType = aroundConfig.model;
 
@@ -63,13 +73,53 @@ pub const AroundConfig = struct {
         return &aroundConfig;
     }
 
-    //fn currentCellConfig(i: usize, j: usize) AroundConfig {}
+    fn set_row(config: *AroundConfig, i: usize, cell: CellType) void {
+        for (0..3) |j| {
+            config.model[i][j] = cell;
+        }
+    }
 
-    pub fn cellAroundchecking(cell: CellType) bool {
-        const aroundConfig: AroundConfig = cellAssign(cell).*;
-        _ = aroundConfig;
+    fn set_col(config: *AroundConfig, j: usize, cell: CellType) void {
+        for (0..3) |i| {
+            config.model[i][j] = cell;
+        }
+    }
 
-        return true;
+    fn setVoidConfig(config: *AroundConfig, i: usize, j: usize) void {
+        if (@as(i32, @intCast(j)) - 1 < 0) {
+            set_row(config, 0, .VOID);
+        }
+        if (j + 1 >= Grid.selfReturn().nb_cols) {
+            set_col(config, 2, .VOID);
+        }
+        if (@as(i32, @intCast(i)) - 1 < 0) {
+            set_col(config, 0, .VOID);
+        }
+        if (i + 1 >= Grid.selfReturn().nb_rows) {
+            set_row(config, 2, .VOID);
+        }
+    }
+    fn currentConfig(i: usize, j: usize) *AroundConfig {
+        var config: AroundConfig = AroundConfig{};
+        setVoidConfig(&config, i, j);
+
+        //tl corner
+        // const r: usize = @as(usize, @intCast(@as(i32, @intCast(i)) - 1));
+        // const c: usize = @as(usize, @intCast(@as(i32, @intCast(j)) - 1));
+
+        const r = if (i > 0) i - 1 else 0;
+        const c = if (j > 0) j - 1 else 0;
+
+        for (0..3) |di| {
+            for (0..3) |dj| {
+                if (config.model[di][dj] == .VOID) {
+                    continue;
+                }
+                config.model[dj][di] = Grid.selfReturn().cells[c + dj][r + di].object.type;
+            }
+        }
+
+        return &config;
     }
 };
 
