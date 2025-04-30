@@ -161,7 +161,7 @@ pub const Object = struct {
     }
 
     //Need PAD only over ground condition
-    pub fn padAction(elf: *Elf, respawn_point: rl.Vector2) void {
+    pub fn padAction(elf: *Elf) void {
         const PadDetectionSides = [_]CellType{
             elf.hitBox.middleLeggs,
         };
@@ -173,19 +173,16 @@ pub const Object = struct {
                 elf.isOnGround = false;
             }
         }
-
-        _ = respawn_point;
     }
 
-    pub fn spikeAction(elf: *Elf, respawn_point: rl.Vector2) void {
+    pub fn spikeAction(elf: *Elf) void {
         const SpikeDetectionSides = [_]CellType{
             elf.hitBox.middleLeggs,
             elf.hitBox.middleBody,
         };
 
         if (HitBox.isInCollision(SpikeDetectionSides[0..], CellType.SPIKE)) {
-            elf.x = respawn_point.x;
-            elf.y = respawn_point.y;
+            Elf.elfRespawning();
             elf.physics.auto_moving = AutoMovements.RIGHT;
             elf.state = PlayerState.DEAD;
             event.playerEventstatus = event.PlayerEventStatus.IDLE_AREA;

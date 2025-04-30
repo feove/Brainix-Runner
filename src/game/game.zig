@@ -7,7 +7,7 @@ const objects = @import("../game/level/events.zig");
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
-pub fn run() void {
+pub fn run() !void {
     rl.beginDrawing();
     defer rl.endDrawing();
 
@@ -18,7 +18,7 @@ pub fn run() void {
 
     //Update Cursor's position
     utils.hud.refresh();
-    objects.level.refresh();
+    try objects.level.refresh();
 
     render();
 }

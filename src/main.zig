@@ -32,7 +32,7 @@ pub fn main() anyerror!void {
             rl.toggleFullscreen();
         }
 
-        game.run();
+        try game.run();
     }
 
     rl.closeWindow();

@@ -13,12 +13,9 @@ const Level = @import("events.zig").Level;
 
 pub const EventConfig = struct {
     events: *[]Event,
+    event_nb: usize,
 
-    pub fn levelReader(allocator: std.mem.Allocator, size: usize, level_pathway: []const u8) !*EventConfig {
-        var eventConfig: EventConfig = undefined;
-
-        var events = try allocator.alloc(Event, size);
-
+    pub fn levelReader(allocator: std.mem.Allocator, level_pathway: []const u8) !*EventConfig {
         var file = try std.fs.cwd().openFile(level_pathway, .{});
         defer file.close();
 
@@ -36,7 +33,16 @@ pub const EventConfig = struct {
 
         var id: usize = 0;
 
+        const size: usize = @as(usize, @intCast(iter.values[0].integer));
+
+        var eventConfig: EventConfig = undefined;
+        var events = try allocator.alloc(Event, size);
+
         while (iter.next()) |entry| {
+            if (entry.key_ptr.*[6] == 'n') {
+                continue;
+            }
+
             const el = entry.value_ptr.object;
             const object_nb: usize = @as(usize, @intCast(el.get("object_nb").?.integer));
             const slow_motion_time: f32 = @as(f32, @floatCast(el.get("slow_motion_time").?.float));
@@ -103,6 +109,7 @@ pub const EventConfig = struct {
             id += 1;
         }
         eventConfig.events = &events;
+        eventConfig.event_nb = size;
         return &eventConfig;
     }
 };

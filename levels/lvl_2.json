@@ -11,7 +11,7 @@
             {
                 "x" : 5,
                 "y" : 7,
-                "type" : "SPIKE"
+                "type" : "GROUND"
             }
         ],
         "inv_objects" : [   

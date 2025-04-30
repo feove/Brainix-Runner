@@ -18,6 +18,8 @@ pub var time_divisor: f32 = 1.0;
 const ELF_DEFAULT_SPEED: f32 = 170.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
+var RESPAWN_POINT: rl.Vector2 = undefined;
+
 pub const PlayerState = enum {
     ALIVE,
     RESPAWNING,
@@ -40,6 +42,8 @@ pub fn initElf() void {
         .hitBox = HitBox{},
         .repulsive_force = 500.0,
     };
+
+    RESPAWN_POINT = .init(initGrid.x, initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y);
 }
 
 const gravity: f32 = 1500.0;
@@ -89,9 +93,9 @@ pub const Elf = struct {
             self.physics.velocity_x = 0;
         }
 
-        Object.padAction(&elf, .init(-1.0, -1.0));
+        Object.padAction(&elf);
 
-        Object.spikeAction(&elf, .init(initGrid.x, initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y));
+        Object.spikeAction(&elf);
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -204,6 +208,11 @@ pub const Elf = struct {
             return true;
         }
         return false;
+    }
+
+    pub fn elfRespawning() void {
+        elf.x = RESPAWN_POINT.x;
+        elf.y = RESPAWN_POINT.y;
     }
 
     pub fn drawElf(self: *Elf) void {

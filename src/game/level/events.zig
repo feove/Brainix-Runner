@@ -8,6 +8,8 @@ const CellType = @import("../grid.zig").CellType;
 const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
 const EventConfig = @import("level_reader.zig").EventConfig;
+var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+const alloc = gpa.allocator();
 const print = std.debug.print;
 
 pub var level: Level = undefined;
@@ -19,10 +21,15 @@ var slots_filled = false;
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
 
-const LEVEL_NB: usize = 1;
-const CURRENT_LEVEL: usize = 1;
+const LEVEL_NB: usize = 2;
+var CURRENT_LEVEL: usize = 0;
 
-const EVENT_NB: usize = 2;
+const level_paths: []const []const u8 = &.{
+    "levels/lvl_1.json",
+    "levels/lvl_2.json",
+};
+
+var EVENT_NB: usize = undefined;
 const CURRENT_EVENT: usize = 0;
 
 pub const PlayerEventStatus = enum {
@@ -149,12 +156,14 @@ pub const Level = struct {
         //must allocate event_nb array of each lvl
 
         //Events Init
-        level.event_nb = EVENT_NB; //TODO Will be Defined by array and current level index
         level.i_event = CURRENT_EVENT;
 
-        const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level.event_nb, "levels/lvl_1.json");
+        const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level_paths[CURRENT_LEVEL]);
 
         level.events = eventConfig.*.events.*;
+        EVENT_NB = eventConfig.*.event_nb;
+        level.event_nb = EVENT_NB;
+        reset();
     }
 
     pub fn reset() void {
@@ -163,6 +172,12 @@ pub const Level = struct {
         for (0..level.event_nb) |i| {
             level.events[i].already_triggered = false;
         }
+
+        Grid.reset();
+
+        levelStatement = .STARTING;
+
+        Elf.elfRespawning();
     }
 
     pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
@@ -182,13 +197,13 @@ pub const Level = struct {
         return .init(x, y, h, w); //flex
     }
 
-    pub fn refresh(self: *Level) void {
+    pub fn refresh(self: *Level) !void {
         var elf: Elf = Elf.selfReturn();
         _ = self;
 
         //TMP Conditions
         if (levelStatement == .PRE_COMPLETED or levelStatement == .COMPLETED) {
-            levelState();
+            try levelState();
             return;
         }
 
@@ -262,7 +277,7 @@ pub const Level = struct {
         }
     }
 
-    fn levelState() void {
+    fn levelState() !void {
         switch (levelStatement) {
             .STARTING => {},
             .ONGOING => {},
@@ -271,6 +286,20 @@ pub const Level = struct {
             },
             .COMPLETED => {
                 print("LEVEL COMPLETED \n", .{});
+                CURRENT_LEVEL += 1;
+
+                if (CURRENT_LEVEL == LEVEL_NB) {
+                    CURRENT_LEVEL = 0;
+                    print("GAME ENDED \n", .{});
+
+                    return;
+                }
+
+                level.event_nb = undefined;
+                level.events = undefined;
+                level.i_event = 0;
+
+                try init(alloc);
             },
         }
     }

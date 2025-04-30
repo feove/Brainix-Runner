@@ -31,6 +31,8 @@ pub const CellType = enum {
     DOOR,
 };
 
+pub var replaceable: []CellType = undefined;
+
 pub const Cell = struct {
     x: f32,
     y: f32,
@@ -100,6 +102,11 @@ pub const Grid = struct {
             .height = CELL_HEIGHT * NB_ROWS,
         };
 
+        replaceable = try allocator.alloc(CellType, 3);
+        replaceable[0] = .AIR;
+        replaceable[1] = .EMPTY;
+        replaceable[2] = .DOOR;
+
         reset();
     }
 
@@ -126,6 +133,15 @@ pub const Grid = struct {
 
     fn cellSet(i: usize, j: usize, cell: CellType) void {
         grid.cells[j][i].object.type = cell;
+    }
+
+    fn canGetCell(cell: CellType) bool {
+        for (replaceable) |cellReplace| {
+            if (cell == cellReplace) {
+                return false;
+            }
+        }
+        return true;
     }
 
     pub fn cellManagement() void {
@@ -161,7 +177,7 @@ pub const Grid = struct {
                                 continue;
                             }
                             //Take item from terrain .object.playerCanTake
-                            if (grid.cells[j][i].object.type != .AIR and grid.cells[j][i].object.canPlayerTake) {
+                            if (grid.cells[j][i].object.canPlayerTake) {
                                 Inventory.setinv_cell(grid.cells[j][i].object.type);
                                 cellSet(i, j, .AIR);
                             }
