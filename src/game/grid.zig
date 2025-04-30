@@ -28,6 +28,7 @@ pub const CellType = enum {
     EMPTY,
     ANY,
     VOID,
+    DOOR,
 };
 
 pub const Cell = struct {
@@ -191,9 +192,8 @@ pub const Grid = struct {
         if (x > self.nb_cols or y + 1 > self.nb_rows) {
             return;
         }
-
-        self.cells[y][x].object.type = .GROUND;
-        self.cells[y + 1][x].object.type = .GROUND;
+        self.cells[y][x].object.type = .DOOR;
+        self.cells[y + 1][x].object.type = .DOOR;
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {

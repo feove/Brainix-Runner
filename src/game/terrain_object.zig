@@ -173,6 +173,7 @@ pub const Object = struct {
                 elf.isOnGround = false;
             }
         }
+
         _ = respawn_point;
     }
 

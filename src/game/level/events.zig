@@ -12,6 +12,7 @@ const print = std.debug.print;
 
 pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
+pub var stop_slow_motion: bool = false;
 pub var slow_motion_start_time: f64 = 0;
 var slots_filled = false;
 
@@ -31,6 +32,7 @@ pub const PlayerEventStatus = enum {
 const LevelStatement = enum {
     STARTING,
     ONGOING,
+    PRE_COMPLETED,
     COMPLETED,
 };
 
@@ -119,13 +121,18 @@ pub const Event = struct {
         if (slow_motion_active) {
             const elapsed = current_time - slow_motion_start_time;
             //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
-            if (elapsed >= level.events[level.i_event].slow_motion_time) {
+            if (elapsed >= level.events[level.i_event].slow_motion_time or stop_slow_motion) {
                 slow_motion_active = false;
                 player.time_divisor = 1;
+                stop_slow_motion = false;
 
-                playerEventstatus = PlayerEventStatus.IDLE_AREA;
+                playerEventstatus = .IDLE_AREA;
             }
         }
+    }
+
+    pub fn stopSlowMotion() void {
+        stop_slow_motion = true;
     }
 };
 
@@ -173,9 +180,13 @@ pub const Level = struct {
     pub fn refresh(self: *Level) void {
         var elf: Elf = Elf.selfReturn();
         _ = self;
-        if (levelStatement == LevelStatement.COMPLETED) {
+
+        //TMP Conditions
+        if (levelStatement == .PRE_COMPLETED or levelStatement == .COMPLETED) {
+            levelState();
             return;
         }
+
         areaSetting(&elf);
 
         playerStatement(&elf);
@@ -187,15 +198,15 @@ pub const Level = struct {
         var area: Areas = level.events[level.i_event].areas;
 
         if (area.player_in_area(elf, area.trigger_area) and !level.events[level.i_event].already_triggered) {
-            playerEventstatus = PlayerEventStatus.SLOW_MOTION_AREA;
+            playerEventstatus = .SLOW_MOTION_AREA;
         }
 
         if (area.player_in_area(elf, area.restricted_area)) {
-            playerEventstatus = PlayerEventStatus.RESTRICTED_AREA;
+            playerEventstatus = .RESTRICTED_AREA;
         }
 
         if (area.player_in_area(elf, area.completed_area)) {
-            playerEventstatus = PlayerEventStatus.COMPLETED_AREA;
+            playerEventstatus = .COMPLETED_AREA;
         }
     }
 
@@ -203,7 +214,7 @@ pub const Level = struct {
         switch (playerEventstatus) {
             PlayerEventStatus.IDLE_AREA => idle(),
             PlayerEventStatus.SLOW_MOTION_AREA => slow_motion(elf),
-            PlayerEventStatus.RESTRICTED_AREA => print("RESTRICTED AREA\n", .{}),
+            PlayerEventStatus.RESTRICTED_AREA => print("IN RESTRICTED AREA\n", .{}),
             PlayerEventStatus.COMPLETED_AREA => complete(),
         }
     }
@@ -217,7 +228,7 @@ pub const Level = struct {
         var event: Event = level.events[level.i_event];
 
         if (slots_filled == false) {
-            print("TRIGGER EVENT {d} \n", .{level.i_event});
+            print("EVENT {d} TRIGGERED\n", .{level.i_event});
             Inventory.slotSetting(event.inv_objects);
             slots_filled = true;
         }
@@ -230,7 +241,7 @@ pub const Level = struct {
     fn complete() void {
         var event: Event = level.events[level.i_event];
 
-        print("COMPLETED EVENT {d}\n", .{level.i_event});
+        print("EVENT {d} COMPLETED\n", .{level.i_event});
 
         event.objectsCleaning(event.grid_objects);
 
@@ -242,14 +253,36 @@ pub const Level = struct {
         level.i_event += 1;
 
         if (level.i_event == level.event_nb) {
-            print("LEVEL COMPLETED \n", .{});
-            levelStatement = LevelStatement.COMPLETED;
-            return;
+            levelStatement = .PRE_COMPLETED;
         }
     }
 
+    fn levelState() void {
+        switch (levelStatement) {
+            .STARTING => {},
+            .ONGOING => {},
+            .PRE_COMPLETED => {
+                in_ending_level();
+            },
+            .COMPLETED => {
+                print("LEVEL COMPLETED \n", .{});
+            },
+        }
+    }
+
+    fn in_ending_level() void {
+        if (Level.openTheDoor()) {
+            levelStatement = .COMPLETED;
+        }
+    }
+
+    fn openTheDoor() bool {
+        //Anims
+        return Elf.playerInDoor();
+    }
+
     fn eventDrawing(event_num: usize) void {
-        if (levelStatement == LevelStatement.COMPLETED or level.events[level.i_event].already_triggered) {
+        if (levelStatement == .COMPLETED or levelStatement == .PRE_COMPLETED or level.events[level.i_event].already_triggered) {
             return;
         }
         const event: Event = level.events[event_num];

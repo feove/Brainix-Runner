@@ -25,10 +25,11 @@ fn drawGrid() void {
             drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
 
             switch (cell.object.type) {
-                CellType.AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
-                CellType.GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
-                CellType.SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
-                CellType.PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
+                .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
+                .GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
+                .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
+                .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
+                .DOOR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown),
                 else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
             }
 

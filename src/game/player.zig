@@ -197,6 +197,15 @@ pub const Elf = struct {
         }
     }
 
+    pub fn playerInDoor() bool {
+        //print("{any}\n", .{elf.hitBox.middleBody});
+
+        if (elf.hitBox.middleBody == .DOOR or elf.hitBox.middleLeggs == .DOOR) {
+            return true;
+        }
+        return false;
+    }
+
     pub fn drawElf(self: *Elf) void {
         rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
     }
