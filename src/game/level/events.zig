@@ -291,13 +291,8 @@ pub const Level = struct {
                 if (CURRENT_LEVEL == LEVEL_NB) {
                     CURRENT_LEVEL = 0;
                     print("GAME ENDED \n", .{});
-
                     return;
                 }
-
-                level.event_nb = undefined;
-                level.events = undefined;
-                level.i_event = 0;
 
                 try init(alloc);
             },

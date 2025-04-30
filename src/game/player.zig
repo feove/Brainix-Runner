@@ -104,7 +104,6 @@ pub const Elf = struct {
         if (rl.isKeyDown(rl.KeyboardKey.left) or self.physics.auto_moving == AutoMovements.LEFT) {
             x_movement -= self.speed * dt - self.physics.velocity_x;
         }
-        //print("x_movement : {d}\n", .{x_movement});
 
         self.elfMovement(x_movement, self.physics.velocity_y * dt);
 
