@@ -19,6 +19,9 @@ var slots_filled = false;
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
 
+const LEVEL_NB: usize = 1;
+const CURRENT_LEVEL: usize = 1;
+
 const EVENT_NB: usize = 2;
 const CURRENT_EVENT: usize = 0;
 
@@ -143,11 +146,13 @@ pub const Level = struct {
 
     pub fn init(allocator: std.mem.Allocator) !void {
 
+        //must allocate event_nb array of each lvl
+
         //Events Init
-        level.event_nb = EVENT_NB;
+        level.event_nb = EVENT_NB; //TODO Will be Defined by array and current level index
         level.i_event = CURRENT_EVENT;
 
-        const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, EVENT_NB, "levels/lvl_1.json");
+        const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level.event_nb, "levels/lvl_1.json");
 
         level.events = eventConfig.*.events.*;
     }
