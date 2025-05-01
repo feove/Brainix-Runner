@@ -35,7 +35,6 @@ pub const Inventory = struct {
     height: f32,
     size: usize,
     cell: Object = Object{ .type = .EMPTY },
-
     slots: []InvCell,
 
     pub fn selfReturn() Inventory {
@@ -87,6 +86,17 @@ pub const Inventory = struct {
         }
     }
 
+    fn remove(current: usize, cell: CellType) void {
+        const object_size: usize = Object.objectSize(cell);
+        for (0..object_size) |i| { //Remove Only to the right
+            inv.slots[current + i].object.type = .EMPTY;
+        }
+        //HardCode
+        if (current > 0 and inv.slots[current - 1].object.type == cell) {
+            inv.slots[current - 1].object.type = .EMPTY;
+        }
+    }
+
     pub fn clear() void {
         for (0..SLOT_NB) |i| {
             inv.slots[i].object.type = CellType.EMPTY;
@@ -120,7 +130,7 @@ pub const Inventory = struct {
 
                             //Take Item fom Inventory
                             inv.cell.type = inv.slots[i].object.type;
-                            inv.slots[i].object.type = CellType.EMPTY;
+                            remove(i, inv.slots[i].object.type);
                             continue;
                         }
 

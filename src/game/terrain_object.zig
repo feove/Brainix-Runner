@@ -6,6 +6,7 @@ const HitBox = @import("player.zig").HitBox;
 const Grid = @import("grid.zig").Grid;
 const PlayerState = @import("player.zig").PlayerState;
 const event = @import("level/events.zig");
+const Inventory = @import("inventory.zig").Inventory;
 const print = std.debug.print;
 
 pub const AutoMovements = enum {
@@ -138,9 +139,9 @@ pub const AroundConfig = struct {
 pub const Object = struct {
     x: usize = 0,
     y: usize = 0,
+    width: usize = 1,
     type: CellType = CellType.EMPTY,
     canPlayerTake: bool = false,
-    //aroundConfig: AroundConfig,
 
     pub fn set(self: *Object, grid: *Grid) void {
         grid.cells[self.y][self.x].object.type = self.type;
@@ -151,13 +152,38 @@ pub const Object = struct {
     }
 
     pub fn add(self: *[]Object, cell: CellType) void {
-        for (0..self.len) |i| {
-            if (self.*[i].type == CellType.EMPTY) {
-                self.*[i].type = cell;
-                self.*[i].canPlayerTake = true;
-                return;
+        const object_size: usize = objectSize(cell);
+        if (cellRemaings(self) >= object_size) {
+            for (0..self.len) |i| {
+                if (self.*[i].type == CellType.EMPTY) {
+                    for (0..object_size) |j| {
+                        self.*[j + i].type = cell;
+                        self.*[j + i].width = object_size;
+                        self.*[j + i].canPlayerTake = true;
+                    }
+
+                    return;
+                }
             }
         }
+    }
+
+    pub fn objectSize(cell: CellType) usize {
+        switch (cell) {
+            .BOOST => return 2,
+            else => return 1,
+        }
+    }
+
+    pub fn cellRemaings(self: *[]Object) usize { //[]Object
+        var counter: usize = 0;
+
+        for (0..self.len) |j| {
+            if (self.*[j].type == .EMPTY) {
+                counter += 1;
+            }
+        }
+        return counter;
     }
 
     //Need PAD only over ground condition

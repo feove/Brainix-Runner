@@ -15,7 +15,8 @@
             }
         ],
         "inv_objects" : [   
-            "PAD"
+            "PAD",
+            "BOOST"
         ],
         "areas" : {
             "triggered" : {

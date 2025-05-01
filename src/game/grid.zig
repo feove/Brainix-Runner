@@ -29,6 +29,7 @@ pub const CellType = enum {
     ANY,
     VOID,
     DOOR,
+    BOOST,
 };
 
 pub var replaceable: []CellType = undefined;
