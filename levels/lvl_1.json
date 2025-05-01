@@ -4,7 +4,7 @@
     "event_0" : {
 
         "object_nb" : 1,
-        "slow_motion_time" : 2.0,
+        "slow_motion_time" : 100.0,
         "time_divisor" : 3.0,
         "already_triggered" :  false,
         "grid_objects" : [
@@ -15,7 +15,8 @@
             }
         ],
         "inv_objects" : [   
-            "PAD",
+            
+            "BOOST",
             "BOOST"
         ],
         "areas" : {

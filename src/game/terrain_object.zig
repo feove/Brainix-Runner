@@ -175,7 +175,7 @@ pub const Object = struct {
         }
     }
 
-    pub fn cellRemaings(self: *[]Object) usize { //[]Object
+    pub fn cellRemaings(self: *[]Object) usize { //[]Object Only
         var counter: usize = 0;
 
         for (0..self.len) |j| {

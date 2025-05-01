@@ -86,17 +86,6 @@ pub const Inventory = struct {
         }
     }
 
-    fn remove(current: usize, cell: CellType) void {
-        const object_size: usize = Object.objectSize(cell);
-        for (0..object_size) |i| { //Remove Only to the right
-            inv.slots[current + i].object.type = .EMPTY;
-        }
-        //HardCode
-        if (current > 0 and inv.slots[current - 1].object.type == cell) {
-            inv.slots[current - 1].object.type = .EMPTY;
-        }
-    }
-
     pub fn clear() void {
         for (0..SLOT_NB) |i| {
             inv.slots[i].object.type = CellType.EMPTY;
@@ -114,6 +103,60 @@ pub const Inventory = struct {
 
     pub fn cacheEmpty() bool {
         return inv.cell.type == CellType.EMPTY;
+    }
+
+    fn remove(current: usize, cell: CellType) void {
+        const object_size: usize = Object.objectSize(cell);
+
+        inv.slots[current].object.type = .EMPTY;
+
+        if (object_size == 1) {
+            return;
+        }
+
+        if (current > 0 and inv.slots[current - 1].object.type == cell) {
+            inv.slots[current - 1].object.type = .EMPTY;
+            return;
+        }
+
+        inv.slots[current + 1].object.type = .EMPTY;
+    }
+
+    fn place(current: usize, cell: CellType) void {
+        const object_size: usize = Object.objectSize(cell);
+        const free_slots: usize = cellRemaings(inv.slots);
+
+        inv.cell.type = CellType.EMPTY;
+
+        //Issue
+        if (free_slots < object_size) {
+            return;
+        }
+
+        if (inv.slots[current].object.type == .EMPTY) {
+            inv.slots[current].object.type = cell;
+        }
+
+        if (object_size > 1) {
+            if (current + 1 < inv.size and inv.slots[current + 1].object.type == .EMPTY) {
+                inv.slots[current + 1].object.type = cell;
+                return;
+            }
+
+            if (current > 0 and inv.slots[current - 1].object.type == .EMPTY) {
+                inv.slots[current - 1].object.type = cell;
+            }
+        }
+    }
+
+    fn cellRemaings(invCell: []InvCell) usize {
+        var counter: usize = 0;
+        for (invCell) |cell| {
+            if (cell.object.type == .EMPTY) {
+                counter += 1;
+            }
+        }
+        return counter;
     }
 
     fn slotManagement() void {
@@ -135,8 +178,9 @@ pub const Inventory = struct {
                         }
 
                         if (inv.slots[i].object.type == CellType.EMPTY) {
-                            inv.slots[i].object.type = inv.cell.type;
-                            inv.cell.type = CellType.EMPTY;
+                            //inv.slots[i].object.type = inv.cell.type;
+
+                            place(i, inv.cell.type);
                         }
                     }
                 }
