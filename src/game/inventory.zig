@@ -145,6 +145,7 @@ pub const Inventory = struct {
             if (current > 0 and inv.slots[current - 1].object.type == .EMPTY) {
                 inv.slots[current - 1].object.type = cell;
                 inv.slots[current].object.type = cell;
+
                 return true;
             }
         }

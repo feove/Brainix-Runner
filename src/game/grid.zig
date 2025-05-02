@@ -132,6 +132,15 @@ pub const Grid = struct {
         grid.cacheCell = tmpCell;
     }
 
+    fn canGetCell(cell: CellType) bool {
+        for (replaceable) |cellReplace| {
+            if (cell == cellReplace) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     fn cellSet(i: usize, j: usize, cell: CellType) bool {
         const object_size: usize = Object.objectSize(cell);
 
@@ -145,37 +154,28 @@ pub const Grid = struct {
             grid.cells[j][i + 1].object.type = cell;
             grid.cells[j][i + 1].object.canPlayerTake = true;
             grid.cells[j][i + 1].object.tail = true;
-
+            grid.cells[j][i].object.tail = false;
             return true;
         }
 
         return false;
     }
 
-    fn canGetCell(cell: CellType) bool {
-        for (replaceable) |cellReplace| {
-            if (cell == cellReplace) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     fn removeFromGrid(i: usize, j: usize, cell: CellType) void {
         const object_size: usize = Object.objectSize(cell);
+        const current_cell = grid.cells[j][i].object;
+        const next_cell = grid.cells[j][i + 1].object;
 
         grid.cells[j][i].object.type = .AIR;
 
         if (object_size > 1) {
-            if (i < grid.nb_cols - 1 and grid.cells[j][i + 1].object.type == cell and grid.cells[j][i + 1].object.tail) {
-                grid.cells[j][i + 1].object.type = .AIR;
-                grid.cells[j][i + 1].object.tail = false;
-                return;
+            if (i < grid.nb_cols - 1 and next_cell.type == cell) {
+                if (!current_cell.tail) {
+                    grid.cells[j][i + 1].object.type = .AIR;
+                    return;
+                }
             }
-
-            if (i > 0 and grid.cells[j][i - 1].object.type == cell) {
-                grid.cells[j][i - 1].object.type = .AIR;
-            }
+            grid.cells[j][i - 1].object.type = .AIR;
         }
     }
 
