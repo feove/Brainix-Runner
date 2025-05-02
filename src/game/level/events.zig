@@ -133,9 +133,9 @@ pub const Event = struct {
             //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
             if (elapsed >= level.events[level.i_event].slow_motion_time or stop_slow_motion) {
                 slow_motion_active = false;
-                player.time_divisor = 1;
                 stop_slow_motion = false;
 
+                player.time_divisor = 1;
                 playerEventstatus = .IDLE_AREA;
             }
         }

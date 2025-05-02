@@ -48,6 +48,7 @@ pub fn initElf() void {
 
 const gravity: f32 = 1500.0;
 const jump_force: f32 = -800.0;
+const boost_force: f32 = 0.1;
 
 pub const Elf = struct {
     x: f32,
@@ -60,6 +61,7 @@ pub const Elf = struct {
     hitBox: HitBox,
     repulsive_force: f32,
     jump_force: f32 = jump_force,
+    boost_force: f32 = boost_force,
     state: PlayerState = PlayerState.ALIVE,
 
     pub fn selfReturn() Elf {
@@ -96,6 +98,8 @@ pub const Elf = struct {
         Object.padAction(&elf);
 
         Object.spikeAction(&elf);
+
+        Object.boostAction(&elf);
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {

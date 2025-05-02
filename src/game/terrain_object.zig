@@ -41,6 +41,10 @@ pub const PhysicObject = struct {
 
         self.jump = false;
     }
+
+    pub fn boostEffect(self: *PhysicObject, boost_force: f32) void {
+        self.velocity_x = boost_force;
+    }
 };
 
 pub const AroundConfig = struct {
@@ -195,7 +199,6 @@ pub const Object = struct {
         return counter;
     }
 
-    //Need PAD only over ground condition
     pub fn padAction(elf: *Elf) void {
         const PadDetectionSides = [_]CellType{
             elf.hitBox.middleLeggs,
@@ -207,6 +210,18 @@ pub const Object = struct {
                 elf.physics.applyJump(elf.jump_force);
                 elf.isOnGround = false;
             }
+        }
+    }
+
+    pub fn boostAction(elf: *Elf) void {
+        const PadDetectionSides = [_]CellType{
+            elf.hitBox.middleLeggs,
+            elf.hitBox.middleBody,
+        };
+
+        if (HitBox.isInCollision(PadDetectionSides[0..], .BOOST)) {
+            elf.physics.boostEffect(elf.boost_force);
+            // event.Event.stopSlowMotion();
         }
     }
 

@@ -127,9 +127,6 @@ pub const Inventory = struct {
 
     fn place(current: usize, cell: CellType) bool {
         const object_size: usize = Object.objectSize(cell);
-        //   const free_slots: usize = cellRemaings(inv.slots);
-
-        //New
 
         if (inv.slots[current].object.type == .EMPTY) {
             if (object_size == 1) {
@@ -149,7 +146,6 @@ pub const Inventory = struct {
                 return true;
             }
         }
-
         return false;
     }
 
