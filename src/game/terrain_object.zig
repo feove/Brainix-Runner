@@ -141,18 +141,27 @@ pub const Object = struct {
     y: usize = 0,
     width: usize = 1,
     type: CellType = CellType.EMPTY,
+    tail: bool = false, //Only For Boost
     canPlayerTake: bool = false,
 
     pub fn set(self: *Object, grid: *Grid) void {
+        const object_size: usize = objectSize(self.type);
         grid.cells[self.y][self.x].object.type = self.type;
+        if (object_size == 2) {
+            grid.cells[self.y][self.x + 1].object.type = self.type;
+        }
     }
 
     pub fn remove(self: *Object, grid: *Grid) void {
         grid.cells[self.y][self.x].object.type = CellType.AIR;
     }
 
-    pub fn add(self: *[]Object, cell: CellType) void {
-        const object_size: usize = objectSize(cell);
+    pub fn add(self: *[]Object, cell: CellType, is_grid_objects: bool) void {
+        var object_size: usize = objectSize(cell);
+        if (is_grid_objects) {
+            object_size = 1; //Grid exception
+        }
+
         if (cellRemaings(self) >= object_size) {
             for (0..self.len) |i| {
                 if (self.*[i].type == CellType.EMPTY) {

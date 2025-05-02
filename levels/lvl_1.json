@@ -3,7 +3,7 @@
 
     "event_0" : {
 
-        "object_nb" : 1,
+        "object_nb" : 2,
         "slow_motion_time" : 100.0,
         "time_divisor" : 3.0,
         "already_triggered" :  false,
@@ -12,12 +12,17 @@
                 "x" : 5,
                 "y" : 7,
                 "type" : "SPIKE"
+            },
+            {
+                "x" : 4,
+                "y" : 4,
+                "type" : "BOOST"
             }
         ],
         "inv_objects" : [   
             
             "BOOST",
-            "BOOST"
+            "PAD"
         ],
         "areas" : {
             "triggered" : {

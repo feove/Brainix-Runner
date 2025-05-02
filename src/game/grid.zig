@@ -132,8 +132,24 @@ pub const Grid = struct {
         grid.cacheCell = tmpCell;
     }
 
-    fn cellSet(i: usize, j: usize, cell: CellType) void {
-        grid.cells[j][i].object.type = cell;
+    fn cellSet(i: usize, j: usize, cell: CellType) bool {
+        const object_size: usize = Object.objectSize(cell);
+
+        if (object_size == 1) {
+            grid.cells[j][i].object.type = cell;
+            return true;
+        }
+
+        if (i < grid.nb_cols - 1 and grid.cells[j][i + 1].object.type == .AIR) {
+            grid.cells[j][i].object.type = cell;
+            grid.cells[j][i + 1].object.type = cell;
+            grid.cells[j][i + 1].object.canPlayerTake = true;
+            grid.cells[j][i + 1].object.tail = true;
+
+            return true;
+        }
+
+        return false;
     }
 
     fn canGetCell(cell: CellType) bool {
@@ -143,6 +159,24 @@ pub const Grid = struct {
             }
         }
         return true;
+    }
+
+    fn removeFromGrid(i: usize, j: usize, cell: CellType) void {
+        const object_size: usize = Object.objectSize(cell);
+
+        grid.cells[j][i].object.type = .AIR;
+
+        if (object_size > 1) {
+            if (i < grid.nb_cols - 1 and grid.cells[j][i + 1].object.type == cell and grid.cells[j][i + 1].object.tail) {
+                grid.cells[j][i + 1].object.type = .AIR;
+                grid.cells[j][i + 1].object.tail = false;
+                return;
+            }
+
+            if (i > 0 and grid.cells[j][i - 1].object.type == cell) {
+                grid.cells[j][i - 1].object.type = .AIR;
+            }
+        }
     }
 
     pub fn cellManagement() void {
@@ -171,16 +205,18 @@ pub const Grid = struct {
                                         return;
                                     }
 
-                                    cellSet(i, j, inv.cell.type);
-                                    grid.cells[j][i].object.canPlayerTake = true;
-                                    Inventory.clearinv_cell();
+                                    if (cellSet(i, j, inv.cell.type)) {
+                                        grid.cells[j][i].object.canPlayerTake = true;
+                                        Inventory.clearinv_cell();
+                                    }
                                 }
                                 continue;
                             }
                             //Take item from terrain .object.playerCanTake
                             if (grid.cells[j][i].object.canPlayerTake) {
                                 Inventory.setinv_cell(grid.cells[j][i].object.type);
-                                cellSet(i, j, .AIR);
+                                removeFromGrid(i, j, grid.cells[j][i].object.type);
+                                //print("{any}\n", .{inv.cell.type});
                             }
                         }
                     }

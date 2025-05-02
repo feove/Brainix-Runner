@@ -101,7 +101,7 @@ pub const Event = struct {
     time_divisor: f32,
     already_triggered: bool = false,
 
-    fn objectsSetUp(event: *Event, objects: []Object) void {
+    fn objectsSetUp(event: *Event, objects: []Object) void { //Important
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
             Object.set(&objects[i], &grid);
