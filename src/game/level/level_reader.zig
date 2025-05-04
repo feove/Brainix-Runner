@@ -59,8 +59,10 @@ pub const EventConfig = struct {
                 inv_objects[i] = Object{};
             }
             for (inv_json.items) |item| {
-                const celltype: CellType = stringToCellType(item.string);
-                Object.add(&inv_objects, celltype, false);
+                const str: []const u8 = item.object.get("type").?.string;
+                const celltype: CellType = stringToCellType(str);
+                const count: i64 = item.object.get("count").?.integer;
+                Object.add(&inv_objects, celltype, count, false);
             }
 
             for (0..object_nb) |j| {
@@ -73,7 +75,7 @@ pub const EventConfig = struct {
                     .y = @as(usize, @intCast(obs.object.get("y").?.integer)),
                 };
                 grid_objects[e] = obj;
-                Object.add(&grid_objects, stringToCellType(obs.object.get("type").?.string), true);
+                Object.add(&grid_objects, stringToCellType(obs.object.get("type").?.string), 1, true);
                 e += 1;
             }
 

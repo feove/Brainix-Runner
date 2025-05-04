@@ -15,7 +15,10 @@
             }
         ],
         "inv_objects" : [   
-            "PAD"
+            {
+                "type" : "PAD",
+                "count" : 1
+            }  
         ],
         "areas" : {
             "triggered" : {
@@ -83,7 +86,10 @@
             }
         ],
         "inv_objects" : [   
-            "GROUND"
+            {
+                "type" : "GROUND",
+                "count" : 1
+            }  
          
         ],
         "areas" : {

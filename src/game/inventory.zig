@@ -134,14 +134,15 @@ pub const Inventory = struct {
             }
 
             if (current < inv.size - 1 and inv.slots[current + 1].object.type == cell) {
-                inv.slots[current + 1].object.type = .EMPTY;
                 decreaseSlotCount(current + 1);
+                inv.slots[current + 1].object.type = .EMPTY;
+
                 return;
             }
 
             if (current > 0 and inv.slots[current - 1].object.type == cell) {
-                inv.slots[current - 1].object.type = .EMPTY;
                 decreaseSlotCount(current - 1);
+                inv.slots[current - 1].object.type = .EMPTY;
                 return;
             }
         }

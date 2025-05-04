@@ -147,7 +147,7 @@ pub const Object = struct {
     type: CellType = CellType.EMPTY,
     tail: bool = false, //Only For Boost
     canPlayerTake: bool = false,
-    count: u8 = 1,
+    count: i64 = 1,
 
     pub fn set(self: *Object, grid: *Grid) void {
         const object_size: usize = objectSize(self.type);
@@ -161,7 +161,7 @@ pub const Object = struct {
         grid.cells[self.y][self.x].object.type = CellType.AIR;
     }
 
-    pub fn add(self: *[]Object, cell: CellType, is_grid_objects: bool) void {
+    pub fn add(self: *[]Object, cell: CellType, count: i64, is_grid_objects: bool) void {
         var object_size: usize = objectSize(cell);
         if (is_grid_objects) {
             object_size = 1; //Grid exception
@@ -174,6 +174,7 @@ pub const Object = struct {
                         self.*[j + i].type = cell;
                         self.*[j + i].width = object_size;
                         self.*[j + i].canPlayerTake = true;
+                        self.*[j + i].count = count;
                     }
 
                     return;
