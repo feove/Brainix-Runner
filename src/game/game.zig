@@ -20,10 +20,10 @@ pub fn run() !void {
     utils.hud.refresh();
     try objects.level.refresh();
 
-    render();
+    try render();
 }
 
-pub fn render() void {
+pub fn render() !void {
     player.elf.drawElf();
-    scene.drawScene();
+    try scene.drawScene();
 }

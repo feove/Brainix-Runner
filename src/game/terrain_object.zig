@@ -147,6 +147,7 @@ pub const Object = struct {
     type: CellType = CellType.EMPTY,
     tail: bool = false, //Only For Boost
     canPlayerTake: bool = false,
+    count: u8 = 1,
 
     pub fn set(self: *Object, grid: *Grid) void {
         const object_size: usize = objectSize(self.type);
@@ -232,8 +233,8 @@ pub const Object = struct {
         };
 
         if (HitBox.isInCollision(SpikeDetectionSides[0..], CellType.SPIKE)) {
-            Elf.elfRespawning();
-            elf.physics.auto_moving = AutoMovements.RIGHT;
+            Elf.respawn();
+
             elf.state = PlayerState.DEAD;
             event.playerEventstatus = event.PlayerEventStatus.IDLE_AREA;
         }

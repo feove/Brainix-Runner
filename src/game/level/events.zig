@@ -177,7 +177,7 @@ pub const Level = struct {
 
         levelStatement = .STARTING;
 
-        Elf.elfRespawning();
+        Elf.respawn();
     }
 
     pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {

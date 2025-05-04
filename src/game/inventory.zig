@@ -82,6 +82,10 @@ pub const Inventory = struct {
         if (invEmpty()) {
             for (0..SLOT_NB) |i| {
                 inv.slots[i].object.type = objects[i].type;
+                inv.slots[i].object.count = 0;
+                if (inv.slots[i].object.type != .EMPTY) {
+                    inv.slots[i].object.count = objects[i].count;
+                }
             }
         }
     }
@@ -101,6 +105,18 @@ pub const Inventory = struct {
         return true;
     }
 
+    fn increaseSlotCount(i_slot: usize) void {
+        if (inv.slots[i_slot].object.type != .EMPTY) {
+            inv.slots[i_slot].object.count += 1;
+        }
+    }
+
+    fn decreaseSlotCount(i_slot: usize) void {
+        if (inv.slots[i_slot].object.type != .EMPTY and inv.slots[i_slot].object.count > 0) {
+            inv.slots[i_slot].object.count -= 1;
+        }
+    }
+
     pub fn cacheEmpty() bool {
         return inv.cell.type == CellType.EMPTY;
     }
@@ -108,41 +124,60 @@ pub const Inventory = struct {
     fn remove(current: usize, cell: CellType) void {
         const object_size: usize = Object.objectSize(cell);
 
-        inv.slots[current].object.type = .EMPTY;
+        decreaseSlotCount(current);
 
-        if (object_size == 1) {
-            return;
-        }
+        if (inv.slots[current].object.count == 0) {
+            inv.slots[current].object.type = .EMPTY;
 
-        if (current < inv.size - 1 and inv.slots[current + 1].object.type == cell) {
-            inv.slots[current + 1].object.type = .EMPTY;
-            return;
-        }
+            if (object_size == 1) {
+                return;
+            }
 
-        if (current > 0 and inv.slots[current - 1].object.type == cell) {
-            inv.slots[current - 1].object.type = .EMPTY;
-            return;
+            if (current < inv.size - 1 and inv.slots[current + 1].object.type == cell) {
+                inv.slots[current + 1].object.type = .EMPTY;
+                decreaseSlotCount(current + 1);
+                return;
+            }
+
+            if (current > 0 and inv.slots[current - 1].object.type == cell) {
+                inv.slots[current - 1].object.type = .EMPTY;
+                decreaseSlotCount(current - 1);
+                return;
+            }
         }
     }
 
     fn place(current: usize, cell: CellType) bool {
         const object_size: usize = Object.objectSize(cell);
+        const slot = inv.slots[current].object.type;
 
-        if (inv.slots[current].object.type == .EMPTY) {
+        if (cell == .EMPTY) {
+            return false;
+        }
+
+        if (slot == cell) {
+            return true;
+        }
+
+        if (slot == .EMPTY) {
             if (object_size == 1) {
                 inv.slots[current].object.type = cell;
                 return true;
             }
             if (current + 1 < inv.size and inv.slots[current + 1].object.type == .EMPTY) {
-                inv.slots[current + 1].object.type = cell;
                 inv.slots[current].object.type = cell;
+                inv.slots[current + 1].object.type = cell;
+
+                increaseSlotCount(current + 1);
+
                 return true;
             }
 
             if (current > 0 and inv.slots[current - 1].object.type == .EMPTY) {
-                inv.slots[current - 1].object.type = cell;
                 inv.slots[current].object.type = cell;
+                inv.slots[current - 1].object.type = cell;
 
+                increaseSlotCount(current - 1);
                 return true;
             }
         }
@@ -169,7 +204,12 @@ pub const Inventory = struct {
                     inv.slots[i].isSelected = true;
 
                     if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                        if (inv.cell.type == CellType.EMPTY) {
+                        std.debug.print("\n========================================= \n", .{});
+                        for (inv.slots) |it| {
+                            std.debug.print("\n Object : {any} \n", .{it.object});
+                        }
+
+                        if (inv.cell.type == CellType.EMPTY and inv.slots[i].object.type != .EMPTY) {
 
                             //Take Item fom Inventory
 
@@ -178,12 +218,11 @@ pub const Inventory = struct {
                             continue;
                         }
 
-                        if (inv.slots[i].object.type == CellType.EMPTY) {
-                            //inv.slots[i].object.type = inv.cell.type;
+                        //inv.slots[i].object.type = inv.cell.type;
 
-                            if (place(i, inv.cell.type)) {
-                                inv.cell.type = CellType.EMPTY;
-                            }
+                        if (place(i, inv.cell.type)) {
+                            increaseSlotCount(i);
+                            inv.cell.type = CellType.EMPTY;
                         }
                     }
                 }

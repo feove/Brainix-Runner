@@ -146,9 +146,7 @@ pub const Elf = struct {
 
         //If Void Falling
         if (self.y + self.height >= grid.y + grid.height - 5) {
-            self.x = initGrid.x;
-            self.y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y;
-            self.physics.auto_moving = AutoMovements.RIGHT;
+            Elf.respawn();
             return;
         }
 
@@ -213,9 +211,10 @@ pub const Elf = struct {
         return false;
     }
 
-    pub fn elfRespawning() void {
+    pub fn respawn() void {
         elf.x = RESPAWN_POINT.x;
         elf.y = RESPAWN_POINT.y;
+        elf.physics.auto_moving = AutoMovements.RIGHT;
     }
 
     pub fn drawElf(self: *Elf) void {

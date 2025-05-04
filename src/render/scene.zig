@@ -1,4 +1,5 @@
 const print = @import("std").debug.print;
+const std = @import("std");
 const Grid = @import("../game/grid.zig").Grid;
 const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
@@ -7,11 +8,11 @@ const player = @import("../game/player.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
 
 //Tmp Drawing
-pub fn drawScene() void {
+pub fn drawScene() !void {
     rl.clearBackground(.white);
 
     drawGrid();
-    drawInventory();
+    try drawInventory();
     player.elf.drawElf();
 }
 
@@ -41,7 +42,7 @@ fn drawGrid() void {
     }
 }
 
-fn drawInventory() void {
+fn drawInventory() !void {
     const inv = Inventory.selfReturn();
 
     //Draw Inventory Borders
@@ -65,6 +66,27 @@ fn drawInventory() void {
 
         if (slot.isSelected) {
             drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
+        }
+    }
+
+    try drawItemNumber();
+}
+
+fn drawItemNumber() !void {
+    const inv = Inventory.selfReturn();
+
+    for (0..inv.size) |i| {
+        const x: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.x + inv.slots[i].width - 2 * inv.slots[i].padding));
+        const y: i32 = @as(i32, @intFromFloat(inv.slots[i].pos.y));
+        if (inv.slots[i].object.type != .EMPTY) {
+            const slot = inv.slots[i].object;
+
+            if (i > 0 and slot.type == .BOOST and inv.slots[i - 1].object.type == .BOOST) {
+                continue;
+            }
+            var buf: [16:0]u8 = undefined; // Note the ':0' for null-terminated buffer
+            const numAsString = try std.fmt.bufPrintZ(&buf, "{}", .{slot.count});
+            rl.drawText(numAsString, x, y, 30, .black);
         }
     }
 }
