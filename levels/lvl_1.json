@@ -1,5 +1,5 @@
 {
-    "event_nb" : 2,
+    "event_nb" : 3,
 
     "event_0" : {
 
@@ -46,69 +46,107 @@
 
     "event_1" : {
 
-        "object_nb" : 7,
+        "object_nb" : 1,
         "slow_motion_time" : 3.0,
-        "time_divisor" : 5.0,
+        "time_divisor" : 4.0,
         "already_triggered" :  false,
         "grid_objects" : [
+            
             {
                 "x" : 6,
                 "y" : 7,
-                "type" : "PAD"
-            },
-            {
-                "x" : 2,
-                "y" : 7,
-                "type" : "GROUND"
-            },
-            {
-                "x" : 2,
-                "y" : 6,
-                "type" : "GROUND"
-            },
-            {
-                "x" : 2,
-                "y" : 5,
-                "type" : "SPIKE"
-            },
-            {
-                "x" : 1,
-                "y" : 7,
-                "type" : "GROUND"
-            },
-            {
-                "x" : 1,
-                "y" : 6,
-                "type" : "GROUND"
-            },
-            {
-                "x" : 1,
-                "y" : 5,
-                "type" : "SPIKE"
+                "type" : "UP_PAD"
             }
+            
         ],
-        "inv_objects" : [   
+        "inv_objects" : [  
             {
-                "type" : "GROUND",
+                "type" : "EMPTY",
                 "count" : 1
-            }  
-         
+            }
         ],
         "areas" : {
             "triggered" : {
                 "x" : 6,
                 "y" : 7,
                 "width" : 1,
-                "height" : 1
+                "height" :1
             },
             "restricted" :  {
-                "x" : 1,
-                "y" : 0,
+                "x" : 0,
+                "y" : 1,
                 "width" : 0,
                 "height" : 0
             },
             "completed" :   {
+                "x" : 4,
+                "y" : 4,
+                "width" : 4,
+                "height" : 1
+            }
+        }
+    },
+
+    "event_2" : {
+
+        "object_nb" : 6,
+        "slow_motion_time" : 2.5,
+        "time_divisor" : 5.0,
+        "already_triggered" :  false,
+        "grid_objects" : [
+            
+            {
+                "x" : 4,
+                "y" : 7,
+                "type" : "GROUND"
+            },
+            {
                 "x" : 5,
+                "y" : 7,
+                "type" : "GROUND"
+            },
+            {
+                "x" : 6,
+                "y" : 7,
+                "type" : "GROUND"
+            },
+            {
+                "x" : 4,
+                "y" : 6,
+                "type" : "SPIKE"
+            },
+            {
+                "x" : 5,
+                "y" : 6,
+                "type" : "SPIKE"
+            },
+            {
+                "x" : 6,
+                "y" : 6,
+                "type" : "SPIKE"
+            }
+        ],
+        "inv_objects" : [  
+            {
+                "type" : "GROUND",
+                "count" : 2
+            }
+        ],
+        "areas" : {
+            "triggered" : {
+                "x" : 4,
+                "y" : 2,
+                "width" : 4,
+                "height" :1
+            },
+            "restricted" :  {
+                "x" : 0,
+                "y" : 1,
+                "width" : 0,
+                "height" : 0
+            },
+            "completed" :   {
+                "x" : 2,
                 "y" : 7,
                 "width" : 1,
                 "height" : 1

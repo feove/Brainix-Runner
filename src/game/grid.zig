@@ -25,6 +25,7 @@ pub const CellType = enum {
     GROUND,
     SPIKE,
     PAD,
+    UP_PAD,
     EMPTY,
     ANY,
     VOID,

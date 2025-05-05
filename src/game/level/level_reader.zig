@@ -126,6 +126,8 @@ pub fn stringToCellType(str: []const u8) CellType {
         return CellType.SPIKE;
     } else if (std.mem.eql(u8, str, "PAD")) {
         return CellType.PAD;
+    } else if (std.mem.eql(u8, str, "UP_PAD")) {
+        return CellType.UP_PAD;
     } else if (std.mem.eql(u8, str, "BOOST")) {
         return CellType.BOOST;
     } else {

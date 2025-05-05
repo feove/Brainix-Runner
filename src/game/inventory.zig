@@ -205,10 +205,10 @@ pub const Inventory = struct {
                     inv.slots[i].isSelected = true;
 
                     if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                        std.debug.print("\n========================================= \n", .{});
-                        for (inv.slots) |it| {
-                            std.debug.print("\n Object : {any} \n", .{it.object});
-                        }
+                        // std.debug.print("\n========================================= \n", .{});
+                        // for (inv.slots) |it| {
+                        //     std.debug.print("\n Object : {any} \n", .{it.object});
+                        // }
 
                         if (inv.cell.type == CellType.EMPTY and inv.slots[i].object.type != .EMPTY) {
 

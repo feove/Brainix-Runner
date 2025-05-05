@@ -211,7 +211,7 @@ pub const Level = struct {
 
         playerStatement(&elf);
 
-        eventDrawing(level.i_event);
+        // eventDrawing(level.i_event);
     }
 
     fn areaSetting(elf: *Elf) void {
@@ -323,8 +323,8 @@ pub const Level = struct {
 
         const t_x: f32 = event.areas.trigger_area.x;
         const t_y: f32 = event.areas.trigger_area.y;
-        const t_w: f32 = event.areas.completed_area.w;
-        const t_h: f32 = event.areas.completed_area.z;
+        const t_w: f32 = event.areas.trigger_area.w;
+        const t_h: f32 = event.areas.trigger_area.z;
 
         const grid: Grid = Grid.selfReturn();
 

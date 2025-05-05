@@ -9,6 +9,12 @@ const event = @import("level/events.zig");
 const Inventory = @import("inventory.zig").Inventory;
 const print = std.debug.print;
 
+const ItemSpec = struct {
+    up_pad_force: f32 = -1000,
+};
+
+const itemSpec = ItemSpec{};
+
 pub const AutoMovements = enum {
     RIGHT,
     LEFT,
@@ -40,6 +46,11 @@ pub const PhysicObject = struct {
         };
 
         self.jump = false;
+    }
+
+    pub fn upPadEffect(self: *PhysicObject, up_pad_force: f32) void {
+        self.velocity_y = up_pad_force;
+        self.velocity_x = 0;
     }
 
     pub fn boostEffect(self: *PhysicObject, boost_force: f32) void {
@@ -210,6 +221,20 @@ pub const Object = struct {
         if (HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
             if (elf.isOnGround) {
                 elf.physics.applyJump(elf.jump_force);
+                elf.isOnGround = false;
+            }
+        }
+    }
+
+    pub fn upPadAction(elf: *Elf) void {
+        const PadDetectionSides = [_]CellType{
+            elf.hitBox.middleLeggs,
+        };
+
+        //(rl.isKeyPressed(rl.KeyboardKey.space)) or
+        if (HitBox.isInCollision(PadDetectionSides[0..], CellType.UP_PAD)) {
+            if (elf.isOnGround) {
+                elf.physics.upPadEffect(itemSpec.up_pad_force);
                 elf.isOnGround = false;
             }
         }

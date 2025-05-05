@@ -97,6 +97,8 @@ pub const Elf = struct {
 
         Object.padAction(&elf);
 
+        Object.upPadAction(&elf);
+
         Object.spikeAction(&elf);
 
         Object.boostAction(&elf);

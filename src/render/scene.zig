@@ -30,6 +30,7 @@ fn drawGrid() void {
                 .GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
                 .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                 .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
+                .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
                 .DOOR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown),
                 .BOOST => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .beige),
                 else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
@@ -57,6 +58,7 @@ fn drawInventory() !void {
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
             .EMPTY => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
             .PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),
+            .UP_PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .orange),
             .BOOST => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .beige),
             else => {},
         }
