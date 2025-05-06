@@ -9,13 +9,13 @@ const print = @import("std").debug.print;
 
 pub var grid: Grid = undefined;
 
-const GRID_X: f32 = 50;
+const GRID_X: f32 = 65;
 const GRID_Y: f32 = 50;
 
 const OFFSET: i32 = @intFromFloat(GRID_X);
 
 const NB_ROWS: usize = 10;
-const NB_COLS: usize = 10;
+const NB_COLS: usize = 13;
 
 var CELL_WIDTH: f32 = undefined;
 var CELL_HEIGHT: f32 = undefined;
@@ -124,7 +124,7 @@ pub const Grid = struct {
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 
-        grid.setExitDoor(9, 6);
+        grid.setExitDoor(grid.nb_cols - 1, 6);
     }
 
     fn removeCell(i: usize, j: usize) void {

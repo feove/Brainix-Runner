@@ -4,6 +4,7 @@ const Grid = @import("../game/grid.zig").Grid;
 const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
 const textures = @import("textures.zig");
+const Sprite = @import("textures.zig").Sprite;
 const player = @import("../game/player.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
 
@@ -27,7 +28,7 @@ fn drawGrid() void {
 
             switch (cell.object.type) {
                 .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
-                .GROUND => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .blue),
+                .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.block, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15),
                 .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                 .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                 .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),

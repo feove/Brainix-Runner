@@ -152,7 +152,7 @@ pub const Inventory = struct {
         const object_size: usize = Object.objectSize(cell);
         const slot = inv.slots[current].object.type;
 
-        if (cell == .EMPTY) {
+        if (cell == .EMPTY or cell == .BOOST) {
             return false;
         }
 

@@ -30,10 +30,11 @@ pub fn initElf() void {
     const tex = textures.elf;
     const scale_factor: f32 = 0.1;
     initGrid = Grid.selfReturn();
+    RESPAWN_POINT = .init(initGrid.x, initGrid.cells[initGrid.nb_rows - 4][1].y);
 
     elf = Elf{
         .x = initGrid.x,
-        .y = initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y,
+        .y = initGrid.cells[2][2].y,
         .width = @as(f32, @floatFromInt(tex.width)) * scale_factor,
         .height = @as(f32, @floatFromInt(tex.height)) * scale_factor,
         .speed = ELF_DEFAULT_SPEED,
@@ -42,8 +43,6 @@ pub fn initElf() void {
         .hitBox = HitBox{},
         .repulsive_force = 500.0,
     };
-
-    RESPAWN_POINT = .init(initGrid.x, initGrid.cells[initGrid.nb_cols - 4][initGrid.nb_rows - 1].y);
 }
 
 const gravity: f32 = 1500.0;
