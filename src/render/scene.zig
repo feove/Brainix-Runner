@@ -26,20 +26,48 @@ fn drawGrid() void {
 
             drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
 
-            switch (cell.object.type) {
-                .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
-                .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.block, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15),
-                .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
-                .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
-                .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
-                .DOOR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown),
-                .BOOST => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .beige),
-                else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
+            if (r < grid.nb_rows - 2) {
+                switch (cell.object.type) {
+                    .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
+                    .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_l2, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15),
+                    .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
+                    .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
+                    .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
+                    .DOOR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown),
+                    .BOOST => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .beige),
+                    else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
+                }
             }
 
             if (cell.isSelected) {
                 drawcell(cell.x, cell.y, cell.width, cell.height, cell.padding, false, .black);
             }
+        }
+    }
+    drawGround();
+}
+
+fn drawGround() void {
+    const grid: Grid = Grid.selfReturn();
+
+    for (grid.nb_rows - 2..grid.nb_rows) |r| {
+        for (0..grid.nb_cols) |c| {
+            const cell = grid.cells[r][c];
+
+            if (c == 0 or c == grid.nb_cols - 1) {
+                if (r == grid.nb_rows - 2) {
+                    Sprite.draw(textures.spriteSheet, textures.sprites.carved_granite, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pillar, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15);
+                }
+                continue;
+            }
+
+            if (r == grid.nb_rows - 2) {
+                Sprite.draw(textures.spriteSheet, textures.sprites.granite_beam, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
+                continue;
+            }
+
+            Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, 4.15);
         }
     }
 }

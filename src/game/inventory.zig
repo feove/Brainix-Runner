@@ -17,7 +17,7 @@ const INV_MARGIN: f32 = 10;
 
 fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
     SLOT_WIDTH = inventory_width / @as(f32, @floatFromInt(SLOT_NB));
-    SLOT_HEIGHT = (cell_height * SLOT_WIDTH) / cell_width;
+    SLOT_HEIGHT = ((cell_height - 15) * SLOT_WIDTH) / cell_width;
 }
 
 pub const InvCell = struct {
@@ -213,13 +213,10 @@ pub const Inventory = struct {
                         if (inv.cell.type == CellType.EMPTY and inv.slots[i].object.type != .EMPTY) {
 
                             //Take Item fom Inventory
-
                             inv.cell.type = inv.slots[i].object.type;
                             remove(i, inv.slots[i].object.type);
                             continue;
                         }
-
-                        //inv.slots[i].object.type = inv.cell.type;
 
                         if (place(i, inv.cell.type)) {
                             increaseSlotCount(i);
