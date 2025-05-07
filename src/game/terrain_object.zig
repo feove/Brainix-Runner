@@ -117,7 +117,7 @@ pub const AroundConfig = struct {
             //print("OUT OF BAND j - 1 < 0\n", .{});
             set_row(config, 0, .VOID);
         }
-        if (j + 1 >= Grid.selfReturn().nb_cols) {
+        if (j + 1 >= Grid.selfReturn().nb_rows) {
             //print("OUT OF BAND j + 1 >= nb_cols\n", .{});
             set_row(config, 2, .VOID);
         }
@@ -125,7 +125,7 @@ pub const AroundConfig = struct {
             //print("OUT OF BAND i - 1 < 0\n", .{});
             set_col(config, 0, .VOID);
         }
-        if (i + 1 >= Grid.selfReturn().nb_rows) {
+        if (i + 1 >= Grid.selfReturn().nb_cols) {
             // print("OUT OF BAND i + 1 > nb_rows\n", .{});
             set_col(config, 2, .VOID);
         }
@@ -133,6 +133,14 @@ pub const AroundConfig = struct {
     fn currentConfig(i: usize, j: usize) *AroundConfig {
         var config: AroundConfig = AroundConfig{};
         setVoidConfig(&config, i, j);
+
+        //Thx Debuger
+        // for (0..config.model.len) |e| {
+        //     for (0..config.model.len) |f| {
+        //         print("{}  ", .{config.model[e][f]});
+        //     }
+        //     print("\n", .{});
+        // }
 
         //tl corner
         const r = if (i == 0) i else if (i == Grid.selfReturn().nb_rows) i - 3 else i - 1;

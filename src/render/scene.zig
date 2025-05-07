@@ -18,6 +18,8 @@ pub fn drawScene() !void {
 }
 
 fn drawGrid() void {
+    textures.Sprite.draw(textures.forest_background, textures.sprites.forest_background, .init(0, 0), 0.85);
+
     const grid: Grid = Grid.selfReturn();
 
     for (0..grid.nb_rows) |r| {
@@ -29,7 +31,7 @@ fn drawGrid() void {
             if (r < grid.nb_rows - 2) {
                 switch (cell.object.type) {
                     .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
-                    .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_l2, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15),
+                    .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15),
                     .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                     .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                     .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
@@ -64,12 +66,27 @@ fn drawGround() void {
 
             if (r == grid.nb_rows - 2) {
                 Sprite.draw(textures.spriteSheet, textures.sprites.granite_beam, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
+
+                //Scripted
+                if (c == 2 or c == 5 or c == 9) {
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l3, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15);
+                }
+
                 continue;
             }
 
-            Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, 4.15);
+            if (c != 2 and c != 5 and c != 9) {
+                Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, 4.15);
+            }
         }
     }
+}
+
+pub fn getRandomNumber(min: u32, max: u32) u32 {
+    // var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
+    var prng = std.Random.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
+    return prng.random().intRangeAtMost(u32, min, max);
 }
 
 fn drawInventory() !void {
@@ -82,7 +99,7 @@ fn drawInventory() !void {
         const slot = inv.slots[i];
 
         switch (slot.object.type) {
-            .GROUND => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .blue),
+            .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = slot.pos.x + slot.padding, .y = slot.pos.y }, 4.1),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
             .EMPTY => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),

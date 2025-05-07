@@ -2,14 +2,16 @@ const rl = @import("raylib");
 
 pub var elf: rl.Texture2D = undefined;
 pub var spriteSheet: rl.Texture2D = undefined;
+pub var forest_background: rl.Texture2D = undefined;
 
 const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
 
 pub fn init() !void {
     elf = try rl.loadTexture("assets/textures/elf/pers.png");
-    spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
+    forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
 
+    spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
     sprites = Sprites.init();
 }
 
@@ -32,6 +34,8 @@ pub const Sprite = struct {
 };
 
 pub const Sprites = struct {
+    granite_pure_l4: Sprite,
+    granite_pure_l3: Sprite,
     granite_l1: Sprite,
     granite_l2: Sprite,
     granite_l3: Sprite,
@@ -46,6 +50,8 @@ pub const Sprites = struct {
     water: Sprite,
     portal: Sprite,
 
+    forest_background: Sprite,
+
     pub fn init() Sprites {
         return Sprites{
             .granite_l4 = .{ .name = "Granite_L4", .src = rl.Rectangle{ .x = 0, .y = 0, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
@@ -55,11 +61,15 @@ pub const Sprites = struct {
             .carved_granite = .{ .name = "Carverd_Granite", .src = rl.Rectangle{ .x = 0, .y = 4 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .granite_pillar = .{ .name = "Granite_Pillar", .src = rl.Rectangle{ .x = 0, .y = 5 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .granite_beam = .{ .name = "Granite_Beam", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 4 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .granite_pure_l4 = .{ .name = "Granite_Pure_L4", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 0, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .granite_pure_l3 = .{ .name = "Granite_Pure_L3", .src = rl.Rectangle{ .x = 2 * BLOCK_SIZE, .y = 2 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
 
             .bushGreen = .{ .name = "GreenBush", .src = rl.Rectangle{ .x = 96, .y = 0, .width = 96, .height = 96 } },
             .bushDark = .{ .name = "DarkBush", .src = rl.Rectangle{ .x = 192, .y = 0, .width = 96, .height = 96 } },
             .water = .{ .name = "Water", .src = rl.Rectangle{ .x = 96, .y = 96, .width = 96, .height = 96 } },
             .portal = .{ .name = "Portal", .src = rl.Rectangle{ .x = 0, .y = 96, .width = 96, .height = 96 } },
+
+            .forest_background = .{ .name = "Forest Background", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1747, .height = 984 } },
         };
     }
 };
