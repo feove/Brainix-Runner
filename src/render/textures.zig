@@ -3,12 +3,15 @@ const rl = @import("raylib");
 pub var elf: rl.Texture2D = undefined;
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
+pub var inventory_hud: rl.Texture2D = undefined;
+pub var simple_inventory_hud: rl.Texture2D = undefined;
 
 pub var oak_bg_lyr_1: rl.Texture2D = undefined;
 pub var oak_bg_lyr_2: rl.Texture2D = undefined;
 pub var oak_bg_lyr_3: rl.Texture2D = undefined;
 pub var oak_woods_tileset: rl.Texture2D = undefined;
 pub var top_far_bgrnd: rl.Texture2D = undefined;
+pub var env_ground: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
@@ -23,6 +26,9 @@ pub fn init() !void {
     oak_woods_tileset = try rl.loadTexture("assets/textures/pack/oak_woods/oak_woods_tileset.png");
 
     top_far_bgrnd = try rl.loadTexture("assets/textures/pack/DarkForest/top_far_bgrnd.png");
+    env_ground = try rl.loadTexture("assets/textures/pack/DarkForest/env_ground.png");
+    inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
+    simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
     sprites = Sprites.init();
@@ -88,9 +94,12 @@ pub const Sprites = struct {
     oak_woods_tileset: Sprite,
 
     forest_background: Sprite,
+    inventory_hud: Sprite,
+    simple_inventory_hud: Sprite,
 
     dark_forest_grd: Sprite,
     scared_forest_grd: Sprite,
+    env_ground_leaves: Sprite,
 
     pub fn init() Sprites {
         return Sprites{
@@ -113,6 +122,9 @@ pub const Sprites = struct {
             .portal = .{ .name = "Portal", .src = rl.Rectangle{ .x = 0, .y = 96, .width = 96, .height = 96 } },
 
             .forest_background = .{ .name = "Forest Background", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1747, .height = 984 } },
+            .inventory_hud = .{ .name = "Inventory HUD", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 278, .height = 103 } },
+            .simple_inventory_hud = .{ .name = "Simple Inventory HUD", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 77, .height = 26 } },
+
             .oak_bg_lyr_1 = .{ .name = "Oak Background Layer 1", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_bg_lyr_2 = .{ .name = "Oak Background Layer 2", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_bg_lyr_3 = .{ .name = "Oak Background Layer 3", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
@@ -120,6 +132,7 @@ pub const Sprites = struct {
 
             .scared_forest_grd = .{ .name = "Scared Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 600, .height = 100 } },
             .dark_forest_grd = .{ .name = "Dark Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 700, .width = 600, .height = 100 } },
+            .env_ground_leaves = .{ .name = "Environment Ground With Orange Leaves", .src = rl.Rectangle{ .x = 120, .y = 250, .width = 150, .height = 30 } },
         };
     }
 };

@@ -201,6 +201,10 @@ pub const Level = struct {
         var elf: Elf = Elf.selfReturn();
         _ = self;
 
+        if (levelStatement == .STARTING) {
+            levelStatement = .ONGOING;
+        }
+
         //TMP Conditions
         if (levelStatement == .PRE_COMPLETED or levelStatement == .COMPLETED) {
             try levelState();
@@ -275,6 +279,10 @@ pub const Level = struct {
         if (level.i_event == level.event_nb) {
             levelStatement = .PRE_COMPLETED;
         }
+    }
+
+    pub fn getLevelStatement() LevelStatement {
+        return levelStatement;
     }
 
     fn levelState() !void {

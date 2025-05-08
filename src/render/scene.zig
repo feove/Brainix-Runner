@@ -26,11 +26,12 @@ fn drawGrid() void {
         for (0..grid.nb_cols) |c| {
             const cell = grid.cells[r][c];
 
-            drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
+            //drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
+            //drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black)
 
             if (r < grid.nb_rows - 2) {
                 switch (cell.object.type) {
-                    .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
+                    .AIR => {},
                     .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white),
                     .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                     .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
@@ -48,17 +49,15 @@ fn drawGrid() void {
     }
     drawGround();
 
-    textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(-200, 600), 5, .white);
-    textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(800, 600), 5, .white);
+    drawUnderGroundDeco();
 }
 
 fn drawBackgrounds() void {
 
-    //Parallax
     // textures.Sprite.draw(textures.forest_background, textures.sprites.forest_background, .init(-100, 0), 0.85);
     textures.Sprite.draw(textures.oak_bg_lyr_1, textures.sprites.oak_bg_lyr_1, .init(-100, 0), 3.5, .white);
-    textures.Sprite.draw(textures.oak_bg_lyr_2, textures.sprites.oak_bg_lyr_2, .init(-100, 0), 3.5, .white);
-    textures.Sprite.draw(textures.oak_bg_lyr_3, textures.sprites.oak_bg_lyr_3, .init(-100, 0), 3.5, .white);
+    textures.Sprite.draw(textures.oak_bg_lyr_2, textures.sprites.oak_bg_lyr_2, .init(-100 + 0.02 * player.elf.x, 0), 3.5 + 0.00001 * player.elf.x, .white);
+    textures.Sprite.draw(textures.oak_bg_lyr_3, textures.sprites.oak_bg_lyr_3, .init(-100 - 0.01 * player.elf.x, 0), 3.5, .white);
 
     drawBorders();
 
@@ -93,6 +92,18 @@ fn drawBorders() void {
             255,
         );
     }
+}
+
+fn drawUnderGroundDeco() void {
+    //const grid: Grid = Grid.selfReturn();
+    //const block_size = textures.BLOCK_SIZE * 4.15;
+    //textures.Sprite.draw(textures.spriteSheet, textures.sprites.granite_l2, .init(grid.cells[grid.nb_rows - 1][0].x, grid.cells[grid.nb_rows - 1][0].y + block_size), 4.15, .white);
+
+    //Good Option
+    textures.Sprite.draw(textures.env_ground, textures.sprites.env_ground_leaves, .init(50, 670), 6.5, .gray);
+
+    textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(-200, 600), 5, .white);
+    textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(800, 600), 5, .white);
 }
 
 fn drawGround() void {
@@ -141,6 +152,9 @@ fn drawInventory() !void {
     //Draw Inventory Borders
     drawcell(inv.pos.x, inv.pos.y, inv.width, inv.height, 0, false, .black);
 
+    //textures.Sprite.draw(textures.inventory_hud, textures.sprites.inventory_hud, .init(inv.pos.x - 10, inv.pos.y - 70), 1.5, .white);
+    textures.Sprite.draw(textures.simple_inventory_hud, textures.sprites.simple_inventory_hud, .init(inv.pos.x - 30, inv.pos.y - 30), 4.76, .white);
+
     for (0..inv.size) |i| {
         const slot = inv.slots[i];
 
@@ -158,11 +172,11 @@ fn drawInventory() !void {
             else => {},
         }
         if (i != inv.size - 1) {
-            drawLines(slot.pos.x + slot.width + slot.padding, inv.pos.y, slot.pos.x + slot.width + slot.padding, inv.pos.y + inv.height);
+            //drawLines(slot.pos.x + slot.width + slot.padding, inv.pos.y, slot.pos.x + slot.width + slot.padding, inv.pos.y + inv.height);
         }
 
         if (slot.isSelected) {
-            drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
+            //drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
         }
     }
 

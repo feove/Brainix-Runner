@@ -12,9 +12,9 @@ pub fn run() !void {
     defer rl.endDrawing();
 
     //Interactions
+    player.elf.controller();
     terrain.grid.interactions();
     inventory.inv.interactions();
-    player.elf.controller();
 
     //Update Cursor's position
     utils.hud.refresh();

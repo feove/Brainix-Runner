@@ -12,7 +12,7 @@ const SLOT_NB: usize = 4;
 var SLOT_WIDTH: f32 = undefined;
 var SLOT_HEIGHT: f32 = undefined;
 
-const SLOT_PADDING: f32 = 10;
+const SLOT_PADDING: f32 = 12;
 const INV_MARGIN: f32 = 10;
 
 fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
@@ -46,23 +46,27 @@ pub const Inventory = struct {
 
         const slots = try allocator.alloc(InvCell, SLOT_NB);
 
-        const inventory_width: f32 = grid.width / 2;
+        const inventory_width: f32 = grid.width / 3;
 
         slotSizeInit(inventory_width, grid.cells[0][0].width, grid.cells[0][0].height);
 
         const inventory_height: f32 = SLOT_HEIGHT;
-        const x = grid.x + grid.width / 4;
+        const x = grid.x + grid.width / 3;
         const y = grid.y + grid.height + INV_MARGIN;
 
+        var slot_x = x + SLOT_PADDING;
+
         for (0..SLOT_NB) |i| {
-            const i_cast: f32 = @as(f32, @floatFromInt(i));
+            // const i_cast: f32 = @as(f32, @floatFromInt(i));
 
             slots[i] = InvCell{
-                .pos = .init(x + i_cast * SLOT_WIDTH + SLOT_PADDING, y + SLOT_PADDING),
+                .pos = .init(slot_x, y ),
                 .width = SLOT_WIDTH - 2 * SLOT_PADDING,
-                .height = SLOT_HEIGHT - 2 * SLOT_PADDING,
+                .height = SLOT_HEIGHT ,
                 .object = Object{ .type = CellType.EMPTY },
             };
+
+            slot_x += SLOT_WIDTH + SLOT_PADDING / 2;
         }
 
         //Harcode

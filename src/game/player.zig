@@ -30,11 +30,11 @@ pub fn initElf() void {
     const tex = textures.elf;
     const scale_factor: f32 = 0.1;
     initGrid = Grid.selfReturn();
-    RESPAWN_POINT = .init(initGrid.x, initGrid.cells[initGrid.nb_rows - 4][1].y);
+    RESPAWN_POINT = .init(initGrid.cells[6][0].x, initGrid.cells[6][0].y);
 
     elf = Elf{
-        .x = initGrid.x,
-        .y = initGrid.cells[2][2].y,
+        .x = RESPAWN_POINT.x,
+        .y = RESPAWN_POINT.y,
         .width = @as(f32, @floatFromInt(tex.width)) * scale_factor,
         .height = @as(f32, @floatFromInt(tex.height)) * scale_factor,
         .speed = ELF_DEFAULT_SPEED,
@@ -63,6 +63,12 @@ pub const Elf = struct {
     boost_force: f32 = boost_force,
     state: PlayerState = PlayerState.ALIVE,
 
+    pub fn respawn() void {
+        elf.x = RESPAWN_POINT.x;
+        elf.y = RESPAWN_POINT.y;
+        elf.physics.auto_moving = AutoMovements.RIGHT;
+    }
+
     pub fn selfReturn() Elf {
         return elf;
     }
@@ -83,6 +89,10 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();
 
+        if (Level.getLevelStatement() == .STARTING) {
+            respawn();
+        }
+
         //print("{d}\n", .{self.time_divisor});
 
         self.isOnGround = self.hitBox.bottomLeggs == CellType.GROUND;
@@ -101,6 +111,8 @@ pub const Elf = struct {
         Object.spikeAction(&elf);
 
         Object.boostAction(&elf);
+
+        HitBox.antiSoftLock(&elf);
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -212,12 +224,6 @@ pub const Elf = struct {
         return false;
     }
 
-    pub fn respawn() void {
-        elf.x = RESPAWN_POINT.x;
-        elf.y = RESPAWN_POINT.y;
-        elf.physics.auto_moving = AutoMovements.RIGHT;
-    }
-
     pub fn drawElf(self: *Elf) void {
         rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
     }
@@ -276,6 +282,12 @@ pub const HitBox = struct {
         self.leftLeggs = leggs_vertical_detection(grid, x - p, y + height - p, height, p, &i, &j);
 
         self.bottomLeggs = horizontal_detection(grid, x, y + height, width, p, &i, &j);
+    }
+
+    fn antiSoftLock(self: *Elf) void {
+        if (self.hitBox.middleBody == .GROUND or self.hitBox.middleBody == .GROUND) {
+            Elf.respawn();
+        }
     }
 
     fn leggs_vertical_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
