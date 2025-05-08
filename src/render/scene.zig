@@ -18,7 +18,7 @@ pub fn drawScene() !void {
 }
 
 fn drawGrid() void {
-    textures.Sprite.draw(textures.forest_background, textures.sprites.forest_background, .init(0, 0), 0.85);
+    drawBackgrounds();
 
     const grid: Grid = Grid.selfReturn();
 
@@ -31,7 +31,7 @@ fn drawGrid() void {
             if (r < grid.nb_rows - 2) {
                 switch (cell.object.type) {
                     .AIR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black),
-                    .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15),
+                    .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white),
                     .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                     .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                     .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
@@ -47,6 +47,52 @@ fn drawGrid() void {
         }
     }
     drawGround();
+
+    textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(-200, 600), 5, .white);
+    textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(800, 600), 5, .white);
+}
+
+fn drawBackgrounds() void {
+
+    //Parallax
+    // textures.Sprite.draw(textures.forest_background, textures.sprites.forest_background, .init(-100, 0), 0.85);
+    textures.Sprite.draw(textures.oak_bg_lyr_1, textures.sprites.oak_bg_lyr_1, .init(-100, 0), 3.5, .white);
+    textures.Sprite.draw(textures.oak_bg_lyr_2, textures.sprites.oak_bg_lyr_2, .init(-100, 0), 3.5, .white);
+    textures.Sprite.draw(textures.oak_bg_lyr_3, textures.sprites.oak_bg_lyr_3, .init(-100, 0), 3.5, .white);
+
+    drawBorders();
+
+    // textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(300, 600), 4, .white);
+    //textures.Sprite.draw(textures.oak_woods_tileset, textures.sprites.oak_woods_tileset, .init(0, 600), 3, .white);
+    //textures.Sprite.draw(textures.top_far_bgrnd, textures.sprites.scared_forest_grd, .init(200, 500), 1);
+    //textures.Sprite.draw(textures.top_far_bgrnd, textures.sprites.dark_forest_grd, .init(-50, 550), 2);
+}
+fn drawBorders() void {
+    const height: usize = Grid.selfReturn().nb_rows + 2;
+
+    //Left Side
+    for (0..height) |r| {
+        textures.Sprite.drawWithRotation(
+            textures.spriteSheet,
+            textures.sprites.granite_border,
+            rl.Vector2.init(0.0, @as(f32, @floatFromInt(r)) * textures.BLOCK_SIZE * 4.17),
+            4.17,
+            270.0,
+            255,
+        );
+    }
+
+    //Right Side
+    for (0..height - 1) |r| {
+        textures.Sprite.drawWithRotation(
+            textures.spriteSheet,
+            textures.sprites.granite_border,
+            rl.Vector2.init(1000.0, @as(f32, @floatFromInt(r)) * textures.BLOCK_SIZE * 4.17),
+            4.17,
+            90.0,
+            255,
+        );
+    }
 }
 
 fn drawGround() void {
@@ -58,26 +104,26 @@ fn drawGround() void {
 
             if (c == 0 or c == grid.nb_cols - 1) {
                 if (r == grid.nb_rows - 2) {
-                    Sprite.draw(textures.spriteSheet, textures.sprites.carved_granite, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
-                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pillar, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.carved_granite, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pillar, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15, .white);
                 }
                 continue;
             }
 
             if (r == grid.nb_rows - 2) {
-                Sprite.draw(textures.spriteSheet, textures.sprites.granite_beam, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
+                Sprite.draw(textures.spriteSheet, textures.sprites.granite_beam, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
 
                 //Scripted
                 if (c == 2 or c == 5 or c == 9) {
-                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15);
-                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l3, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l3, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15, .white);
                 }
 
                 continue;
             }
 
             if (c != 2 and c != 5 and c != 9) {
-                Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, 4.15);
+                Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, 4.15, .white);
             }
         }
     }
@@ -99,7 +145,10 @@ fn drawInventory() !void {
         const slot = inv.slots[i];
 
         switch (slot.object.type) {
-            .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = slot.pos.x + slot.padding, .y = slot.pos.y }, 4.1),
+            .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{
+                .x = slot.pos.x + slot.padding,
+                .y = slot.pos.y,
+            }, 4.1, .white),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
             .EMPTY => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),

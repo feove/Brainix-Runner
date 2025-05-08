@@ -4,12 +4,25 @@ pub var elf: rl.Texture2D = undefined;
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
 
-const BLOCK_SIZE: f32 = 16;
+pub var oak_bg_lyr_1: rl.Texture2D = undefined;
+pub var oak_bg_lyr_2: rl.Texture2D = undefined;
+pub var oak_bg_lyr_3: rl.Texture2D = undefined;
+pub var oak_woods_tileset: rl.Texture2D = undefined;
+pub var top_far_bgrnd: rl.Texture2D = undefined;
+
+pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
 
 pub fn init() !void {
     elf = try rl.loadTexture("assets/textures/elf/pers.png");
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
+
+    oak_bg_lyr_1 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_1.png");
+    oak_bg_lyr_2 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_2.png");
+    oak_bg_lyr_3 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_3.png");
+    oak_woods_tileset = try rl.loadTexture("assets/textures/pack/oak_woods/oak_woods_tileset.png");
+
+    top_far_bgrnd = try rl.loadTexture("assets/textures/pack/DarkForest/top_far_bgrnd.png");
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
     sprites = Sprites.init();
@@ -19,7 +32,7 @@ pub const Sprite = struct {
     name: []const u8,
     src: rl.Rectangle,
 
-    pub fn draw(sheet: rl.Texture2D, self: Sprite, position: rl.Vector2, scale: f32) void {
+    pub fn draw(sheet: rl.Texture2D, self: Sprite, position: rl.Vector2, scale: f32, tint: rl.Color) void {
         const dest = rl.Rectangle{
             .x = position.x,
             .y = position.y,
@@ -29,7 +42,26 @@ pub const Sprite = struct {
         const origin = rl.Vector2{ .x = 0, .y = 0 };
         const rotation: f32 = 0.0;
 
-        rl.drawTexturePro(sheet, self.src, dest, origin, rotation, .white);
+        rl.drawTexturePro(sheet, self.src, dest, origin, rotation, tint);
+    }
+
+    pub fn drawWithRotation(sheet: rl.Texture2D, self: Sprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: u8) void {
+        const dest = rl.Rectangle{
+            .x = position.x,
+            .y = position.y,
+            .width = self.src.width * scale,
+            .height = self.src.height * scale,
+        };
+        const origin = rl.Vector2{ .x = 0, .y = 0 };
+
+        const tint = rl.Color{
+            .r = 255,
+            .g = 255,
+            .b = 255,
+            .a = alpha,
+        };
+
+        rl.drawTexturePro(sheet, self.src, dest, origin, rotation, tint);
     }
 };
 
@@ -42,15 +74,23 @@ pub const Sprites = struct {
     granite_l4: Sprite,
     granite_pillar: Sprite,
     granite_beam: Sprite,
-
+    granite_border: Sprite,
     carved_granite: Sprite,
-
     bushGreen: Sprite,
+    bushGreenBorders: Sprite,
     bushDark: Sprite,
     water: Sprite,
     portal: Sprite,
 
+    oak_bg_lyr_1: Sprite,
+    oak_bg_lyr_2: Sprite,
+    oak_bg_lyr_3: Sprite,
+    oak_woods_tileset: Sprite,
+
     forest_background: Sprite,
+
+    dark_forest_grd: Sprite,
+    scared_forest_grd: Sprite,
 
     pub fn init() Sprites {
         return Sprites{
@@ -63,13 +103,23 @@ pub const Sprites = struct {
             .granite_beam = .{ .name = "Granite_Beam", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 4 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .granite_pure_l4 = .{ .name = "Granite_Pure_L4", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 0, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .granite_pure_l3 = .{ .name = "Granite_Pure_L3", .src = rl.Rectangle{ .x = 2 * BLOCK_SIZE, .y = 2 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .granite_border = .{ .name = "Granite Border", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 6 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
 
             .bushGreen = .{ .name = "GreenBush", .src = rl.Rectangle{ .x = 96, .y = 0, .width = 96, .height = 96 } },
+            .bushGreenBorders = .{ .name = "Bush Green Borders", .src = rl.Rectangle{ .x = 145, .y = 0, .width = 78, .height = 78 } },
+
             .bushDark = .{ .name = "DarkBush", .src = rl.Rectangle{ .x = 192, .y = 0, .width = 96, .height = 96 } },
             .water = .{ .name = "Water", .src = rl.Rectangle{ .x = 96, .y = 96, .width = 96, .height = 96 } },
             .portal = .{ .name = "Portal", .src = rl.Rectangle{ .x = 0, .y = 96, .width = 96, .height = 96 } },
 
             .forest_background = .{ .name = "Forest Background", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1747, .height = 984 } },
+            .oak_bg_lyr_1 = .{ .name = "Oak Background Layer 1", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
+            .oak_bg_lyr_2 = .{ .name = "Oak Background Layer 2", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
+            .oak_bg_lyr_3 = .{ .name = "Oak Background Layer 3", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
+            .oak_woods_tileset = .{ .name = "Oak Wookd Tileset", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 100, .height = 100 } },
+
+            .scared_forest_grd = .{ .name = "Scared Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 600, .height = 100 } },
+            .dark_forest_grd = .{ .name = "Dark Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 700, .width = 600, .height = 100 } },
         };
     }
 };
