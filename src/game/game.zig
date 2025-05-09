@@ -12,9 +12,9 @@ pub fn run() !void {
     defer rl.endDrawing();
 
     //Interactions
-    player.elf.controller();
     terrain.grid.interactions();
     inventory.inv.interactions();
+    player.elf.controller();
 
     //Update Cursor's position
     utils.hud.refresh();
@@ -24,6 +24,8 @@ pub fn run() !void {
 }
 
 pub fn render() !void {
+    // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
     player.elf.drawElf();
     try scene.drawScene();
+    return;
 }

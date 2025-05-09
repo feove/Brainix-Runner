@@ -18,7 +18,7 @@ pub var time_divisor: f32 = 1.0;
 const ELF_DEFAULT_SPEED: f32 = 170.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
-var RESPAWN_POINT: rl.Vector2 = undefined;
+var RESPAWN_POINT: rl.Vector2 = .init(80, 443);
 
 pub const PlayerState = enum {
     ALIVE,
@@ -30,7 +30,6 @@ pub fn initElf() void {
     const tex = textures.elf;
     const scale_factor: f32 = 0.1;
     initGrid = Grid.selfReturn();
-    RESPAWN_POINT = .init(initGrid.cells[6][0].x, initGrid.cells[6][0].y);
 
     elf = Elf{
         .x = RESPAWN_POINT.x,
@@ -61,7 +60,7 @@ pub const Elf = struct {
     repulsive_force: f32,
     jump_force: f32 = jump_force,
     boost_force: f32 = boost_force,
-    state: PlayerState = PlayerState.ALIVE,
+    state: PlayerState = PlayerState.RESPAWNING,
 
     pub fn respawn() void {
         elf.x = RESPAWN_POINT.x;
@@ -85,13 +84,19 @@ pub const Elf = struct {
         self.speed = 1500;
     }
 
+    pub fn setState(state: PlayerState) void {
+        elf.state = state;
+    }
+
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();
 
-        if (Level.getLevelStatement() == .STARTING) {
-            respawn();
-        }
+        // if (elf.x != 80 or elf.y != 443) {
+        //     return;
+        // }
+
+        // print("x : {d} ||y : {d}\n\n", .{ initGrid.cells[6][0].x + 15, initGrid.cells[6][0].y });
 
         //print("{d}\n", .{self.time_divisor});
 
@@ -112,7 +117,7 @@ pub const Elf = struct {
 
         Object.boostAction(&elf);
 
-        HitBox.antiSoftLock(&elf);
+        //HitBox.antiSoftLock(&elf);
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -158,11 +163,12 @@ pub const Elf = struct {
         const grid = Grid.selfReturn();
 
         //If Void Falling
-        if (self.y + self.height >= grid.y + grid.height - 5) {
+        if (self.y + self.height >= grid.y + grid.height - 5 or self.y + self.height >= Grid.getGroundPos().y + 15) {
             Elf.respawn();
             return;
         }
 
+        //print("DEBUG 1 : x : {d} ||y : {d}\n\n", .{ elf.x, elf.y });
         if (canMoveHorizontal(self, x)) {
             if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.rightLeggs == CellType.GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt;
@@ -176,6 +182,7 @@ pub const Elf = struct {
             }
         }
 
+        //print("DEBUG 2 : x : {d} ||y : {d}\n\n", .{ elf.x, elf.y });
         if (canMoveVertical(self, y)) {
             if (self.y <= grid.y) {
                 self.y += 5;
@@ -226,6 +233,12 @@ pub const Elf = struct {
 
     pub fn drawElf(self: *Elf) void {
         rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
+        //const p: f32 = Grid.selfReturn().cells[0][0].padding;
+        //rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
+
+        //rl.drawRectangleRec(.init(elf.x + 3 * p, elf.y + elf.height / 2, elf.width - 6 * p, p), .orange);
+
+        //rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + elf.height - elf.height / 3 + p, elf.width - 4 * p, p), .yellow);
     }
 };
 
@@ -235,6 +248,7 @@ pub const HitBox = struct {
     leftBody: CellType = CellType.EMPTY,
     middleBody: CellType = CellType.EMPTY,
 
+    kneesLeggs: CellType = CellType.EMPTY,
     middleLeggs: CellType = CellType.EMPTY,
     leftLeggs: CellType = CellType.EMPTY,
     rightLeggs: CellType = CellType.EMPTY,
@@ -273,7 +287,9 @@ pub const HitBox = struct {
 
         self.rightLeggs = leggs_vertical_detection(grid, x + width, y + height - p, height, p, &i, &j);
 
-        self.middleBody = horizontal_detection(grid, x + 2 * p, y + p, width - 4 * p, p, &i, &j);
+        self.middleBody = horizontal_detection(grid, x + 2 * p, y + p + height / 4, width - 4 * p, p, &i, &j);
+
+        self.kneesLeggs = horizontal_detection(grid, x + 2 * p, y + 2 * p, width - 4 * p, p, &i, &j);
 
         self.middleLeggs = horizontal_detection(grid, x + 3 * p, y + height / 2, width - 6 * p, p, &i, &j);
 
@@ -285,7 +301,11 @@ pub const HitBox = struct {
     }
 
     fn antiSoftLock(self: *Elf) void {
-        if (self.hitBox.middleBody == .GROUND or self.hitBox.middleBody == .GROUND) {
+        const htb: HitBox = self.hitBox;
+
+        //print("\n{}\n", .{htb.kneesLeggs});
+
+        if (htb.kneesLeggs == .GROUND or htb.middleBody == .GROUND) {
             Elf.respawn();
         }
     }

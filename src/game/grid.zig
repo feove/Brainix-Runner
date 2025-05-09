@@ -20,6 +20,8 @@ const NB_COLS: usize = 13;
 var CELL_WIDTH: f32 = undefined;
 var CELL_HEIGHT: f32 = undefined;
 
+var GROUND_POS: rl.Vector2 = undefined;
+
 pub const CellType = enum {
     AIR,
     GROUND,
@@ -226,6 +228,10 @@ pub const Grid = struct {
         }
     }
 
+    pub fn getGroundPos() rl.Vector2 {
+        return GROUND_POS;
+    }
+
     fn groundDefine(self: *Grid, x: usize, y: usize, width: usize, height: usize) void {
         if (x + width > self.nb_cols or y + height > self.nb_rows) {
             return;
@@ -236,6 +242,8 @@ pub const Grid = struct {
                 self.cells[j][i].object.type = .GROUND;
             }
         }
+
+        GROUND_POS = .init(self.cells[y][x].x, self.cells[y][x].y);
 
         //self.cells[7][6].type = .SPIKE;
         // self.cells[7][4].type = .GROUND;

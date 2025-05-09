@@ -175,9 +175,9 @@ pub const Level = struct {
 
         Grid.reset();
 
-        levelStatement = .STARTING;
-
         Elf.respawn();
+
+        levelStatement = .STARTING;
     }
 
     pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
@@ -202,6 +202,7 @@ pub const Level = struct {
         _ = self;
 
         if (levelStatement == .STARTING) {
+            Elf.setState(player.PlayerState.ALIVE);
             levelStatement = .ONGOING;
         }
 
