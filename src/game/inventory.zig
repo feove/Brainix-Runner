@@ -12,7 +12,7 @@ const SLOT_NB: usize = 4;
 var SLOT_WIDTH: f32 = undefined;
 var SLOT_HEIGHT: f32 = undefined;
 
-const SLOT_PADDING: f32 = 12;
+const SLOT_PADDING: f32 = 15;
 const INV_MARGIN: f32 = 10;
 
 fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
@@ -51,18 +51,18 @@ pub const Inventory = struct {
         slotSizeInit(inventory_width, grid.cells[0][0].width, grid.cells[0][0].height);
 
         const inventory_height: f32 = SLOT_HEIGHT;
-        const x = grid.x + grid.width / 3;
+        const x = grid.x + grid.width / 3 - SLOT_PADDING;
         const y = grid.y + grid.height + INV_MARGIN;
 
-        var slot_x = x + SLOT_PADDING;
+        var slot_x = x + SLOT_PADDING / 3;
 
         for (0..SLOT_NB) |i| {
             // const i_cast: f32 = @as(f32, @floatFromInt(i));
 
             slots[i] = InvCell{
-                .pos = .init(slot_x, y ),
-                .width = SLOT_WIDTH - 2 * SLOT_PADDING,
-                .height = SLOT_HEIGHT ,
+                .pos = .init(slot_x, y + SLOT_PADDING / 5),
+                .width = SLOT_WIDTH - SLOT_PADDING,
+                .height = SLOT_HEIGHT,
                 .object = Object{ .type = CellType.EMPTY },
             };
 
@@ -199,12 +199,18 @@ pub const Inventory = struct {
         return counter;
     }
 
+    pub fn unselectSlots() void {
+        for (0..SLOT_NB) |i| {
+            inv.slots[i].isSelected = false;
+        }
+    }
+
     fn slotManagement() void {
         //const grid: Grid = Grid.selfReturn();
+        unselectSlots();
 
         if (HUD.cursorInInventory()) {
             for (0..SLOT_NB) |i| {
-                inv.slots[i].isSelected = false;
                 if (HUD.cursorInSlot(inv.slots[i])) {
                     inv.slots[i].isSelected = true;
 

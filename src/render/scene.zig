@@ -160,15 +160,15 @@ fn drawInventory() !void {
 
         switch (slot.object.type) {
             .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{
-                .x = slot.pos.x + slot.padding,
+                .x = slot.pos.x,
                 .y = slot.pos.y,
-            }, 4.1, .white),
+            }, 3.5, .white),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
-            .EMPTY => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .gray),
             .PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),
             .UP_PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .orange),
             .BOOST => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .beige),
+            .EMPTY => {},
             else => {},
         }
         if (i != inv.size - 1) {
@@ -176,7 +176,14 @@ fn drawInventory() !void {
         }
 
         if (slot.isSelected) {
-            //drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, -slot.padding / 2, false, .gray);
+            drawSelectedSlot(
+                slot.pos.x,
+                slot.pos.y,
+                slot.width,
+                slot.height,
+                0,
+                150,
+            );
         }
     }
 
@@ -195,11 +202,28 @@ fn drawItemNumber() !void {
             if (i > 0 and slot.type == .BOOST and inv.slots[i - 1].object.type == .BOOST) {
                 continue;
             }
-            var buf: [16:0]u8 = undefined; // Note the ':0' for null-terminated buffer
+            var buf: [16:0]u8 = undefined;
             const numAsString = try std.fmt.bufPrintZ(&buf, "{}", .{slot.count});
             rl.drawText(numAsString, x, y, 30, .black);
         }
     }
+}
+fn drawSelectedSlot(x_f32: f32, y_f32: f32, width_f32: f32, height_f32: f32, padding: f32, alpha: f32) void {
+    const p: i32 = @as(i32, @intFromFloat(padding));
+    const x: i32 = @as(i32, @intFromFloat(x_f32));
+    const y: i32 = @as(i32, @intFromFloat(y_f32));
+    const width: i32 = @as(i32, @intFromFloat(width_f32));
+    const height: i32 = @as(i32, @intFromFloat(height_f32));
+    const a: u8 = @as(u8, @intFromFloat(alpha));
+
+    const grayWithAlpha = rl.Color{
+        .r = 130,
+        .g = 130,
+        .b = 130,
+        .a = a,
+    };
+
+    rl.drawRectangle(x + p, y + p, width - 2 * p, height - 2 * p, grayWithAlpha);
 }
 
 //Casting de cons

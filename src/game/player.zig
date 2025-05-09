@@ -162,8 +162,9 @@ pub const Elf = struct {
         const dt: f32 = rl.getFrameTime();
         const grid = Grid.selfReturn();
 
-        //If Void Falling
+        //If Void Falling or Ground Issue
         if (self.y + self.height >= grid.y + grid.height - 5 or self.y + self.height >= Grid.getGroundPos().y + 15) {
+            print("Elf under Ground at x : {d} y : {d}\n", .{ self.x, self.y });
             Elf.respawn();
             return;
         }
