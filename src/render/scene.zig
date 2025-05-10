@@ -29,21 +29,32 @@ fn drawGrid() void {
             //drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black);
             //drawcell(cell.x, cell.y, cell.width, cell.height, 0, false, .black)
 
+            if (cell.isSelected) {
+                // drawcell(cell.x, cell.y, cell.width, cell.height, cell.padding, false, .black);
+                drawSelectedSlot(
+                    cell.x,
+                    cell.y,
+                    cell.width,
+                    cell.height,
+                    0,
+                    100,
+                );
+            }
             if (r < grid.nb_rows - 2) {
                 switch (cell.object.type) {
                     .AIR => {},
                     .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white),
                     .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
-                    .PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
+                    .PAD => {
+                        textures.jumper_sprite.update(rl.getFrameTime());
+                        textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 3 }, 3.2, 255);
+                    },
+                    //drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                     .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
                     .DOOR => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown),
                     .BOOST => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .beige),
                     else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
                 }
-            }
-
-            if (cell.isSelected) {
-                drawcell(cell.x, cell.y, cell.width, cell.height, cell.padding, false, .black);
             }
         }
     }
@@ -170,9 +181,6 @@ fn drawInventory() !void {
             .BOOST => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .beige),
             .EMPTY => {},
             else => {},
-        }
-        if (i != inv.size - 1) {
-            //drawLines(slot.pos.x + slot.width + slot.padding, inv.pos.y, slot.pos.x + slot.width + slot.padding, inv.pos.y + inv.height);
         }
 
         if (slot.isSelected) {

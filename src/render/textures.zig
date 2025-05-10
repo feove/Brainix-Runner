@@ -13,6 +13,9 @@ pub var oak_woods_tileset: rl.Texture2D = undefined;
 pub var top_far_bgrnd: rl.Texture2D = undefined;
 pub var env_ground: rl.Texture2D = undefined;
 
+pub var pad: rl.Texture2D = undefined;
+pub var jumper_sprite: AnimatedSprite = undefined;
+
 pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
 
@@ -30,8 +33,21 @@ pub fn init() !void {
     inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
     simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
 
+    pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
+
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
     sprites = Sprites.init();
+
+    //Animated Sprites
+    jumper_sprite = AnimatedSprite{
+        .texture = pad,
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 24,
+        .frame_height = 16,
+        .num_frames = 8,
+        .frame_duration = 0.1,
+    };
 }
 
 pub const Sprite = struct {
@@ -134,5 +150,52 @@ pub const Sprites = struct {
             .dark_forest_grd = .{ .name = "Dark Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 700, .width = 600, .height = 100 } },
             .env_ground_leaves = .{ .name = "Environment Ground With Orange Leaves", .src = rl.Rectangle{ .x = 120, .y = 250, .width = 150, .height = 30 } },
         };
+    }
+};
+
+pub const AnimatedSprite = struct {
+    texture: rl.Texture2D,
+    start_x: f32,
+    start_y: f32,
+    frame_width: f32,
+    frame_height: f32,
+    num_frames: usize,
+    current_frame: usize = 0,
+    frame_duration: f32, // seconds
+    time_acc: f32 = 0.0,
+
+    pub fn update(self: *AnimatedSprite, delta_time: f32) void {
+        self.time_acc += delta_time;
+        if (self.time_acc >= self.frame_duration) {
+            self.time_acc -= self.frame_duration;
+            self.current_frame = (self.current_frame + 1) % self.num_frames;
+        }
+    }
+
+    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, alpha: u8) void {
+        const src = rl.Rectangle{
+            .x = self.start_x + @as(f32, @floatFromInt(self.current_frame)) * self.frame_width,
+            .y = self.start_y,
+            .width = self.frame_width,
+            .height = self.frame_height,
+        };
+
+        const dest = rl.Rectangle{
+            .x = position.x,
+            .y = position.y,
+            .width = self.frame_width * scale,
+            .height = self.frame_height * scale,
+        };
+
+        const origin = rl.Vector2{ .x = 0, .y = 0 };
+
+        const tint = rl.Color{
+            .r = 255,
+            .g = 255,
+            .b = 255,
+            .a = alpha,
+        };
+
+        rl.drawTexturePro(self.texture, src, dest, origin, 0.0, tint);
     }
 };
