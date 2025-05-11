@@ -3,16 +3,21 @@
 
     "event_0" : {
 
-        "object_nb" : 1,
-        "slow_motion_time" : 2.0,
+        "object_nb" : 2,
+        "slow_motion_time" : 200.0,
         "time_divisor" : 3.0,
-        "already_triggered" :  false,
+        "already_triggered" : false,
         "grid_objects" : [
             
             {
                 "x" : 5,
                 "y" : 7,
                 "type" : "SPIKE"
+            },
+            {
+                "x" : 7,
+                "y" : 7,
+                "type" : "PAD"
             }
             
         ],
@@ -20,6 +25,10 @@
             {
                 "type" : "PAD",
                 "count" : 1
+            },
+            {
+                "type" : "GROUND",
+                "count" : 4
             }
         ],
         "areas" : {

@@ -1,4 +1,7 @@
 const rl = @import("raylib");
+const std = @import("std");
+const print = std.debug.print;
+const CellType = @import("../game/grid.zig").CellType;
 
 pub var elf: rl.Texture2D = undefined;
 pub var spriteSheet: rl.Texture2D = undefined;
@@ -14,6 +17,7 @@ pub var top_far_bgrnd: rl.Texture2D = undefined;
 pub var env_ground: rl.Texture2D = undefined;
 
 pub var pad: rl.Texture2D = undefined;
+
 pub var jumper_sprite: AnimatedSprite = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
@@ -41,12 +45,16 @@ pub fn init() !void {
     //Animated Sprites
     jumper_sprite = AnimatedSprite{
         .texture = pad,
+        .sprite = Sprite{
+            .name = "Pad",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 24, .height = 16 },
+        },
         .start_x = 0,
         .start_y = 0,
         .frame_width = 24,
         .frame_height = 16,
         .num_frames = 8,
-        .frame_duration = 0.1,
+        .frame_duration = 0.08,
     };
 }
 
@@ -84,6 +92,14 @@ pub const Sprite = struct {
         };
 
         rl.drawTexturePro(sheet, self.src, dest, origin, rotation, tint);
+    }
+
+    pub fn typeToSprite(celltype: CellType) Sprite {
+        return switch (celltype) {
+            .GROUND => sprites.granite_pure_l4,
+            .PAD => jumper_sprite.texture,
+            else => sprites.granite_pure_l4,
+        };
     }
 };
 
@@ -155,6 +171,7 @@ pub const Sprites = struct {
 
 pub const AnimatedSprite = struct {
     texture: rl.Texture2D,
+    sprite: Sprite,
     start_x: f32,
     start_y: f32,
     frame_width: f32,
@@ -163,18 +180,30 @@ pub const AnimatedSprite = struct {
     current_frame: usize = 0,
     frame_duration: f32, // seconds
     time_acc: f32 = 0.0,
+    isRunning: bool = false,
+    loop: usize = 0,
 
-    pub fn update(self: *AnimatedSprite, delta_time: f32) void {
+    pub fn update(self: *AnimatedSprite, delta_time: f32, loop_limit: usize) void {
+        if (self.loop == loop_limit) {
+            self.isRunning = false;
+            self.loop = 0;
+            return;
+        }
+
         self.time_acc += delta_time;
         if (self.time_acc >= self.frame_duration) {
             self.time_acc -= self.frame_duration;
             self.current_frame = (self.current_frame + 1) % self.num_frames;
         }
+
+        if (self.isRunning and self.current_frame == self.num_frames - 1) {
+            self.loop += 1;
+        }
     }
 
     pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, alpha: u8) void {
         const src = rl.Rectangle{
-            .x = self.start_x + @as(f32, @floatFromInt(self.current_frame)) * self.frame_width,
+            .x = self.start_x + if (self.isRunning) @as(f32, @floatFromInt(self.current_frame)) * self.frame_width else 0,
             .y = self.start_y,
             .width = self.frame_width,
             .height = self.frame_height,

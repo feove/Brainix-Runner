@@ -7,6 +7,7 @@ const Grid = @import("grid.zig").Grid;
 const PlayerState = @import("player.zig").PlayerState;
 const event = @import("level/events.zig");
 const Inventory = @import("inventory.zig").Inventory;
+const textures = @import("../render/textures.zig");
 const print = std.debug.print;
 
 const ItemSpec = struct {
@@ -230,6 +231,8 @@ pub const Object = struct {
             if (elf.isOnGround) {
                 elf.physics.applyJump(elf.jump_force);
                 elf.isOnGround = false;
+
+                textures.jumper_sprite.isRunning = true;
             }
         }
     }

@@ -1,8 +1,11 @@
 const rl = @import("raylib");
 const Grid = @import("grid.zig").Grid;
 const Cell = @import("grid.zig").Cell;
+const CellType = @import("grid.zig").CellType;
 const Inventory = @import("inventory.zig").Inventory;
 const InvCell = @import("inventory.zig").InvCell;
+const textures = @import("../render/textures.zig");
+const Sprite = textures.Sprite;
 pub var hud = HUD{};
 
 pub const HUD = struct {
@@ -48,5 +51,19 @@ pub const HUD = struct {
         const inAxeY: bool = hud.mouseY > slot.pos.y and hud.mouseY < slot.pos.y + slot.height;
 
         return inAxeX and inAxeY;
+    }
+
+    pub fn spriteUnderCursor() void {
+        const inv = Inventory.selfReturn();
+
+        switch (inv.cell.type) {
+            .GROUND => {
+                Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+            },
+            .PAD => {
+                Sprite.drawWithRotation(textures.jumper_sprite.texture, textures.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+            },
+            else => {},
+        }
     }
 };

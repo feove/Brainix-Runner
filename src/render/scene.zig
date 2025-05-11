@@ -7,6 +7,7 @@ const textures = @import("textures.zig");
 const Sprite = @import("textures.zig").Sprite;
 const player = @import("../game/player.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
+const HUD = @import("../game/utils.zig").HUD;
 
 //Tmp Drawing
 pub fn drawScene() !void {
@@ -46,7 +47,7 @@ fn drawGrid() void {
                     .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white),
                     .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
                     .PAD => {
-                        textures.jumper_sprite.update(rl.getFrameTime());
+                        textures.jumper_sprite.update(rl.getFrameTime(), 1);
                         textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 3 }, 3.2, 255);
                     },
                     //drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
@@ -119,6 +120,7 @@ fn drawUnderGroundDeco() void {
 
 fn drawGround() void {
     const grid: Grid = Grid.selfReturn();
+    const block_scale: f32 = 4.19;
 
     for (grid.nb_rows - 2..grid.nb_rows) |r| {
         for (0..grid.nb_cols) |c| {
@@ -126,26 +128,26 @@ fn drawGround() void {
 
             if (c == 0 or c == grid.nb_cols - 1) {
                 if (r == grid.nb_rows - 2) {
-                    Sprite.draw(textures.spriteSheet, textures.sprites.carved_granite, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
-                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pillar, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15, .white);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.carved_granite, rl.Vector2{ .x = cell.x, .y = cell.y }, block_scale, .white);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pillar, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, block_scale, .white);
                 }
                 continue;
             }
 
             if (r == grid.nb_rows - 2) {
-                Sprite.draw(textures.spriteSheet, textures.sprites.granite_beam, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
+                Sprite.draw(textures.spriteSheet, textures.sprites.granite_beam, rl.Vector2{ .x = cell.x, .y = cell.y }, block_scale, .white);
 
                 //Scripted
                 if (c == 2 or c == 5 or c == 9) {
-                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
-                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l3, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, 4.15, .white);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, block_scale, .white);
+                    Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l3, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, block_scale, .white);
                 }
 
                 continue;
             }
 
             if (c != 2 and c != 5 and c != 9) {
-                Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, 4.15, .white);
+                Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y + 1 }, block_scale, .white);
             }
         }
     }
@@ -196,6 +198,8 @@ fn drawInventory() !void {
     }
 
     try drawItemNumber();
+
+    HUD.spriteUnderCursor();
 }
 
 fn drawItemNumber() !void {
