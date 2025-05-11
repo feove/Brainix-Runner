@@ -142,7 +142,6 @@ fn drawGround() void {
                     Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, block_scale, .white);
                     Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l3, rl.Vector2{ .x = cell.x, .y = cell.y + cell.height }, block_scale, .white);
                 }
-
                 continue;
             }
 
@@ -178,12 +177,14 @@ fn drawInventory() !void {
             }, 3.5, .white),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
-            .PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .yellow),
+            .PAD => Sprite.drawWithRotation(textures.jumper_sprite.texture, textures.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255),
             .UP_PAD => drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .orange),
             .BOOST => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .beige),
             .EMPTY => {},
             else => {},
         }
+
+        //drawcell(, slot.width, slot.height / 4, 0, true, .yellow),
 
         if (slot.isSelected) {
             drawSelectedSlot(
