@@ -145,6 +145,7 @@ pub const Elf = struct {
         self.hitBox.hitBoxUpdate(&grid, &elf);
 
         self.canTrigger = self.hitBox.middleLeggs != CellType.AIR;
+
         //HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
 

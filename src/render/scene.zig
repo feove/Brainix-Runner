@@ -44,11 +44,17 @@ fn drawGrid() void {
             if (r < grid.nb_rows - 2) {
                 switch (cell.object.type) {
                     .AIR => {},
-                    .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_l3, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white),
+                    .GROUND => {
+                        var sprite: Sprite = textures.sprites.granite_l3;
+                        if (cell.object.canPlayerTake) {
+                            sprite = textures.sprites.granite_pure_l4;
+                        }
+                        Sprite.draw(textures.spriteSheet, sprite, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white);
+                    },
                     .SPIKE => {
                         //drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red);
                         // Sprite.draw(textures.all_weapons, textures.sprites.simple_spike, .init(cell.x, cell.y + 10), 3.90, .white);
-                        Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 5), 2.80, .white);
+                        Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 8), 2.80, .white);
                     },
                     .PAD => {
                         textures.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
@@ -175,10 +181,7 @@ fn drawInventory() !void {
         const slot = inv.slots[i];
 
         switch (slot.object.type) {
-            .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{
-                .x = slot.pos.x,
-                .y = slot.pos.y,
-            }, 3.5, .white),
+            .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y }, 3.5, .white),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
             .PAD => Sprite.drawWithRotation(textures.jumper_sprite.texture, textures.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255),

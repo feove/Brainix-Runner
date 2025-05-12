@@ -7,6 +7,7 @@ const Grid = @import("grid.zig").Grid;
 const PlayerState = @import("player.zig").PlayerState;
 const event = @import("level/events.zig");
 const Inventory = @import("inventory.zig").Inventory;
+const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
 const print = std.debug.print;
 
@@ -255,9 +256,6 @@ pub const Object = struct {
 
                 textures.jumper_sprite.setPos(i, j);
                 textures.jumper_sprite.isRunning = true;
-
-                //print("PAD TRIGGERED at x : {d} y : {d}\n", .{ textures.jumper_sprite.x, textures.jumper_sprite.y });
-
             }
         }
     }
