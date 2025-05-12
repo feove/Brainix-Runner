@@ -56,6 +56,7 @@ pub const Elf = struct {
     height: f32,
     speed: f32,
     physics: PhysicObject,
+    canTrigger: bool = true,
     isOnGround: bool,
     hitBox: HitBox,
     repulsive_force: f32,
@@ -113,6 +114,10 @@ pub const Elf = struct {
         } else {
             self.physics.velocity_y = 0;
             self.physics.velocity_x = 0;
+        }
+
+        if (elf.hitBox.middleLeggs == .EMPTY) {
+            elf.canTrigger = true;
         }
 
         Object.padAction(&elf);
@@ -266,7 +271,7 @@ pub const HitBox = struct {
         rl.drawRectangleLinesEx(rectangle, 5, .red);
     }
 
-    fn i_and_j_assign(grid: *Grid, x: f32, y: f32, i: *usize, j: *usize) void {
+    pub fn i_and_j_assign(grid: *Grid, x: f32, y: f32, i: *usize, j: *usize) void {
         i.* = @intFromFloat((x - grid.x) / grid.cells[0][0].width);
         j.* = @intFromFloat((y - grid.y) / grid.cells[0][0].height);
     }

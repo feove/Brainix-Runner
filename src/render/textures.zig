@@ -189,8 +189,15 @@ pub const AnimatedSprite = struct {
     current_frame: usize = 0,
     frame_duration: f32, // seconds
     time_acc: f32 = 0.0,
+    x: usize = 0, //Current Pad Animated Position
+    y: usize = 0,
     isRunning: bool = false,
     loop: usize = 0,
+
+    pub fn setPos(self: *AnimatedSprite, x: usize, y: usize) void {
+        self.x = x;
+        self.y = y;
+    }
 
     pub fn update(self: *AnimatedSprite, delta_time: f32, loop_limit: usize) void {
         if (self.loop == loop_limit) {
@@ -210,9 +217,11 @@ pub const AnimatedSprite = struct {
         }
     }
 
-    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, alpha: u8) void {
+    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, alpha: u8, x: usize, y: usize) void {
+        const next_sprite: f32 = if (self.isRunning and x == self.x and y == self.y) @as(f32, @floatFromInt(self.current_frame)) * self.frame_width else 0;
+
         const src = rl.Rectangle{
-            .x = self.start_x + if (self.isRunning) @as(f32, @floatFromInt(self.current_frame)) * self.frame_width else 0,
+            .x = self.start_x + next_sprite,
             .y = self.start_y,
             .width = self.frame_width,
             .height = self.frame_height,

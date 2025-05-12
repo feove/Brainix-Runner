@@ -221,6 +221,19 @@ pub const Object = struct {
         return counter;
     }
 
+    fn findObject(elf: *Elf, i: *usize, j: *usize, celltype: CellType) void {
+        var grid: Grid = Grid.selfReturn();
+        HitBox.i_and_j_assign(&grid, elf.x + elf.width / 2, elf.y + elf.height - elf.height / 4, i, j);
+
+        if (grid.cells[j.*][i.*].object.type != celltype) {
+            i.* += 1; //Can be Out of band
+        }
+
+        if (grid.cells[j.*][i.*].object.type != celltype) {
+            i.* -= 1; //Can be Out of band
+        }
+    }
+
     pub fn padAction(elf: *Elf) void {
         const PadDetectionSides = [_]CellType{
             elf.hitBox.middleLeggs,
@@ -230,9 +243,18 @@ pub const Object = struct {
         if (HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
             if (elf.isOnGround) {
                 elf.physics.applyJump(elf.jump_force);
-                elf.isOnGround = false;
 
+                var i: usize = undefined;
+                var j: usize = undefined;
+
+                findObject(elf, &i, &j, .PAD);
+
+                textures.jumper_sprite.setPos(i, j);
                 textures.jumper_sprite.isRunning = true;
+
+                print("x : {d} y : {d}\n", .{ textures.jumper_sprite.x, textures.jumper_sprite.y });
+                elf.isOnGround = false;
+                elf.canTrigger = false;
             }
         }
     }
