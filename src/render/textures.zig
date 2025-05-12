@@ -2,6 +2,7 @@ const rl = @import("raylib");
 const std = @import("std");
 const print = std.debug.print;
 const CellType = @import("../game/grid.zig").CellType;
+const Elf = @import("../game/player.zig").Elf;
 
 pub var elf: rl.Texture2D = undefined;
 pub var spriteSheet: rl.Texture2D = undefined;
@@ -58,7 +59,7 @@ pub fn init() !void {
         .frame_width = 24,
         .frame_height = 16,
         .num_frames = 8,
-        .frame_duration = 0.08,
+        .frame_duration = 0.1,
     };
 }
 
@@ -203,6 +204,7 @@ pub const AnimatedSprite = struct {
         if (self.loop == loop_limit) {
             self.isRunning = false;
             self.loop = 0;
+
             return;
         }
 
@@ -219,6 +221,10 @@ pub const AnimatedSprite = struct {
 
     pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, alpha: u8, x: usize, y: usize) void {
         const next_sprite: f32 = if (self.isRunning and x == self.x and y == self.y) @as(f32, @floatFromInt(self.current_frame)) * self.frame_width else 0;
+
+        // if (next_sprite != 0) {
+        //     print("Animated !\n", .{});
+        // }
 
         const src = rl.Rectangle{
             .x = self.start_x + next_sprite,

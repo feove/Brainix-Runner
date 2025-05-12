@@ -230,7 +230,7 @@ pub const Object = struct {
         }
 
         if (grid.cells[j.*][i.*].object.type != celltype) {
-            i.* -= 1; //Can be Out of band
+            i.* -= 2; //Can be Out of band
         }
     }
 
@@ -241,7 +241,7 @@ pub const Object = struct {
 
         //(rl.isKeyPressed(rl.KeyboardKey.space)) or
         if (HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
-            if (elf.isOnGround) {
+            if (elf.isOnGround and elf.canTrigger) {
                 elf.physics.applyJump(elf.jump_force);
 
                 var i: usize = undefined;
@@ -249,12 +249,15 @@ pub const Object = struct {
 
                 findObject(elf, &i, &j, .PAD);
 
+                // if (Grid.selfReturn().cells[j][i].object.canPlayerTake) {
+                //     event.Event.stopSlowMotion();
+                // }
+
                 textures.jumper_sprite.setPos(i, j);
                 textures.jumper_sprite.isRunning = true;
 
-                print("x : {d} y : {d}\n", .{ textures.jumper_sprite.x, textures.jumper_sprite.y });
-                elf.isOnGround = false;
-                elf.canTrigger = false;
+                //print("PAD TRIGGERED at x : {d} y : {d}\n", .{ textures.jumper_sprite.x, textures.jumper_sprite.y });
+
             }
         }
     }

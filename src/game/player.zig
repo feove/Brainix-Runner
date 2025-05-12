@@ -90,6 +90,10 @@ pub const Elf = struct {
         elf.state = state;
     }
 
+    pub fn enableTriggers() void {
+        elf.canTrigger = true;
+    }
+
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();
@@ -109,15 +113,11 @@ pub const Elf = struct {
 
         self.isOnGround = self.hitBox.bottomLeggs == CellType.GROUND;
 
-        if (!self.isOnGround) {
+        if (!self.isOnGround and Level.getLevelStatement() != .STARTING) {
             self.physics.velocity_y += gravity * dt;
         } else {
             self.physics.velocity_y = 0;
             self.physics.velocity_x = 0;
-        }
-
-        if (elf.hitBox.middleLeggs == .EMPTY) {
-            elf.canTrigger = true;
         }
 
         Object.padAction(&elf);
@@ -144,6 +144,7 @@ pub const Elf = struct {
 
         self.hitBox.hitBoxUpdate(&grid, &elf);
 
+        self.canTrigger = self.hitBox.middleLeggs != CellType.AIR;
         //HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
 
@@ -196,7 +197,7 @@ pub const Elf = struct {
 
         //print("DEBUG 2 : x : {d} ||y : {d}\n\n", .{ elf.x, elf.y });
         if (canMoveVertical(self, y)) {
-            if (self.y <= grid.y) {
+            if (self.y < grid.y) {
                 self.y += 5;
                 self.physics.velocity_y += self.repulsive_force;
                 return;

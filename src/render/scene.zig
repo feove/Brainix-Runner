@@ -51,7 +51,7 @@ fn drawGrid() void {
                         Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 5), 2.80, .white);
                     },
                     .PAD => {
-                        textures.jumper_sprite.update(rl.getFrameTime(), 1);
+                        textures.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
                         textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 255, c, r);
                     },
                     //drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
