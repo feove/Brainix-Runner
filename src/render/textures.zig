@@ -18,6 +18,8 @@ pub var env_ground: rl.Texture2D = undefined;
 
 pub var pad: rl.Texture2D = undefined;
 
+pub var all_weapons: rl.Texture2D = undefined;
+
 pub var jumper_sprite: AnimatedSprite = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
@@ -36,6 +38,8 @@ pub fn init() !void {
     env_ground = try rl.loadTexture("assets/textures/pack/DarkForest/env_ground.png");
     inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
     simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
+
+    all_weapons = try rl.loadTexture("assets/textures/pack/trap_and_weapon/all.png");
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
 
@@ -129,6 +133,9 @@ pub const Sprites = struct {
     inventory_hud: Sprite,
     simple_inventory_hud: Sprite,
 
+    simple_spike: Sprite,
+    wood_block_spikes: Sprite,
+
     dark_forest_grd: Sprite,
     scared_forest_grd: Sprite,
     env_ground_leaves: Sprite,
@@ -165,6 +172,8 @@ pub const Sprites = struct {
             .scared_forest_grd = .{ .name = "Scared Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 600, .height = 100 } },
             .dark_forest_grd = .{ .name = "Dark Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 700, .width = 600, .height = 100 } },
             .env_ground_leaves = .{ .name = "Environment Ground With Orange Leaves", .src = rl.Rectangle{ .x = 120, .y = 250, .width = 150, .height = 30 } },
+            .simple_spike = .{ .name = "Simple Spike", .src = rl.Rectangle{ .x = 415, .y = 320, .width = 16, .height = 14 } },
+            .wood_block_spikes = .{ .name = "Wood Block Spikes", .src = rl.Rectangle{ .x = 160, .y = 70, .width = 30, .height = 30 } },
         };
     }
 };

@@ -45,10 +45,14 @@ fn drawGrid() void {
                 switch (cell.object.type) {
                     .AIR => {},
                     .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cell.x, .y = cell.y }, 4.15, .white),
-                    .SPIKE => drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red),
+                    .SPIKE => {
+                        //drawSpike(cell.x, cell.y, cell.width, cell.height, cell.padding, .red);
+                        // Sprite.draw(textures.all_weapons, textures.sprites.simple_spike, .init(cell.x, cell.y + 10), 3.90, .white);
+                        Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 5), 2.80, .white);
+                    },
                     .PAD => {
                         textures.jumper_sprite.update(rl.getFrameTime(), 1);
-                        textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 3 }, 3.2, 255);
+                        textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 }, 3.00, 255);
                     },
                     //drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                     .UP_PAD => drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),

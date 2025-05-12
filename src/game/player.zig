@@ -7,6 +7,7 @@ const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
 const Level = @import("level/events.zig").Level;
+const LevelStatement = @import("level/events.zig").LevelStatement;
 const event = @import("level/events.zig");
 const print = @import("std").debug.print;
 const Object = @import("terrain_object.zig").Object;
@@ -99,6 +100,11 @@ pub const Elf = struct {
         // print("x : {d} ||y : {d}\n\n", .{ initGrid.cells[6][0].x + 15, initGrid.cells[6][0].y });
 
         //print("{d}\n", .{self.time_divisor});
+        // print("{}\n", .{Level.getLevelStatement()});
+
+        if (rl.isKeyPressed(rl.KeyboardKey.r) or Level.getLevelStatement() == .STARTING) {
+            respawn();
+        }
 
         self.isOnGround = self.hitBox.bottomLeggs == CellType.GROUND;
 

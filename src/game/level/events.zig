@@ -39,7 +39,7 @@ pub const PlayerEventStatus = enum {
     COMPLETED_AREA,
 };
 
-const LevelStatement = enum {
+pub const LevelStatement = enum {
     STARTING,
     ONGOING,
     PRE_COMPLETED,
