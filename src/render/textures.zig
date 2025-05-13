@@ -136,6 +136,7 @@ pub const Sprites = struct {
 
     simple_spike: Sprite,
     wood_block_spikes: Sprite,
+    arrow_icn: Sprite,
 
     dark_forest_grd: Sprite,
     scared_forest_grd: Sprite,
@@ -175,6 +176,7 @@ pub const Sprites = struct {
             .env_ground_leaves = .{ .name = "Environment Ground With Orange Leaves", .src = rl.Rectangle{ .x = 120, .y = 250, .width = 150, .height = 30 } },
             .simple_spike = .{ .name = "Simple Spike", .src = rl.Rectangle{ .x = 415, .y = 320, .width = 16, .height = 14 } },
             .wood_block_spikes = .{ .name = "Wood Block Spikes", .src = rl.Rectangle{ .x = 160, .y = 70, .width = 30, .height = 30 } },
+            .arrow_icn = .{ .name = "Arrow Icon", .src = rl.Rectangle{ .x = 300, .y = 160, .width = 20, .height = 15 } },
         };
     }
 };

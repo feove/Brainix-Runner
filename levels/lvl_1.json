@@ -15,10 +15,11 @@
                 "type" : "SPIKE"
             },
             {
-                "x" : 7,
+                "x" : 6,
                 "y" : 7,
-                "type" : "PAD"
+                "type" : "SPIKE"
             }
+           
             
         ],
         "inv_objects" : [  

@@ -240,7 +240,6 @@ pub const Object = struct {
             elf.hitBox.middleLeggs,
         };
 
-        //(rl.isKeyPressed(rl.KeyboardKey.space)) or
         if (HitBox.isInCollision(PadDetectionSides[0..], CellType.PAD)) {
             if (elf.isOnGround and elf.canTrigger) {
                 elf.physics.applyJump(elf.jump_force);
@@ -267,9 +266,16 @@ pub const Object = struct {
 
         //(rl.isKeyPressed(rl.KeyboardKey.space)) or
         if (HitBox.isInCollision(PadDetectionSides[0..], CellType.UP_PAD)) {
-            if (elf.isOnGround) {
+            if (elf.isOnGround and elf.canTrigger) {
                 elf.physics.upPadEffect(itemSpec.up_pad_force);
-                elf.isOnGround = false;
+
+                var i: usize = undefined;
+                var j: usize = undefined;
+
+                findObject(elf, &i, &j, .UP_PAD);
+
+                textures.jumper_sprite.setPos(i, j);
+                textures.jumper_sprite.isRunning = true;
             }
         }
     }
