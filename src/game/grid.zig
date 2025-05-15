@@ -61,7 +61,7 @@ pub const Grid = struct {
     nb_cols: usize,
     width: f32,
     height: f32,
-    cellInSelection: bool = false,
+
     cells: [][]Cell,
     cacheCell: CellType = .EMPTY,
 
@@ -201,53 +201,59 @@ pub const Grid = struct {
         // const hud = HUD.selfReturn();
         const inv = Inventory.selfReturn();
 
-        grid.cellInSelection = false;
-        if (HUD.cursorInGrid()) {
+        var canBePlaced: bool = true;
+        var left_click: bool = false;
+        var anyCellSelected: bool = false;
+        const cursorInGrid: bool = HUD.cursorInGrid();
+        //HUD.setPlaceAllowing(inv.anySlotSelected);
+
+        if (cursorInGrid) {
             for (0..grid.nb_cols) |i| {
                 for (0..grid.nb_rows) |j| {
                     grid.cells[j][i].isSelected = false;
-                    HUD.setPlaceAllowing(inv.anySlotSelected);
 
                     if (HUD.cursorInCell(grid.cells[j][i])) {
                         grid.cells[j][i].isSelected = true;
-                        grid.cellInSelection = true;
+                        anyCellSelected = true;
+
                         const PlayerOnCell: bool = playerOnCell(&grid.cells[j][i], inv.cell.type);
-                        HUD.setPlaceAllowing(grid.cells[j][i].object.type != .AIR);
+                        canBePlaced = (!canBePlaced or !PlayerOnCell) and grid.cells[j][i].object.type == .AIR;
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
                             removeCell(i, j);
                         }
 
-                        if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
+                        left_click = rl.isMouseButtonPressed(rl.MouseButton.left);
 
-                            //Place Item over terrain from Inventory
-                            if (inv.cell.type != .EMPTY) {
-                                if (grid.cells[j][i].object.type == .AIR) {
-                                    //if (canBePlaced)
-                                    // HUD.setPlaceAllowing(true);
-                                    if (AroundConfig.cellAroundchecking(i, j, inv.cell.type) or PlayerOnCell) {
-                                        HUD.setPlaceAllowing(false);
-                                        return;
-                                    }
-
-                                    if (cellSet(i, j, inv.cell.type)) {
-                                        grid.cells[j][i].object.canPlayerTake = true;
-                                        Inventory.clearinv_cell();
-                                    }
+                        //Place Item over terrain from Inventory
+                        if (inv.cell.type != .EMPTY) {
+                            if (grid.cells[j][i].object.type == .AIR) {
+                                if (AroundConfig.cellAroundchecking(i, j, inv.cell.type) or PlayerOnCell) {
+                                    canBePlaced = false;
+                                    continue;
                                 }
-                                continue;
+
+                                if (left_click and cellSet(i, j, inv.cell.type)) {
+                                    grid.cells[j][i].object.canPlayerTake = true;
+                                    Inventory.clearinv_cell();
+                                }
                             }
-                            //Take item from terrain .object.playerCanTake
-                            if (grid.cells[j][i].object.canPlayerTake) {
-                                Inventory.setinv_cell(grid.cells[j][i].object.type);
-                                removeFromGrid(i, j, grid.cells[j][i].object.type);
-                                //print("{any}\n", .{inv.cell.type});
-                            }
+                            continue;
+                        }
+
+                        //Take item from terrain .object.playerCanTake
+                        if (left_click and grid.cells[j][i].object.canPlayerTake) {
+                            Inventory.setinv_cell(grid.cells[j][i].object.type);
+                            removeFromGrid(i, j, grid.cells[j][i].object.type);
                         }
                     }
                 }
             }
+            canBePlaced = canBePlaced and anyCellSelected;
         }
+        canBePlaced = canBePlaced and (cursorInGrid != HUD.cursorInInventory());
+
+        HUD.setPlaceAllowing(canBePlaced);
     }
 
     pub fn getGroundPos() rl.Vector2 {
