@@ -10,14 +10,16 @@ const anim = @import("../render/animated_sprite.zig");
 const Level = @import("level/events.zig").Level;
 const LevelStatement = @import("level/events.zig").LevelStatement;
 const event = @import("level/events.zig");
-const print = @import("std").debug.print;
+const anim_manager = @import("animations/anim_manager.zig");
 const Object = @import("terrain_object.zig").Object;
+
+const print = @import("std").debug.print;
 
 pub var elf: Elf = undefined;
 pub var initGrid: Grid = undefined;
 pub var time_divisor: f32 = 1.0;
 
-const ELF_DEFAULT_SPEED: f32 = 170.0;
+const ELF_DEFAULT_SPEED: f32 = 150.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
 var RESPAWN_POINT: rl.Vector2 = .init(80, 443);
@@ -79,10 +81,6 @@ pub const Elf = struct {
         self.speed = ELF_DEFAULT_SPEED;
     }
 
-    pub fn setSlowMotiontSpeed(self: *Elf) void {
-        self.speed = SLOW_MOTION_SPEED;
-    }
-
     pub fn setSpeedBoost(self: *Elf) void {
         self.speed = 1500;
     }
@@ -93,6 +91,10 @@ pub const Elf = struct {
 
     pub fn enableTriggers() void {
         elf.canTrigger = true;
+    }
+
+    pub fn getCurrentTime() f32 {
+        return rl.getFrameTime() / time_divisor;
     }
 
     pub fn controller(self: *Elf) void {
@@ -248,17 +250,14 @@ pub const Elf = struct {
 
     pub fn drawElf() void {
         //   rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
+        anim_manager.elf_anim.update(&elf);
 
-        anim.battle_mage.isRunning = true;
-        anim.battle_mage.update(rl.getFrameTime() / time_divisor, 10);
-        anim.battle_mage.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
+        // const p: f32 = Grid.selfReturn().cells[0][0].padding;
+        // rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
 
-        const p: f32 = Grid.selfReturn().cells[0][0].padding;
-        rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
+        // rl.drawRectangleRec(.init(elf.x + 3 * p, elf.y + elf.height / 2, elf.width - 6 * p, p), .orange);
 
-        rl.drawRectangleRec(.init(elf.x + 3 * p, elf.y + elf.height / 2, elf.width - 6 * p, p), .orange);
-
-        rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + elf.height - elf.height / 3 + p, elf.width - 4 * p, p), .yellow);
+        // rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + elf.height - elf.height / 3 + p, elf.width - 4 * p, p), .yellow);
     }
 };
 

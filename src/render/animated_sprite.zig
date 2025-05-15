@@ -1,10 +1,12 @@
 const rl = @import("raylib");
+const print = @import("std").debug.print;
 const Sprite = @import("textures.zig").Sprite;
 const textures = @import("textures.zig");
 
 pub var jumper_sprite: AnimatedSprite = undefined;
 pub var boost_sprite: AnimatedSprite = undefined;
-pub var battle_mage: AnimatedSprite = undefined;
+
+pub var battle_mage_running: AnimatedSprite = undefined;
 
 pub fn init() !void {
     jumper_sprite = AnimatedSprite{
@@ -36,10 +38,11 @@ pub fn init() !void {
         .num_frames = 4,
         .frame_duration = 0.1,
     };
-    battle_mage = AnimatedSprite{
+
+    battle_mage_running = AnimatedSprite{
         .texture = textures.battlemage,
         .sprite = Sprite{
-            .name = "Battle Mage",
+            .name = "Battle Mage is Running",
             .src = rl.Rectangle{ .x = 0, .y = 0, .width = 56, .height = 480 },
         },
         .start_x = 0,
@@ -67,6 +70,7 @@ pub const AnimatedSprite = struct {
     x: usize = 0,
     y: usize = 0,
     isRunning: bool = false,
+    mirror: bool = false,
     loop: usize = 0,
 
     pub fn setPos(self: *AnimatedSprite, x: usize, y: usize) void {
@@ -94,6 +98,10 @@ pub const AnimatedSprite = struct {
         }
     }
 
+    pub fn applyMirror(self: *AnimatedSprite, mirror: bool) void {
+        self.mirror = mirror;
+    }
+
     pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: u8, x: usize, y: usize) void {
         var x_apply: f32 = @as(f32, @floatFromInt(self.current_frame)) * self.frame_width;
         var y_apply: f32 = @as(f32, @floatFromInt(self.current_frame)) * self.frame_height;
@@ -105,19 +113,25 @@ pub const AnimatedSprite = struct {
                 y_apply = 0;
             }
         }
+
         const src = rl.Rectangle{
             .x = self.start_x + x_apply,
             .y = self.start_y + y_apply,
-            .width = self.frame_width,
+            .width = if (self.mirror) -1 * self.frame_width else self.frame_width,
             .height = self.frame_height,
         };
 
-        const dest = rl.Rectangle{
-            .x = position.x,
+        var dest = rl.Rectangle{
+            .x = if (self.mirror) position.x - self.frame_width * scale else position.x,
             .y = position.y,
             .width = self.frame_width * scale,
             .height = self.frame_height * scale,
         };
+
+        if (self.mirror) {
+            dest.width = -dest.width;
+            dest.x += self.frame_width * scale; // correctly shift to left due to flip
+        }
 
         const origin = rl.Vector2{ .x = 0, .y = 0 };
 
