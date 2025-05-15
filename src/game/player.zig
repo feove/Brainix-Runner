@@ -6,11 +6,12 @@ const PhysicObject = @import("terrain_object.zig").PhysicObject;
 const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
-const anim = @import("../render/animated_sprite.zig");
 const Level = @import("level/events.zig").Level;
 const LevelStatement = @import("level/events.zig").LevelStatement;
 const event = @import("level/events.zig");
+const anim = @import("../render/animated_sprite.zig");
 const anim_manager = @import("animations/anim_manager.zig");
+const AnimManager = anim_manager.AnimManager;
 const Object = @import("terrain_object.zig").Object;
 
 const print = @import("std").debug.print;
@@ -45,6 +46,7 @@ pub fn initElf() void {
         .isOnGround = false,
         .hitBox = HitBox{},
         .repulsive_force = 500.0,
+        .animator = anim_manager.elf_anim,
     };
 }
 
@@ -66,6 +68,7 @@ pub const Elf = struct {
     jump_force: f32 = jump_force,
     boost_force: f32 = boost_force,
     state: PlayerState = PlayerState.RESPAWNING,
+    animator: anim_manager.AnimManager,
 
     pub fn respawn() void {
         elf.x = RESPAWN_POINT.x;
@@ -123,6 +126,8 @@ pub const Elf = struct {
             self.physics.velocity_x = 0;
         }
 
+        AnimManager.AnimationTrigger(&elf);
+
         Object.padAction(&elf);
 
         Object.upPadAction(&elf);
@@ -131,7 +136,7 @@ pub const Elf = struct {
 
         Object.boostAction(&elf);
 
-        //HitBox.antiSoftLock(&elf);
+        //HitBox.antiGrounbGlitch(&elf);
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -187,13 +192,13 @@ pub const Elf = struct {
 
         //print("DEBUG 1 : x : {d} ||y : {d}\n\n", .{ elf.x, elf.y });
         if (canMoveHorizontal(self, x)) {
-            if (((self.hitBox.rightBody == CellType.GROUND or self.hitBox.rightLeggs == CellType.GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
+            if (((self.hitBox.rightBody == .GROUND or self.hitBox.rightLeggs == .GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt;
 
-                self.physics.auto_moving = AutoMovements.LEFT;
-            } else if (((self.hitBox.leftBody == CellType.GROUND or self.hitBox.leftLeggs == CellType.GROUND) and x < 0) or self.x - 10 <= grid.x) {
+                self.physics.auto_moving = .LEFT;
+            } else if (((self.hitBox.leftBody == .GROUND or self.hitBox.leftLeggs == .GROUND) and x < 0) or self.x - 10 <= grid.x) {
                 self.x += self.repulsive_force * dt;
-                self.physics.auto_moving = AutoMovements.RIGHT;
+                self.physics.auto_moving = .RIGHT;
             } else {
                 self.x += x;
             }
@@ -207,9 +212,9 @@ pub const Elf = struct {
                 return;
             }
 
-            if ((self.hitBox.topBody == CellType.GROUND and y < 0)) {
+            if ((self.hitBox.topBody == .GROUND and y < 0)) {
                 self.physics.velocity_y += self.repulsive_force;
-            } else if (self.hitBox.bottomLeggs == CellType.GROUND and y > 0) {
+            } else if (self.hitBox.bottomLeggs == .GROUND and y > 0) {
                 self.y -= self.repulsive_force * 0.4 * dt;
             } else {
                 self.y += y;
@@ -229,11 +234,11 @@ pub const Elf = struct {
     }
 
     fn updatePlayerStatement() void {
-        if (elf.state == PlayerState.DEAD) {
+        if (elf.state == .DEAD) {
             Grid.reset();
             Level.reset();
 
-            elf.state = PlayerState.ALIVE;
+            elf.state = .ALIVE;
 
             event.level.events[event.level.i_event].already_triggered = false;
         }
@@ -242,22 +247,21 @@ pub const Elf = struct {
     pub fn playerInDoor() bool {
         //print("{any}\n", .{elf.hitBox.middleBody});
 
-        if (elf.hitBox.middleBody == .DOOR or elf.hitBox.middleLeggs == .DOOR) {
-            return true;
-        }
-        return false;
+        return elf.hitBox.middleBody == .DOOR or elf.hitBox.middleLeggs == .DOOR;
     }
 
     pub fn drawElf() void {
         //   rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
         anim_manager.elf_anim.update(&elf);
 
-        // const p: f32 = Grid.selfReturn().cells[0][0].padding;
+        //const p: f32 = Grid.selfReturn().cells[0][0].padding;
         // rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
 
         // rl.drawRectangleRec(.init(elf.x + 3 * p, elf.y + elf.height / 2, elf.width - 6 * p, p), .orange);
 
         // rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + elf.height - elf.height / 3 + p, elf.width - 4 * p, p), .yellow);
+
+        //rl.drawRectangleRec(.init(elf.x, elf.y + 0.9 * elf.height, elf.width, p), .yellow);
     }
 };
 
@@ -267,6 +271,7 @@ pub const HitBox = struct {
     leftBody: CellType = CellType.EMPTY,
     middleBody: CellType = CellType.EMPTY,
 
+    shinsLeggs: CellType = CellType.EMPTY,
     kneesLeggs: CellType = CellType.EMPTY,
     middleLeggs: CellType = CellType.EMPTY,
     leftLeggs: CellType = CellType.EMPTY,
@@ -308,6 +313,8 @@ pub const HitBox = struct {
 
         self.middleBody = horizontal_detection(grid, x + 2 * p, y + p + height / 4, width - 4 * p, p, &i, &j);
 
+        self.shinsLeggs = horizontal_detection(grid, x + 3 * p, y + 0.85 * height, width - 3 * p, p, &i, &j);
+
         self.kneesLeggs = horizontal_detection(grid, x + 2 * p, y + 2 * p, width - 4 * p, p, &i, &j);
 
         self.middleLeggs = horizontal_detection(grid, x + 3 * p, y + height / 2, width - 6 * p, p, &i, &j);
@@ -319,14 +326,12 @@ pub const HitBox = struct {
         self.bottomLeggs = horizontal_detection(grid, x, y + height, width, p, &i, &j);
     }
 
-    fn antiSoftLock(self: *Elf) void {
+    pub fn antiGrounbGlitch(self: *Elf) bool {
         const htb: HitBox = self.hitBox;
 
-        //print("\n{}\n", .{htb.kneesLeggs});
+        print("\n{}\n", .{htb.shinsLeggs});
 
-        if (htb.kneesLeggs == .GROUND or htb.middleBody == .GROUND) {
-            Elf.respawn();
-        }
+        return htb.shinsLeggs == .GROUND;
     }
 
     fn leggs_vertical_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
@@ -345,13 +350,13 @@ pub const HitBox = struct {
 
             const currentCell = grid.cells[j.*][i.*].object.type;
 
-            if (currentCell != CellType.AIR) {
+            if (currentCell != .AIR) {
                 return currentCell;
             }
             //rl.drawRectangleRec(.init(x, y - index, 5, 3), .red);
             index += inc;
         }
-        return CellType.AIR;
+        return .AIR;
     }
 
     fn body_vertical_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
@@ -374,24 +379,27 @@ pub const HitBox = struct {
 
             const currentCell = grid.cells[j.*][i.*].object.type;
 
-            if (currentCell != CellType.AIR) {
+            if (currentCell != .AIR) {
                 return currentCell;
             }
             //rl.drawRectangleRec(.init(x, y + index, 5, 3), .red);
             index += inc;
         }
-        return CellType.AIR;
+        return .AIR;
     }
 
     fn horizontal_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
         i_and_j_assign(grid, x, y, i, j);
+        if (i.* > grid.nb_cols or j.* > grid.nb_rows) {
+            return .AIR;
+        }
         const left = grid.cells[j.*][i.*].object.type;
 
         i_and_j_assign(grid, x + len, y, i, j);
         const right = grid.cells[j.*][i.*].object.type;
 
-        if (left == CellType.GROUND or right == CellType.GROUND) {
-            return CellType.GROUND;
+        if (left == .GROUND or right == .GROUND) {
+            return .GROUND;
         }
 
         var p: f32 = 0;
@@ -401,12 +409,12 @@ pub const HitBox = struct {
             }
             i_and_j_assign(grid, x + p, y, i, j);
             const currentCell = grid.cells[j.*][i.*].object.type;
-            if (currentCell != CellType.AIR) {
+            if (currentCell != .AIR) {
                 return currentCell;
             }
             //rl.drawRectangleRec(.init(x + p, y, 5, 3), .red);
             p += inc;
         }
-        return CellType.AIR;
+        return .AIR;
     }
 };

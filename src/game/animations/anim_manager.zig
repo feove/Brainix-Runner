@@ -15,16 +15,79 @@ pub const Animation = enum {
 
 pub const AnimManager = struct {
     current: Animation = .RUNNING,
+    prev: Animation = .RUNNING,
 
     pub fn update(self: *AnimManager, elf: *Elf) void {
+        applyMirrorEffect(elf);
+        stopPrev();
+
+        //Flex
         switch (self.current) {
-            .RUNNING => {
-                anim.battle_mage_running.isRunning = true;
-                anim.battle_mage_running.applyMirror(elf.physics.auto_moving == .LEFT);
-                anim.battle_mage_running.update(Elf.getCurrentTime(), 10);
-                anim.battle_mage_running.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
-            },
+            .RUNNING => running(elf),
+            .JUMPING => jumping(elf),
+            .FALLING => falling(elf),
             else => {},
+        }
+    }
+
+    fn running(elf: *Elf) void {
+        anim.battle_mage_running.isRunning = true;
+        anim.battle_mage_running.update(Elf.getCurrentTime(), 1);
+        anim.battle_mage_running.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
+    }
+
+    fn jumping(elf: *Elf) void {
+        anim.battlemage_jumping_going_up.update(Elf.getCurrentTime(), 1);
+        anim.battlemage_jumping_going_up.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
+
+        if (anim.battlemage_jumping_going_up.isRunning == false) {
+            setAnim(.FALLING);
+        }
+    }
+
+    fn falling(elf: *Elf) void {
+        anim.battlemage_jumping_going_down.isRunning = true;
+        anim.battlemage_jumping_going_down.update(Elf.getCurrentTime(), 1);
+        anim.battlemage_jumping_going_down.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
+
+        if (elf.physics.velocity_y == 0) {
+            setAnim(.RUNNING);
+        }
+    }
+
+    fn stopPrev() void {
+        if (elf_anim.current != elf_anim.prev) {
+            switch (elf_anim.prev) {
+                .RUNNING => anim.battle_mage_running.isRunning = false,
+                .JUMPING => anim.battlemage_jumping_going_up.isRunning = false,
+                .FALLING => anim.battlemage_jumping_going_down.isRunning = false,
+                else => {},
+            }
+        }
+    }
+
+    pub fn getCurrentAnim() Animation {
+        return elf_anim.current;
+    }
+
+    pub fn setAnim(animation: Animation) void {
+        elf_anim.prev = elf_anim.current;
+        elf_anim.current = animation;
+    }
+
+    fn applyMirrorEffect(elf: *Elf) void {
+        anim.battle_mage_running.applyMirror(elf.physics.auto_moving == .LEFT);
+        anim.battlemage_jumping_going_up.applyMirror(elf.physics.auto_moving == .LEFT);
+        anim.battlemage_jumping_going_down.applyMirror(elf.physics.auto_moving == .RIGHT);
+    }
+
+    pub fn AnimationTrigger(elf: *Elf) void {
+        if (elf.physics.velocity_y < 0) {
+            if (elf_anim.current == .RUNNING) {
+                anim.battlemage_jumping_going_up.isRunning = true;
+                setAnim(.JUMPING);
+                return;
+            }
         }
     }
 };

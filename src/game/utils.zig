@@ -12,9 +12,14 @@ pub var hud = HUD{};
 pub const HUD = struct {
     mouseX: f32 = undefined,
     mouseY: f32 = undefined,
+    CanPlaced: bool = false,
 
     pub fn selfReturn() HUD {
         return hud;
+    }
+
+    pub fn setPlaceAllowing(canPlaced: bool) void {
+        hud.CanPlaced = canPlaced;
     }
 
     pub fn refresh(self: *HUD) void {
@@ -59,13 +64,13 @@ pub const HUD = struct {
 
         switch (inv.cell.type) {
             .GROUND => {
-                Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+                Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, hud.CanPlaced);
             },
             .PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, false);
             },
             .UP_PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, false);
             },
             .BOOST => {
                 anim.boost_sprite.draw(.{ .x = hud.mouseX + 20, .y = hud.mouseY - 20 }, 3.1, 90, 200, 0, 0);

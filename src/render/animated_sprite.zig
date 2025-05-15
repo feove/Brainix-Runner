@@ -7,6 +7,8 @@ pub var jumper_sprite: AnimatedSprite = undefined;
 pub var boost_sprite: AnimatedSprite = undefined;
 
 pub var battle_mage_running: AnimatedSprite = undefined;
+pub var battlemage_jumping_going_up: AnimatedSprite = undefined;
+pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
 
 pub fn init() !void {
     jumper_sprite = AnimatedSprite{
@@ -20,8 +22,8 @@ pub fn init() !void {
         .frame_width = 24,
         .frame_height = 16,
         .horizontal_shift = true,
-        .num_frames = 8,
-        .frame_duration = 0.06,
+        .num_frames = 1, //8
+        .frame_duration = 0.08,
     };
 
     boost_sprite = AnimatedSprite{
@@ -51,6 +53,35 @@ pub fn init() !void {
         .frame_height = 48,
         .horizontal_shift = false,
         .num_frames = 10,
+        .frame_duration = 0.1,
+    };
+
+    battlemage_jumping_going_up = AnimatedSprite{
+        .texture = textures.jump_neutral,
+        .sprite = Sprite{
+            .name = "Battle Mage is Jumping Going up",
+            .src = rl.Rectangle{ .x = 0, .y = 48, .width = 56, .height = 624 },
+        },
+        .start_x = 0,
+        .start_y = 48,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 10,
+        .frame_duration = 0.1,
+    };
+    battlemage_jumping_going_down = AnimatedSprite{
+        .texture = textures.jump_neutral_going_down,
+        .sprite = Sprite{
+            .name = "Battle Mage is going down",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 56, .height = 144 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 3,
         .frame_duration = 0.1,
     };
 }
@@ -121,17 +152,12 @@ pub const AnimatedSprite = struct {
             .height = self.frame_height,
         };
 
-        var dest = rl.Rectangle{
-            .x = if (self.mirror) position.x - self.frame_width * scale else position.x,
+        const dest = rl.Rectangle{
+            .x = position.x,
             .y = position.y,
             .width = self.frame_width * scale,
             .height = self.frame_height * scale,
         };
-
-        if (self.mirror) {
-            dest.width = -dest.width;
-            dest.x += self.frame_width * scale; // correctly shift to left due to flip
-        }
 
         const origin = rl.Vector2{ .x = 0, .y = 0 };
 

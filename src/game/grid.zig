@@ -1,6 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
 const Elf = @import("player.zig").Elf;
+const HitBox = @import("player.zig").HitBox;
 const HUD = @import("utils.zig").HUD;
 const Object = @import("terrain_object.zig").Object;
 const Inventory = @import("inventory.zig").Inventory;
@@ -186,6 +187,18 @@ pub const Grid = struct {
         }
     }
 
+    fn playerOnCell(cell: *Cell, invType: CellType) bool {
+        const elf = Elf.selfReturn();
+        const rec1: rl.Rectangle = .init(cell.x, cell.y, cell.width, cell.height);
+        const rec2: rl.Rectangle = .init(elf.x + elf.width * 0.3, elf.y + elf.height * 0.3, elf.width * 0.4, elf.height * 0.4);
+
+        const CanBePlaced: bool = rl.Rectangle.checkCollision(rec1, rec2) and invType == .GROUND;
+
+        HUD.setPlaceAllowing(CanBePlaced);
+
+        return CanBePlaced;
+    }
+
     pub fn cellManagement() void {
         // const hud = HUD.selfReturn();
         const inv = Inventory.selfReturn();
@@ -197,6 +210,7 @@ pub const Grid = struct {
 
                     if (HUD.cursorInCell(grid.cells[j][i])) {
                         grid.cells[j][i].isSelected = true;
+                        const PlayerOnCell: bool = playerOnCell(&grid.cells[j][i], inv.cell.type);
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
                             removeCell(i, j);
@@ -208,7 +222,7 @@ pub const Grid = struct {
                             if (inv.cell.type != .EMPTY) {
                                 if (grid.cells[j][i].object.type == .AIR) {
                                     //if (canBePlaced)
-                                    if (AroundConfig.cellAroundchecking(i, j, inv.cell.type)) {
+                                    if (AroundConfig.cellAroundchecking(i, j, inv.cell.type) or PlayerOnCell) {
                                         return;
                                     }
 

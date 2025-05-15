@@ -10,6 +10,8 @@ const Inventory = @import("inventory.zig").Inventory;
 const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
 const anim = @import("../render/animated_sprite.zig");
+const anim_manager = @import("../game/animations/anim_manager.zig");
+
 const print = std.debug.print;
 
 const ItemSpec = struct {
@@ -41,7 +43,7 @@ pub const PhysicObject = struct {
     pub fn applyJump(self: *PhysicObject, jump_force: f32) void {
         self.velocity_y = jump_force;
 
-        const horizontal_boost: f32 = 0.05;
+        const horizontal_boost: f32 = 0.08;
 
         self.velocity_x = switch (self.auto_moving) {
             AutoMovements.RIGHT => horizontal_boost,
@@ -169,6 +171,7 @@ pub const Object = struct {
     type: CellType = CellType.EMPTY,
     tail: bool = false, //Only For Boost
     canPlayerTake: bool = false,
+
     count: i64 = 1,
 
     pub fn set(self: *Object, grid: *Grid) void {
@@ -256,6 +259,8 @@ pub const Object = struct {
 
                 anim.jumper_sprite.setPos(i, j);
                 anim.jumper_sprite.isRunning = true;
+
+                //    print("{any}\n", .{elf.animator.current});
             }
         }
     }

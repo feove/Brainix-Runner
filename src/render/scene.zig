@@ -119,6 +119,7 @@ fn drawBorders() void {
             4.17,
             270.0,
             255,
+            false,
         );
     }
 
@@ -131,6 +132,7 @@ fn drawBorders() void {
             4.17,
             90.0,
             255,
+            false,
         );
     }
 }
@@ -203,10 +205,10 @@ fn drawInventory() void {
             .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y }, 3.5, .white),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
-            .PAD => Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255),
+            .PAD => Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255, false),
             .UP_PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255);
-                Sprite.drawWithRotation(textures.all_weapons, textures.sprites.arrow_icn, rl.Vector2{ .x = slot.pos.x + slot.width * 0.20, .y = slot.pos.y + slot.height * 0.60 }, 1.70, 0, 255);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255, false);
+                Sprite.drawWithRotation(textures.all_weapons, textures.sprites.arrow_icn, rl.Vector2{ .x = slot.pos.x + slot.width * 0.20, .y = slot.pos.y + slot.height * 0.60 }, 1.70, 0, 255, false);
             }, //drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .orange),
             .BOOST => Sprite.draw(anim.boost_sprite.texture, anim.boost_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y }, 2.7, .white),
             .EMPTY => {},

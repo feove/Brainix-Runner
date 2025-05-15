@@ -4,10 +4,17 @@ const print = std.debug.print;
 const CellType = @import("../game/grid.zig").CellType;
 const Elf = @import("../game/player.zig").Elf;
 const anim = @import("animated_sprite.zig");
+const HUD = @import("../game/utils.zig").HUD;
+const Inventory = @import("../game/inventory.zig").Inventory;
 
 pub var elf: rl.Texture2D = undefined;
 pub var battlemage_text: rl.Texture2D = undefined;
 pub var battlemage: rl.Texture2D = undefined;
+
+//Anims
+pub var jump_neutral: rl.Texture2D = undefined;
+pub var jump_neutral_going_down: rl.Texture2D = undefined;
+
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
 pub var inventory_hud: rl.Texture2D = undefined;
@@ -32,6 +39,8 @@ pub var sprites: Sprites = undefined;
 pub fn init() !void {
     elf = try rl.loadTexture("assets/textures/elf/pers.png");
     battlemage = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/Running/battlemage_running.png");
+    jump_neutral = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/battlemage_jump_neutral.png");
+    jump_neutral_going_down = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/going_down/jump_neutral_going_down.png");
 
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
 
@@ -72,7 +81,7 @@ pub const Sprite = struct {
         rl.drawTexturePro(sheet, self.src, dest, origin, rotation, tint);
     }
 
-    pub fn drawWithRotation(sheet: rl.Texture2D, self: Sprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: u8) void {
+    pub fn drawWithRotation(sheet: rl.Texture2D, self: Sprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: f32, canPlace: bool) void {
         const dest = rl.Rectangle{
             .x = position.x,
             .y = position.y,
@@ -81,12 +90,9 @@ pub const Sprite = struct {
         };
         const origin = rl.Vector2{ .x = 0, .y = 0 };
 
-        const tint = rl.Color{
-            .r = 255,
-            .g = 255,
-            .b = 255,
-            .a = alpha,
-        };
+        const color: rl.Color = if (!canPlace) .white else .red;
+
+        const tint: rl.Color = rl.Color.alpha(color, alpha / 255);
 
         rl.drawTexturePro(sheet, self.src, dest, origin, rotation, tint);
     }
