@@ -61,7 +61,7 @@ pub const Grid = struct {
     nb_cols: usize,
     width: f32,
     height: f32,
-
+    cellInSelection: bool = false,
     cells: [][]Cell,
     cacheCell: CellType = .EMPTY,
 
@@ -190,7 +190,7 @@ pub const Grid = struct {
     fn playerOnCell(cell: *Cell, invType: CellType) bool {
         const elf = Elf.selfReturn();
         const rec1: rl.Rectangle = .init(cell.x, cell.y, cell.width, cell.height);
-        const rec2: rl.Rectangle = .init(elf.x + elf.width * 0.3, elf.y + elf.height * 0.3, elf.width * 0.4, elf.height * 0.4);
+        const rec2: rl.Rectangle = .init(elf.x + elf.width * 0.3, elf.y, elf.width * 0.4, elf.height * 0.4);
 
         const CanBePlaced: bool = rl.Rectangle.checkCollision(rec1, rec2) and invType == .GROUND;
 
@@ -203,6 +203,7 @@ pub const Grid = struct {
         // const hud = HUD.selfReturn();
         const inv = Inventory.selfReturn();
 
+        grid.cellInSelection = false;
         if (HUD.cursorInGrid()) {
             for (0..grid.nb_cols) |i| {
                 for (0..grid.nb_rows) |j| {
@@ -210,6 +211,7 @@ pub const Grid = struct {
 
                     if (HUD.cursorInCell(grid.cells[j][i])) {
                         grid.cells[j][i].isSelected = true;
+                        grid.cellInSelection = true;
                         const PlayerOnCell: bool = playerOnCell(&grid.cells[j][i], inv.cell.type);
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
