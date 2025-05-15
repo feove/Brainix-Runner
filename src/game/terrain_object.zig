@@ -9,6 +9,7 @@ const event = @import("level/events.zig");
 const Inventory = @import("inventory.zig").Inventory;
 const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
+const anim = @import("../render/animated_sprite.zig");
 const print = std.debug.print;
 
 const ItemSpec = struct {
@@ -253,8 +254,8 @@ pub const Object = struct {
                 //     event.Event.stopSlowMotion();
                 // }
 
-                textures.jumper_sprite.setPos(i, j);
-                textures.jumper_sprite.isRunning = true;
+                anim.jumper_sprite.setPos(i, j);
+                anim.jumper_sprite.isRunning = true;
             }
         }
     }
@@ -274,8 +275,8 @@ pub const Object = struct {
 
                 findObject(elf, &i, &j, .UP_PAD);
 
-                textures.jumper_sprite.setPos(i, j);
-                textures.jumper_sprite.isRunning = true;
+                anim.jumper_sprite.setPos(i, j);
+                anim.jumper_sprite.isRunning = true;
             }
         }
     }

@@ -6,6 +6,7 @@ const PhysicObject = @import("terrain_object.zig").PhysicObject;
 const AutoMovements = @import("terrain_object.zig").AutoMovements;
 const CellType = @import("grid.zig").CellType;
 const CellAround = @import("grid.zig").CellAround;
+const anim = @import("../render/animated_sprite.zig");
 const Level = @import("level/events.zig").Level;
 const LevelStatement = @import("level/events.zig").LevelStatement;
 const event = @import("level/events.zig");
@@ -245,14 +246,19 @@ pub const Elf = struct {
         return false;
     }
 
-    pub fn drawElf(self: *Elf) void {
-        rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
-        //const p: f32 = Grid.selfReturn().cells[0][0].padding;
-        //rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
+    pub fn drawElf() void {
+        //   rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
 
-        //rl.drawRectangleRec(.init(elf.x + 3 * p, elf.y + elf.height / 2, elf.width - 6 * p, p), .orange);
+        anim.battle_mage.isRunning = true;
+        anim.battle_mage.update(rl.getFrameTime() / time_divisor, 10);
+        anim.battle_mage.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
 
-        //rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + elf.height - elf.height / 3 + p, elf.width - 4 * p, p), .yellow);
+        const p: f32 = Grid.selfReturn().cells[0][0].padding;
+        rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
+
+        rl.drawRectangleRec(.init(elf.x + 3 * p, elf.y + elf.height / 2, elf.width - 6 * p, p), .orange);
+
+        rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + elf.height - elf.height / 3 + p, elf.width - 4 * p, p), .yellow);
     }
 };
 
@@ -357,6 +363,10 @@ pub const HitBox = struct {
 
         while (index < len) {
             j_prev = j.*;
+
+            if (y + index > grid.height) {
+                return .AIR;
+            }
             i_and_j_assign(grid, x, y + index, i, j);
 
             if (j.* > j_prev) {
@@ -387,6 +397,9 @@ pub const HitBox = struct {
 
         var p: f32 = 0;
         while (p < len) {
+            if (x + p > grid.width) {
+                return .AIR;
+            }
             i_and_j_assign(grid, x + p, y, i, j);
             const currentCell = grid.cells[j.*][i.*].object.type;
             if (currentCell != CellType.AIR) {

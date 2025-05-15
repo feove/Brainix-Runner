@@ -3,8 +3,11 @@ const std = @import("std");
 const print = std.debug.print;
 const CellType = @import("../game/grid.zig").CellType;
 const Elf = @import("../game/player.zig").Elf;
+const anim = @import("animated_sprite.zig");
 
 pub var elf: rl.Texture2D = undefined;
+pub var battlemage_text: rl.Texture2D = undefined;
+pub var battlemage: rl.Texture2D = undefined;
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
 pub var inventory_hud: rl.Texture2D = undefined;
@@ -18,16 +21,18 @@ pub var top_far_bgrnd: rl.Texture2D = undefined;
 pub var env_ground: rl.Texture2D = undefined;
 
 pub var pad: rl.Texture2D = undefined;
-
 pub var all_weapons: rl.Texture2D = undefined;
 
-pub var jumper_sprite: AnimatedSprite = undefined;
+pub var green_effects: rl.Texture2D = undefined;
+pub var yellow_effects: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
 
 pub fn init() !void {
     elf = try rl.loadTexture("assets/textures/elf/pers.png");
+    battlemage = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/Running/battlemage_running.png");
+
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
 
     oak_bg_lyr_1 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_1.png");
@@ -40,27 +45,14 @@ pub fn init() !void {
     inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
     simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
 
+    green_effects = try rl.loadTexture("assets/textures/pack/effects/green_effect.png");
+    yellow_effects = try rl.loadTexture("assets/textures/pack/effects/yellow_effect.png");
     all_weapons = try rl.loadTexture("assets/textures/pack/trap_and_weapon/all.png");
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
     sprites = Sprites.init();
-
-    //Animated Sprites
-    jumper_sprite = AnimatedSprite{
-        .texture = pad,
-        .sprite = Sprite{
-            .name = "Pad",
-            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 24, .height = 16 },
-        },
-        .start_x = 0,
-        .start_y = 0,
-        .frame_width = 24,
-        .frame_height = 16,
-        .num_frames = 8,
-        .frame_duration = 0.1,
-    };
 }
 
 pub const Sprite = struct {
@@ -102,7 +94,7 @@ pub const Sprite = struct {
     pub fn typeToSprite(celltype: CellType) Sprite {
         return switch (celltype) {
             .GROUND => sprites.granite_pure_l4,
-            .PAD => jumper_sprite.texture,
+            .PAD => anim.jumper_sprite.texture,
             else => sprites.granite_pure_l4,
         };
     }
@@ -178,80 +170,5 @@ pub const Sprites = struct {
             .wood_block_spikes = .{ .name = "Wood Block Spikes", .src = rl.Rectangle{ .x = 160, .y = 70, .width = 30, .height = 30 } },
             .arrow_icn = .{ .name = "Arrow Icon", .src = rl.Rectangle{ .x = 300, .y = 160, .width = 20, .height = 15 } },
         };
-    }
-};
-
-pub const AnimatedSprite = struct {
-    texture: rl.Texture2D,
-    sprite: Sprite,
-    start_x: f32,
-    start_y: f32,
-    frame_width: f32,
-    frame_height: f32,
-    num_frames: usize,
-    current_frame: usize = 0,
-    frame_duration: f32, // seconds
-    time_acc: f32 = 0.0,
-    x: usize = 0, //Current Pad Animated Position
-    y: usize = 0,
-    isRunning: bool = false,
-    loop: usize = 0,
-
-    pub fn setPos(self: *AnimatedSprite, x: usize, y: usize) void {
-        self.x = x;
-        self.y = y;
-    }
-
-    pub fn update(self: *AnimatedSprite, delta_time: f32, loop_limit: usize) void {
-        if (self.loop >= loop_limit) {
-            self.isRunning = false;
-            self.loop = 0;
-            self.current_frame = 0;
-            return;
-        }
-
-        self.time_acc += delta_time;
-        if (self.time_acc >= self.frame_duration) {
-            self.time_acc -= self.frame_duration;
-            self.current_frame = (self.current_frame + 1) % self.num_frames;
-        }
-
-        if (self.isRunning and self.current_frame == self.num_frames - 1) {
-            self.loop += 1;
-            self.current_frame = 0;
-        }
-    }
-
-    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, alpha: u8, x: usize, y: usize) void {
-        const next_sprite: f32 = if (self.isRunning and x == self.x and y == self.y) @as(f32, @floatFromInt(self.current_frame)) * self.frame_width else 0;
-
-        // if (next_sprite != 0) {
-        //     print("Animated !\n", .{});
-        // }
-
-        const src = rl.Rectangle{
-            .x = self.start_x + next_sprite,
-            .y = self.start_y,
-            .width = self.frame_width,
-            .height = self.frame_height,
-        };
-
-        const dest = rl.Rectangle{
-            .x = position.x,
-            .y = position.y,
-            .width = self.frame_width * scale,
-            .height = self.frame_height * scale,
-        };
-
-        const origin = rl.Vector2{ .x = 0, .y = 0 };
-
-        const tint = rl.Color{
-            .r = 255,
-            .g = 255,
-            .b = 255,
-            .a = alpha,
-        };
-
-        rl.drawTexturePro(self.texture, src, dest, origin, 0.0, tint);
     }
 };

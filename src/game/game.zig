@@ -25,7 +25,7 @@ pub fn run() !void {
 
 pub fn render() !void {
     // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
-    player.elf.drawElf();
     try scene.drawScene();
+    player.Elf.drawElf();
     return;
 }

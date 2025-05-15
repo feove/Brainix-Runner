@@ -5,6 +5,7 @@ const CellType = @import("grid.zig").CellType;
 const Inventory = @import("inventory.zig").Inventory;
 const InvCell = @import("inventory.zig").InvCell;
 const textures = @import("../render/textures.zig");
+const anim = @import("../render/animated_sprite.zig");
 const Sprite = textures.Sprite;
 pub var hud = HUD{};
 
@@ -61,7 +62,13 @@ pub const HUD = struct {
                 Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
             },
             .PAD => {
-                Sprite.drawWithRotation(textures.jumper_sprite.texture, textures.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+            },
+            .UP_PAD => {
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150);
+            },
+            .BOOST => {
+                anim.boost_sprite.draw(.{ .x = hud.mouseX + 20, .y = hud.mouseY - 20 }, 3.1, 90, 200, 0, 0);
             },
             else => {},
         }

@@ -167,12 +167,16 @@ pub const Grid = struct {
     fn removeFromGrid(i: usize, j: usize, cell: CellType) void {
         const object_size: usize = Object.objectSize(cell);
         const current_cell = grid.cells[j][i].object;
-        const next_cell = grid.cells[j][i + 1].object;
+
+        var next_cell = current_cell;
+        if (i + 1 <= grid.nb_cols - 1) {
+            next_cell = grid.cells[j][i + 1].object;
+        }
 
         grid.cells[j][i].object.type = .AIR;
 
         if (object_size > 1) {
-            if (i < grid.nb_cols - 1 and next_cell.type == cell) {
+            if (i <= grid.nb_cols - 1 and next_cell.type == cell) {
                 if (!current_cell.tail) {
                     grid.cells[j][i + 1].object.type = .AIR;
                     return;

@@ -6,6 +6,7 @@ const window = @import("render/window.zig");
 const Grid = @import("game/grid.zig").Grid;
 const Inventory = @import("game/inventory.zig").Inventory;
 const textures = @import("render/textures.zig");
+const anim = @import("render/animated_sprite.zig");
 const Level = @import("game/level/events.zig").Level;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -18,6 +19,7 @@ pub fn main() anyerror!void {
     window.windowInit(1000, 800);
 
     try textures.init();
+    try anim.init();
     try Grid.init(allocator);
     try Inventory.init(allocator);
     player.initElf();

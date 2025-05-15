@@ -4,6 +4,7 @@ const Grid = @import("../game/grid.zig").Grid;
 const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
 const textures = @import("textures.zig");
+const anim = @import("animated_sprite.zig");
 const Sprite = @import("textures.zig").Sprite;
 const player = @import("../game/player.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
@@ -11,16 +12,21 @@ const HUD = @import("../game/utils.zig").HUD;
 
 //Tmp Drawing
 pub fn drawScene() !void {
-    rl.clearBackground(.white);
+    // rl.clearBackground(.white);
+    drawBackgrounds();
 
     drawGrid();
-    try drawInventory();
-    player.elf.drawElf();
+    drawGround();
+
+    drawUnderGroundDeco();
+    drawInventory();
+
+    try drawItemNumber();
+
+    HUD.spriteUnderCursor();
 }
 
 fn drawGrid() void {
-    drawBackgrounds();
-
     const grid: Grid = Grid.selfReturn();
 
     for (0..grid.nb_rows) |r| {
@@ -57,28 +63,34 @@ fn drawGrid() void {
                         Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 8), 2.80, .white);
                     },
                     .PAD => {
-                        textures.jumper_sprite.update(rl.getFrameTime() / (player.time_divisor / 2), 1);
-                        textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 255, c, r);
+                        anim.jumper_sprite.update(rl.getFrameTime() / (player.time_divisor / 2), 1);
+                        anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);
                     },
-                    //drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .yellow),
                     .UP_PAD => {
-                        textures.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
-                        textures.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 255, c, r);
-
-                        //  Sprite.draw(textures.all_weapons, textures.sprites.arrow_icn, .init(100, 100), 3.00, .white);
-                    }, //drawcell(cell.x, cell.y + cell.height - cell.height / 4, cell.width, cell.height / 3, cell.padding, true, .orange),
+                        anim.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
+                        anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);
+                    },
                     .DOOR => {
                         //drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown);
                     },
-                    .BOOST => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .beige),
+                    .BOOST => {
+                        //drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .beige),
+                        //  print("r : {d} c : {d}\n", .{ r, c });
+                        var x = cell.x + cell.width;
+                        if (grid.cells[r][c].object.tail) {
+                            x -= cell.width / 4 + 1;
+                            //cell.padding;
+                        }
+                        anim.boost_sprite.setPos(c, r);
+                        anim.boost_sprite.isRunning = true;
+                        anim.boost_sprite.update(rl.getFrameTime() / (player.time_divisor / 2), 1);
+                        anim.boost_sprite.draw(.{ .x = x, .y = cell.y + cell.padding }, 3.1, 90, 200, c, r);
+                    },
                     else => drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .gray),
                 }
             }
         }
     }
-    drawGround();
-
-    drawUnderGroundDeco();
 }
 
 fn drawBackgrounds() void {
@@ -175,7 +187,7 @@ pub fn getRandomNumber(min: u32, max: u32) u32 {
     return prng.random().intRangeAtMost(u32, min, max);
 }
 
-fn drawInventory() !void {
+fn drawInventory() void {
     const inv = Inventory.selfReturn();
 
     //Draw Inventory Borders
@@ -191,12 +203,12 @@ fn drawInventory() !void {
             .GROUND => Sprite.draw(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y }, 3.5, .white),
             .SPIKE => drawSpike(slot.pos.x, slot.pos.y - slot.padding, slot.width, slot.height + slot.padding, slot.padding, .red),
             .AIR => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .white),
-            .PAD => Sprite.drawWithRotation(textures.jumper_sprite.texture, textures.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255),
+            .PAD => Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255),
             .UP_PAD => {
-                Sprite.drawWithRotation(textures.jumper_sprite.texture, textures.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255);
                 Sprite.drawWithRotation(textures.all_weapons, textures.sprites.arrow_icn, rl.Vector2{ .x = slot.pos.x + slot.width * 0.20, .y = slot.pos.y + slot.height * 0.60 }, 1.70, 0, 255);
             }, //drawcell(slot.pos.x, slot.pos.y + slot.height - slot.height / 4, slot.width, slot.height / 4, 0, true, .orange),
-            .BOOST => drawcell(slot.pos.x, slot.pos.y, slot.width, slot.height, 0, true, .beige),
+            .BOOST => Sprite.draw(anim.boost_sprite.texture, anim.boost_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y }, 2.7, .white),
             .EMPTY => {},
             else => {},
         }
@@ -214,10 +226,6 @@ fn drawInventory() !void {
             );
         }
     }
-
-    try drawItemNumber();
-
-    HUD.spriteUnderCursor();
 }
 
 fn drawItemNumber() !void {
