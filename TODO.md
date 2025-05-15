@@ -3,7 +3,7 @@
 
 ### Tasks Remaining
 - [ ] Add Fronted End  
-- [ ] Rename All "Object" worlds by "Item" 
+- [ ] Rename All "Object" words by "Item" 
 
 ### Tasks Completed  ✓
 - [x] Set Up a Door as end of the level
