@@ -36,6 +36,7 @@ pub const Inventory = struct {
     size: usize,
     cell: Object = Object{ .type = .EMPTY },
     slots: []InvCell,
+    anySlotSelected: bool = true,
 
     pub fn selfReturn() Inventory {
         return inv;
@@ -209,6 +210,7 @@ pub const Inventory = struct {
         //const grid: Grid = Grid.selfReturn();
         unselectSlots();
 
+        inv.anySlotSelected = HUD.cursorInInventory();
         if (HUD.cursorInInventory()) {
             for (0..SLOT_NB) |i| {
                 if (HUD.cursorInSlot(inv.slots[i])) {

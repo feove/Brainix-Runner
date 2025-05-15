@@ -194,8 +194,6 @@ pub const Grid = struct {
 
         const CanBePlaced: bool = rl.Rectangle.checkCollision(rec1, rec2) and invType == .GROUND;
 
-        HUD.setPlaceAllowing(CanBePlaced);
-
         return CanBePlaced;
     }
 
@@ -208,11 +206,13 @@ pub const Grid = struct {
             for (0..grid.nb_cols) |i| {
                 for (0..grid.nb_rows) |j| {
                     grid.cells[j][i].isSelected = false;
+                    HUD.setPlaceAllowing(inv.anySlotSelected);
 
                     if (HUD.cursorInCell(grid.cells[j][i])) {
                         grid.cells[j][i].isSelected = true;
                         grid.cellInSelection = true;
                         const PlayerOnCell: bool = playerOnCell(&grid.cells[j][i], inv.cell.type);
+                        HUD.setPlaceAllowing(grid.cells[j][i].object.type != .AIR);
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
                             removeCell(i, j);
@@ -224,7 +224,9 @@ pub const Grid = struct {
                             if (inv.cell.type != .EMPTY) {
                                 if (grid.cells[j][i].object.type == .AIR) {
                                     //if (canBePlaced)
+                                    // HUD.setPlaceAllowing(true);
                                     if (AroundConfig.cellAroundchecking(i, j, inv.cell.type) or PlayerOnCell) {
+                                        HUD.setPlaceAllowing(false);
                                         return;
                                     }
 
