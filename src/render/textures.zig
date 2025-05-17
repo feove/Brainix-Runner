@@ -54,7 +54,9 @@ pub fn init() !void {
     battlemage_dying = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/death/battlemage_death.png");
 
     //Demon
-    demon_idle2 = try rl.loadTexture("assets/textures/demon/idle2.png");
+    demon_idle2 = try rl.loadTexture("assets/textures/wizard/Fall.png");
+    //try rl.loadTexture("assets/textures/demon/Idle.png")
+    //try rl.loadTexture("assets/textures/demon/idle2.png");
 
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
 

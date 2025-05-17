@@ -102,18 +102,19 @@ pub fn init() !void {
         .num_frames = 12,
         .frame_duration = 0.1,
     };
+
     demon_idle2 = AnimatedSprite{
         .texture = textures.demon_idle2,
         .sprite = Sprite{
             .name = "Demon in Idle2",
-            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 800, .height = 100 },
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1386, .height = 190 },
         },
         .start_x = 0,
         .start_y = 0,
-        .frame_width = 100,
-        .frame_height = 100,
+        .frame_width = 231,
+        .frame_height = 190,
         .horizontal_shift = true,
-        .num_frames = 8,
+        .num_frames = 6,
         .frame_duration = 0.1,
     };
 }
@@ -194,12 +195,16 @@ pub const AnimatedSprite = struct {
 
         const origin = rl.Vector2{ .x = 0, .y = 0 };
 
-        const tint = rl.Color{
-            .r = 255,
-            .g = 255,
-            .b = 255,
-            .a = alpha,
-        };
+        // const tint = rl.Color{
+        //     .r = 255,
+        //     .g = 255,
+        //     .b = 255,
+        //     .a = alpha,
+        // };
+
+        const color: rl.Color = .white;
+
+        const tint: rl.Color = rl.Color.alpha(color, @as(f32, @floatFromInt(alpha / 255)));
 
         rl.drawTexturePro(self.texture, src, dest, origin, rotation, tint);
     }
