@@ -1,8 +1,12 @@
 const rl = @import("raylib");
 const std = @import("std");
 const print = std.debug.print;
-const CellType = @import("../game/grid.zig").CellType;
-const Elf = @import("../game/player.zig").Elf;
+
+const terrain = @import("../terrain/grid.zig");
+const Grid = terrain.Grid;
+const CellType = terrain.CellType;
+
+const Elf = @import("../entity/elf.zig").Elf;
 const anim = @import("../game/animations/animations_manager.zig");
 const HUD = @import("../game/utils.zig").HUD;
 const Inventory = @import("../game/inventory.zig").Inventory;

@@ -1,12 +1,16 @@
 const std = @import("std");
 const rl = @import("raylib");
-const Elf = @import("player.zig").Elf;
-const HitBox = @import("player.zig").HitBox;
-const HUD = @import("utils.zig").HUD;
-const Object = @import("terrain_object.zig").Object;
-const Inventory = @import("inventory.zig").Inventory;
-const AroundConfig = @import("terrain_object.zig").AroundConfig;
-const print = @import("std").debug.print;
+const print = std.debug.print;
+
+const player = @import("../entity/elf.zig");
+const Elf = player.Elf;
+const HitBox = player.HitBox;
+
+const HUD = @import("../game/utils.zig").HUD;
+const Inventory = @import("../game/inventory.zig").Inventory;
+
+const AroundConfig = @import("../game/terrain_object.zig").AroundConfig;
+const Object = @import("../game/terrain_object.zig").Object;
 
 pub var grid: Grid = undefined;
 

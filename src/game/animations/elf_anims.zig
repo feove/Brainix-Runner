@@ -1,9 +1,9 @@
 const anim = @import("animations_manager.zig");
-const Elf = @import("../player.zig").Elf;
+const Elf = @import("../../entity/elf.zig").Elf;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
-pub var elf_anim = AnimManager{};
+pub var elf_anim = ElfManager{};
 
 pub const ElfAnimation = enum {
     IDLE,
@@ -13,11 +13,11 @@ pub const ElfAnimation = enum {
     DYING,
 };
 
-pub const AnimManager = struct {
+pub const ElfManager = struct {
     current: ElfAnimation = .RUNNING,
     prev: ElfAnimation = .RUNNING,
 
-    pub fn update(self: *AnimManager, elf: *Elf) void {
+    pub fn update(self: *ElfManager, elf: *Elf) void {
         applyMirrorEffect(elf);
         stopPrev();
 
@@ -37,7 +37,6 @@ pub const AnimManager = struct {
         anim.battlemage_dying.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
 
         if (anim.battlemage_dying.isRunning == false) {
-            print("RUNNING\n", .{});
             elf.state = .RESPAWNING;
             setAnim(.RUNNING);
         }

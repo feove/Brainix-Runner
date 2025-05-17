@@ -1,19 +1,24 @@
-const std = @import("std");
-const scene = @import("../render/scene.zig");
-const Grid = @import("grid.zig").Grid;
 const rl = @import("raylib");
+const std = @import("std");
+
+const scene = @import("../render/scene.zig");
+
+const terrain = @import("../terrain/grid.zig");
+const Grid = terrain.Grid;
+const CellType = terrain.CellType;
+
 const textures = @import("../render/textures.zig");
-const PhysicObject = @import("terrain_object.zig").PhysicObject;
-const AutoMovements = @import("terrain_object.zig").AutoMovements;
-const CellType = @import("grid.zig").CellType;
-const CellAround = @import("grid.zig").CellAround;
-const Level = @import("level/events.zig").Level;
-const LevelStatement = @import("level/events.zig").LevelStatement;
-const event = @import("level/events.zig");
-const anim = @import("animations/animations_manager.zig");
-const elf_anims = @import("animations/elf_anims.zig");
-const AnimManager = elf_anims.AnimManager;
-const Object = @import("terrain_object.zig").Object;
+const PhysicObject = @import("../game/terrain_object.zig").PhysicObject;
+const AutoMovements = @import("../game/terrain_object.zig").AutoMovements;
+
+const event = @import("../game/level/events.zig");
+const Level = event.Level;
+const LevelStatement = event.LevelStatement;
+
+const anim = @import("../game/animations/animations_manager.zig");
+const elf_anims = @import("../game/animations/elf_anims.zig");
+const ElfManager = elf_anims.ElfManager;
+const Object = @import("../game/terrain_object.zig").Object;
 
 const print = @import("std").debug.print;
 
@@ -69,7 +74,7 @@ pub const Elf = struct {
     jump_force: f32 = jump_force,
     boost_force: f32 = boost_force,
     state: PlayerState = PlayerState.RESPAWNING,
-    animator: elf_anims.AnimManager,
+    animator: elf_anims.ElfManager,
 
     pub fn respawn() void {
         elf.x = RESPAWN_POINT.x;
@@ -128,7 +133,7 @@ pub const Elf = struct {
             self.physics.velocity_x = 0;
         }
 
-        AnimManager.AnimationTrigger(&elf);
+        ElfManager.AnimationTrigger(&elf);
 
         Object.padAction(&elf);
 
@@ -237,7 +242,7 @@ pub const Elf = struct {
     fn updatePlayerStatement() void {
         switch (elf.state) {
             .DEAD => {
-                elf_anims.AnimManager.setAnim(.DYING);
+                elf_anims.ElfManager.setAnim(.DYING);
                 elf.speed *= 0.999;
             },
             .RESPAWNING => {

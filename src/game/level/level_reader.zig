@@ -1,10 +1,14 @@
 const std = @import("std");
 const rl = @import("raylib");
-const Elf = @import("../player.zig").Elf;
-const player = @import("../player.zig");
-const Grid = @import("../grid.zig").Grid;
-const Cell = @import("../grid.zig").Cell;
-const CellType = @import("../grid.zig").CellType;
+
+const player = @import("../../entity/elf.zig");
+const Elf = player.Elf;
+
+const terrain = @import("../../terrain/grid.zig");
+const Grid = terrain.Grid;
+const Cell = terrain.Cell;
+const CellType = terrain.CellType;
+
 const Object = @import("../terrain_object.zig").Object;
 const Areas = @import("events.zig").Areas;
 const Inventory = @import("../inventory.zig").Inventory;

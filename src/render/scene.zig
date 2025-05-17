@@ -1,12 +1,15 @@
-const print = @import("std").debug.print;
 const std = @import("std");
-const Grid = @import("../game/grid.zig").Grid;
-const CellType = @import("../game/grid.zig").CellType;
+const print = std.debug.print;
+
+const terrain = @import("../terrain/grid.zig");
+const Grid = terrain.Grid;
+const CellType = terrain.CellType;
+
 const rl = @import("raylib");
 const textures = @import("textures.zig");
 const anim = @import("../game/animations/animations_manager.zig");
 const Sprite = @import("textures.zig").Sprite;
-const player = @import("../game/player.zig");
+const player = @import("../entity/elf.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
 const HUD = @import("../game/utils.zig").HUD;
 

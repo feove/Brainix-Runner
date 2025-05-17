@@ -1,9 +1,10 @@
 const scene = @import("../render/scene.zig");
-const player = @import("../game/player.zig");
-const terrain = @import("../game/grid.zig");
+const player = @import("../entity/elf.zig");
+const terrain = @import("../terrain/grid.zig");
 const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
 const objects = @import("../game/level/events.zig");
+const Entity = @import("../entity/entity_manager.zig").Entity;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
@@ -26,6 +27,8 @@ pub fn run() !void {
 pub fn render() !void {
     // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
     try scene.drawScene();
-    player.Elf.drawElf();
+
+    Entity.draw();
+
     return;
 }

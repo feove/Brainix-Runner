@@ -1,6 +1,9 @@
 const rl = @import("raylib");
-const Grid = @import("grid.zig").Grid;
-const CellType = @import("grid.zig").CellType;
+
+const terrain = @import("../terrain/grid.zig");
+const Grid = terrain.Grid;
+const CellType = terrain.CellType;
+
 const std = @import("std");
 const HUD = @import("utils.zig").HUD;
 const Object = @import("terrain_object.zig").Object;
