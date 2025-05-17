@@ -1,0 +1,206 @@
+const rl = @import("raylib");
+const print = @import("std").debug.print;
+const textures = @import("../../render/textures.zig");
+const Sprite = textures.Sprite;
+
+pub var jumper_sprite: AnimatedSprite = undefined;
+pub var boost_sprite: AnimatedSprite = undefined;
+
+pub var battlemage_running: AnimatedSprite = undefined;
+pub var battlemage_jumping_full: AnimatedSprite = undefined;
+pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
+pub var battlemage_dying: AnimatedSprite = undefined;
+
+pub var demon_idle2: AnimatedSprite = undefined;
+
+pub fn init() !void {
+    jumper_sprite = AnimatedSprite{
+        .texture = textures.pad,
+        .sprite = Sprite{
+            .name = "Pad",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 24, .height = 16 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 24,
+        .frame_height = 16,
+        .horizontal_shift = true,
+        .num_frames = 8, //8
+        .frame_duration = 0.1,
+    };
+
+    boost_sprite = AnimatedSprite{
+        .texture = textures.yellow_effects,
+        .sprite = Sprite{
+            .name = "Boost",
+            .src = rl.Rectangle{ .x = 304, .y = 32, .width = 16, .height = 16 },
+        },
+        .start_x = 304,
+        .start_y = 32,
+        .frame_width = 16,
+        .frame_height = 16,
+        .horizontal_shift = true,
+        .num_frames = 4,
+        .frame_duration = 0.1,
+    };
+
+    battlemage_running = AnimatedSprite{
+        .texture = textures.battlemage_running,
+        .sprite = Sprite{
+            .name = "Battle Mage is Running",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 56, .height = 480 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 10,
+        .frame_duration = 0.1,
+    };
+
+    battlemage_jumping_full = AnimatedSprite{
+        .texture = textures.battlemage_jump_neutral,
+        .sprite = Sprite{
+            .name = "Battle Mage is Jumping Going up",
+            .src = rl.Rectangle{ .x = 0, .y = 48, .width = 56, .height = 624 },
+        },
+        .start_x = 0,
+        .start_y = 48,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 10,
+        .frame_duration = 0.1,
+    };
+    battlemage_jumping_going_down = AnimatedSprite{
+        .texture = textures.battlemage_jump_neutral_going_down,
+        .sprite = Sprite{
+            .name = "Battle Mage is going down",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 56, .height = 144 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 3,
+        .frame_duration = 0.1,
+    };
+
+    battlemage_dying = AnimatedSprite{
+        .texture = textures.battlemage_dying,
+        .sprite = Sprite{
+            .name = "Battle Mage is dying",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 56, .height = 576 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 12,
+        .frame_duration = 0.1,
+    };
+    demon_idle2 = AnimatedSprite{
+        .texture = textures.demon_idle2,
+        .sprite = Sprite{
+            .name = "Demon in Idle2",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 800, .height = 100 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 100,
+        .frame_height = 100,
+        .horizontal_shift = true,
+        .num_frames = 8,
+        .frame_duration = 0.1,
+    };
+}
+
+pub const AnimatedSprite = struct {
+    texture: rl.Texture2D,
+    sprite: Sprite,
+    start_x: f32,
+    start_y: f32,
+    frame_width: f32,
+    frame_height: f32,
+    horizontal_shift: bool,
+    num_frames: usize,
+    current_frame: usize = 0,
+    frame_duration: f32, // seconds
+    time_acc: f32 = 0.0,
+    x: usize = 0,
+    y: usize = 0,
+    isRunning: bool = false,
+    mirror: bool = false,
+    loop: usize = 0,
+
+    pub fn setPos(self: *AnimatedSprite, x: usize, y: usize) void {
+        self.x = x;
+        self.y = y;
+    }
+
+    pub fn update(self: *AnimatedSprite, delta_time: f32, loop_limit: usize) void {
+        if (self.loop >= loop_limit) {
+            self.isRunning = false;
+            self.loop = 0;
+            self.current_frame = 0;
+            self.x = 0;
+            self.y = 0;
+            return;
+        }
+
+        self.time_acc += delta_time;
+        if (self.time_acc >= self.frame_duration) {
+            self.time_acc -= self.frame_duration;
+            self.current_frame = (self.current_frame + 1) % self.num_frames;
+        }
+
+        if (self.isRunning and self.current_frame == self.num_frames - 1) {
+            self.loop += 1;
+        }
+    }
+
+    pub fn applyMirror(self: *AnimatedSprite, mirror: bool) void {
+        self.mirror = mirror;
+    }
+
+    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: u8, x: usize, y: usize) void {
+        var x_apply: f32 = 0;
+        var y_apply: f32 = 0;
+
+        if (self.isRunning and x == self.x and y == self.y) {
+            if (self.horizontal_shift) {
+                x_apply = @as(f32, @floatFromInt(self.current_frame)) * self.frame_width;
+            } else {
+                y_apply = @as(f32, @floatFromInt(self.current_frame)) * self.frame_height;
+            }
+        }
+
+        const src = rl.Rectangle{
+            .x = self.start_x + x_apply,
+            .y = self.start_y + y_apply,
+            .width = if (self.mirror) -1 * self.frame_width else self.frame_width,
+            .height = self.frame_height,
+        };
+
+        const dest = rl.Rectangle{
+            .x = position.x,
+            .y = position.y,
+            .width = self.frame_width * scale,
+            .height = self.frame_height * scale,
+        };
+
+        const origin = rl.Vector2{ .x = 0, .y = 0 };
+
+        const tint = rl.Color{
+            .r = 255,
+            .g = 255,
+            .b = 255,
+            .a = alpha,
+        };
+
+        rl.drawTexturePro(self.texture, src, dest, origin, rotation, tint);
+    }
+};
