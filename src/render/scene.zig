@@ -4,7 +4,7 @@ const Grid = @import("../game/grid.zig").Grid;
 const CellType = @import("../game/grid.zig").CellType;
 const rl = @import("raylib");
 const textures = @import("textures.zig");
-const anim = @import("animated_sprite.zig");
+const anim = @import("../game/animations/animations_manager.zig");
 const Sprite = @import("textures.zig").Sprite;
 const player = @import("../game/player.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
@@ -63,6 +63,8 @@ fn drawGrid() void {
                         Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 8), 2.80, .white);
                     },
                     .PAD => {
+                        // print("c : {d} r : {d}\n", .{ c, r });
+
                         anim.jumper_sprite.update(rl.getFrameTime() / (player.time_divisor / 2), 1);
                         anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);
                     },

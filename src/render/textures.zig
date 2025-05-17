@@ -3,17 +3,21 @@ const std = @import("std");
 const print = std.debug.print;
 const CellType = @import("../game/grid.zig").CellType;
 const Elf = @import("../game/player.zig").Elf;
-const anim = @import("animated_sprite.zig");
+const anim = @import("../game/animations/animations_manager.zig");
 const HUD = @import("../game/utils.zig").HUD;
 const Inventory = @import("../game/inventory.zig").Inventory;
 
 pub var elf: rl.Texture2D = undefined;
 pub var battlemage_text: rl.Texture2D = undefined;
-pub var battlemage: rl.Texture2D = undefined;
 
-//Anims
-pub var jump_neutral: rl.Texture2D = undefined;
-pub var jump_neutral_going_down: rl.Texture2D = undefined;
+//battlemage Anims
+pub var battlemage_running: rl.Texture2D = undefined;
+pub var battlemage_jump_neutral: rl.Texture2D = undefined;
+pub var battlemage_jump_neutral_going_down: rl.Texture2D = undefined;
+pub var battlemage_dying: rl.Texture2D = undefined;
+
+//Demon Anims
+pub var demon_idle2: rl.Texture2D = undefined;
 
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
@@ -38,9 +42,15 @@ pub var sprites: Sprites = undefined;
 
 pub fn init() !void {
     elf = try rl.loadTexture("assets/textures/elf/pers.png");
-    battlemage = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/Running/battlemage_running.png");
-    jump_neutral = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/battlemage_jump_neutral.png");
-    jump_neutral_going_down = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/going_down/jump_neutral_going_down.png");
+
+    //Battle mage
+    battlemage_running = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/Running/battlemage_running.png");
+    battlemage_jump_neutral = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/battlemage_jump_neutral.png");
+    battlemage_jump_neutral_going_down = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/going_down/jump_neutral_going_down.png");
+    battlemage_dying = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/death/battlemage_death.png");
+
+    //Demon
+    demon_idle2 = try rl.loadTexture("assets/textures/demon/idle2.png");
 
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
 

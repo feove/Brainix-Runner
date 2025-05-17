@@ -1,3 +1,4 @@
+const std = @import("std");
 const scene = @import("../render/scene.zig");
 const Grid = @import("grid.zig").Grid;
 const rl = @import("raylib");
@@ -9,9 +10,9 @@ const CellAround = @import("grid.zig").CellAround;
 const Level = @import("level/events.zig").Level;
 const LevelStatement = @import("level/events.zig").LevelStatement;
 const event = @import("level/events.zig");
-const anim = @import("../render/animated_sprite.zig");
-const anim_manager = @import("animations/anim_manager.zig");
-const AnimManager = anim_manager.AnimManager;
+const anim = @import("animations/animations_manager.zig");
+const elf_anims = @import("animations/elf_anims.zig");
+const AnimManager = elf_anims.AnimManager;
 const Object = @import("terrain_object.zig").Object;
 
 const print = @import("std").debug.print;
@@ -46,7 +47,7 @@ pub fn initElf() void {
         .isOnGround = false,
         .hitBox = HitBox{},
         .repulsive_force = 500.0,
-        .animator = anim_manager.elf_anim,
+        .animator = elf_anims.elf_anim,
     };
 }
 
@@ -68,11 +69,12 @@ pub const Elf = struct {
     jump_force: f32 = jump_force,
     boost_force: f32 = boost_force,
     state: PlayerState = PlayerState.RESPAWNING,
-    animator: anim_manager.AnimManager,
+    animator: elf_anims.AnimManager,
 
     pub fn respawn() void {
         elf.x = RESPAWN_POINT.x;
         elf.y = RESPAWN_POINT.y;
+        elf.setDefaultSpeed();
         elf.physics.auto_moving = AutoMovements.RIGHT;
     }
 
@@ -137,6 +139,7 @@ pub const Elf = struct {
         Object.boostAction(&elf);
 
         //HitBox.antiGrounbGlitch(&elf);
+        updatePlayerStatement();
 
         var x_movement: f32 = 0;
         if (rl.isKeyDown(rl.KeyboardKey.right) or self.physics.auto_moving == AutoMovements.RIGHT) {
@@ -148,11 +151,9 @@ pub const Elf = struct {
 
         self.elfMovement(x_movement, self.physics.velocity_y * dt);
 
-        updatePlayerStatement();
-
         self.hitBox.hitBoxUpdate(&grid, &elf);
 
-        self.canTrigger = self.hitBox.middleLeggs != CellType.AIR;
+        //self.canTrigger = self.hitBox.middleLeggs != CellType.PAD;
 
         //HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
@@ -234,13 +235,20 @@ pub const Elf = struct {
     }
 
     fn updatePlayerStatement() void {
-        if (elf.state == .DEAD) {
-            Grid.reset();
-            Level.reset();
-
-            elf.state = .ALIVE;
-
-            event.level.events[event.level.i_event].already_triggered = false;
+        switch (elf.state) {
+            .DEAD => {
+                elf_anims.AnimManager.setAnim(.DYING);
+                elf.speed *= 0.999;
+            },
+            .RESPAWNING => {
+                Level.reset();
+                Grid.reset();
+                event.level.events[event.level.i_event].already_triggered = false;
+                event.playerEventstatus = event.PlayerEventStatus.IDLE_AREA;
+                respawn();
+                elf.state = .ALIVE;
+            },
+            .ALIVE => {},
         }
     }
 
@@ -252,7 +260,7 @@ pub const Elf = struct {
 
     pub fn drawElf() void {
         //   rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);
-        anim_manager.elf_anim.update(&elf);
+        elf_anims.elf_anim.update(&elf);
 
         //const p: f32 = Grid.selfReturn().cells[0][0].padding;
         // rl.drawRectangleRec(.init(elf.x + 2 * p, elf.y + p + elf.height / 4, elf.width - 4 * p, p), .orange);
@@ -344,7 +352,7 @@ pub const HitBox = struct {
             j_prev = j.*;
             i_and_j_assign(grid, x, y - index, i, j);
 
-            if (j.* < j_prev) {
+            if (j.* < j_prev or j.* > grid.nb_rows) {
                 break;
             }
 
@@ -390,7 +398,7 @@ pub const HitBox = struct {
 
     fn horizontal_detection(grid: *Grid, x: f32, y: f32, len: f32, inc: f32, i: *usize, j: *usize) CellType {
         i_and_j_assign(grid, x, y, i, j);
-        if (i.* > grid.nb_cols or j.* > grid.nb_rows) {
+        if (i.* > grid.nb_cols or j.* >= grid.nb_rows) {
             return .AIR;
         }
         const left = grid.cells[j.*][i.*].object.type;

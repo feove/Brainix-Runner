@@ -5,7 +5,7 @@ const CellType = @import("grid.zig").CellType;
 const Inventory = @import("inventory.zig").Inventory;
 const InvCell = @import("inventory.zig").InvCell;
 const textures = @import("../render/textures.zig");
-const anim = @import("../render/animated_sprite.zig");
+const anim = @import("animations/animations_manager.zig");
 const Sprite = textures.Sprite;
 pub var hud = HUD{};
 
@@ -37,8 +37,8 @@ pub const HUD = struct {
     }
 
     pub fn cursorInCell(cell: Cell) bool {
-        const inAxeX: bool = hud.mouseX > cell.x + cell.padding and hud.mouseX < cell.x + cell.width - cell.padding;
-        const inAxeY: bool = hud.mouseY > cell.y + cell.padding and hud.mouseY < cell.y + cell.height - cell.padding;
+        const inAxeX: bool = hud.mouseX > cell.x and hud.mouseX < cell.x + cell.width;
+        const inAxeY: bool = hud.mouseY > cell.y and hud.mouseY < cell.y + cell.height;
 
         return inAxeX and inAxeY;
     }

@@ -9,8 +9,8 @@ const event = @import("level/events.zig");
 const Inventory = @import("inventory.zig").Inventory;
 const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
-const anim = @import("../render/animated_sprite.zig");
-const anim_manager = @import("../game/animations/anim_manager.zig");
+const anim = @import("animations/animations_manager.zig");
+const elf_anims = @import("../game/animations/elf_anims.zig");
 
 const print = std.debug.print;
 
@@ -253,14 +253,13 @@ pub const Object = struct {
 
                 findObject(elf, &i, &j, .PAD);
 
-                // if (Grid.selfReturn().cells[j][i].object.canPlayerTake) {
-                //     event.Event.stopSlowMotion();
-                // }
+                print("i : {d} j : {d}\n", .{ i, j });
 
                 anim.jumper_sprite.setPos(i, j);
-                anim.jumper_sprite.isRunning = true;
 
-                //    print("{any}\n", .{elf.animator.current});
+                anim.jumper_sprite.isRunning = true;
+                //elf.canTrigger = false;
+
             }
         }
     }
@@ -305,10 +304,9 @@ pub const Object = struct {
         };
 
         if (HitBox.isInCollision(SpikeDetectionSides[0..], CellType.SPIKE)) {
-            Elf.respawn();
-
-            elf.state = PlayerState.DEAD;
-            event.playerEventstatus = event.PlayerEventStatus.IDLE_AREA;
+            if (elf.state == .ALIVE) {
+                elf.state = .DEAD;
+            }
         }
     }
 };

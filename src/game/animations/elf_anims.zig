@@ -5,7 +5,7 @@ const print = @import("std").debug.print;
 
 pub var elf_anim = AnimManager{};
 
-pub const Animation = enum {
+pub const ElfAnimation = enum {
     IDLE,
     RUNNING,
     JUMPING,
@@ -14,8 +14,8 @@ pub const Animation = enum {
 };
 
 pub const AnimManager = struct {
-    current: Animation = .RUNNING,
-    prev: Animation = .RUNNING,
+    current: ElfAnimation = .RUNNING,
+    prev: ElfAnimation = .RUNNING,
 
     pub fn update(self: *AnimManager, elf: *Elf) void {
         applyMirrorEffect(elf);
@@ -80,11 +80,11 @@ pub const AnimManager = struct {
         }
     }
 
-    pub fn getCurrentAnim() Animation {
+    pub fn getCurrentAnim() ElfAnimation {
         return elf_anim.current;
     }
 
-    pub fn setAnim(animation: Animation) void {
+    pub fn setAnim(animation: ElfAnimation) void {
         elf_anim.prev = elf_anim.current;
         elf_anim.current = animation;
     }

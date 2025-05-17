@@ -18,7 +18,11 @@
             {
                 "type" : "PAD",
                 "count" : 1
-            }  
+            }  ,
+            {
+                "type" : "GROUND",
+                "count" : 1
+            } 
         ],
         "areas" : {
             "triggered" : {

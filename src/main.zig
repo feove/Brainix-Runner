@@ -6,7 +6,7 @@ const window = @import("render/window.zig");
 const Grid = @import("game/grid.zig").Grid;
 const Inventory = @import("game/inventory.zig").Inventory;
 const textures = @import("render/textures.zig");
-const anim = @import("render/animated_sprite.zig");
+const anim = @import("game/animations/animations_manager.zig");
 const Level = @import("game/level/events.zig").Level;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};

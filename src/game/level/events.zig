@@ -175,8 +175,6 @@ pub const Level = struct {
 
         Grid.reset();
 
-        Elf.respawn();
-
         levelStatement = .STARTING;
     }
 
