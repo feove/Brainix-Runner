@@ -36,6 +36,7 @@ pub var top_far_bgrnd: rl.Texture2D = undefined;
 pub var env_ground: rl.Texture2D = undefined;
 
 pub var pad: rl.Texture2D = undefined;
+pub var moving_platform: rl.Texture2D = undefined;
 pub var all_weapons: rl.Texture2D = undefined;
 
 pub var green_effects: rl.Texture2D = undefined;
@@ -54,7 +55,7 @@ pub fn init() !void {
     battlemage_dying = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/death/battlemage_death.png");
 
     //Demon
-    demon_idle2 = try rl.loadTexture("assets/textures/wizard/Fall.png");
+    demon_idle2 = try rl.loadTexture("assets/textures/wizard/Idle.png");
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");
 
@@ -75,6 +76,7 @@ pub fn init() !void {
     all_weapons = try rl.loadTexture("assets/textures/pack/trap_and_weapon/all.png");
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
+    moving_platform = try rl.loadTexture("assets/textures/pack/trap_and_weapon/moving_platform.png");
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
     sprites = Sprites.init();

@@ -22,6 +22,8 @@ pub const DemonManager = struct {
             .IDLE2 => idle_2(demon),
             else => {},
         }
+
+        moving_platform();
     }
 
     fn idle_2(demon: *Demon) void {
@@ -29,4 +31,6 @@ pub const DemonManager = struct {
         anim.demon_idle2.update(Elf.getCurrentTime(), 1);
         anim.demon_idle2.draw(.init(demon.x, demon.y), 2.0, 0.0, 255, 0, 0);
     }
+
+    fn moving_platform() void {}
 };

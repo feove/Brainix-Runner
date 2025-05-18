@@ -4,6 +4,7 @@ const textures = @import("../../render/textures.zig");
 const Sprite = textures.Sprite;
 
 pub var jumper_sprite: AnimatedSprite = undefined;
+pub var moving_platform: AnimatedSprite = undefined;
 pub var boost_sprite: AnimatedSprite = undefined;
 
 pub var battlemage_running: AnimatedSprite = undefined;
@@ -115,6 +116,21 @@ pub fn init() !void {
         .frame_height = 190,
         .horizontal_shift = true,
         .num_frames = 6,
+        .frame_duration = 0.2,
+    };
+
+    moving_platform = AnimatedSprite{
+        .texture = textures.moving_platform,
+        .sprite = Sprite{
+            .name = "Moving Platform",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 8 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 32,
+        .frame_height = 8,
+        .horizontal_shift = true,
+        .num_frames = 10,
         .frame_duration = 0.1,
     };
 }
