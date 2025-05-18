@@ -10,12 +10,12 @@
         "grid_objects" : [
             
             {
-                "x" : 5,
+                "x" : 7,
                 "y" : 7,
                 "type" : "SPIKE"
             },
             {
-                "x" : 6,
+                "x" : 8,
                 "y" : 7,
                 "type" : "SPIKE"
             }
@@ -44,7 +44,7 @@
                 "height" : 0
             },
             "completed" :   {
-                "x" : 8,
+                "x" : 9,
                 "y" : 7,
                 "width" : 1,
                 "height" : 1

@@ -23,7 +23,7 @@ pub var battlemage_dying: rl.Texture2D = undefined;
 //Wizard Anims
 pub var demon_idle2: rl.Texture2D = undefined;
 pub var wizard_jumping: rl.Texture2D = undefined;
-pub var wizard_falling: rl.Texture2D = undefined; 
+pub var wizard_falling: rl.Texture2D = undefined;
 pub var wizard_attacking_1: rl.Texture2D = undefined;
 
 pub var spriteSheet: rl.Texture2D = undefined;
