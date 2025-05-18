@@ -12,7 +12,10 @@ pub var battlemage_jumping_full: AnimatedSprite = undefined;
 pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
 pub var battlemage_dying: AnimatedSprite = undefined;
 
+//Wizard
 pub var demon_idle2: AnimatedSprite = undefined;
+pub var wizard_jumping: AnimatedSprite = undefined;
+pub var wizard_falling: AnimatedSprite = undefined;
 
 pub fn init() !void {
     jumper_sprite = AnimatedSprite{
@@ -117,6 +120,36 @@ pub fn init() !void {
         .horizontal_shift = true,
         .num_frames = 6,
         .frame_duration = 0.2,
+    };
+
+    wizard_jumping = AnimatedSprite{
+        .texture = textures.wizard_jumping,
+        .sprite = Sprite{
+            .name = "Wizard is Jumping",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 462, .height = 190 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 231,
+        .frame_height = 190,
+        .horizontal_shift = true,
+        .num_frames = 2,
+        .frame_duration = 0.1,
+    };
+
+    wizard_falling = AnimatedSprite{
+        .texture = textures.wizard_falling,
+        .sprite = Sprite{
+            .name = "Wizard is Falling",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 462, .height = 190 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 231,
+        .frame_height = 190,
+        .horizontal_shift = true,
+        .num_frames = 2,
+        .frame_duration = 0.1,
     };
 
     moving_platform = AnimatedSprite{

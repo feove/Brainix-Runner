@@ -20,8 +20,10 @@ pub var battlemage_jump_neutral: rl.Texture2D = undefined;
 pub var battlemage_jump_neutral_going_down: rl.Texture2D = undefined;
 pub var battlemage_dying: rl.Texture2D = undefined;
 
-//Demon Anims
+//Wizard Anims
 pub var demon_idle2: rl.Texture2D = undefined;
+pub var wizard_jumping: rl.Texture2D = undefined;
+pub var wizard_falling: rl.Texture2D = undefined;
 
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
@@ -56,6 +58,8 @@ pub fn init() !void {
 
     //Demon
     demon_idle2 = try rl.loadTexture("assets/textures/wizard/Idle.png");
+    wizard_jumping = try rl.loadTexture("assets/textures/wizard/Jump.png");
+    wizard_falling = try rl.loadTexture("assets/textures/wizard/Fall.png");
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");
 

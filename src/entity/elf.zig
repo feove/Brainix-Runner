@@ -107,6 +107,10 @@ pub const Elf = struct {
         return rl.getFrameTime() / time_divisor;
     }
 
+    pub fn getTimeDivisor() f32 {
+        return time_divisor;
+    }
+
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();

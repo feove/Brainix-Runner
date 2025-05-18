@@ -4,6 +4,10 @@ const rl = @import("raylib");
 const player = @import("../../entity/elf.zig");
 const Elf = player.Elf;
 
+const wizard_anim = @import("../animations/wizard_anims.zig").wizard_anim;
+const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimation;
+const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
+
 const terrain = @import("../../terrain/grid.zig");
 const Grid = terrain.Grid;
 const Cell = terrain.Cell;
@@ -12,6 +16,7 @@ const CellType = terrain.CellType;
 const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
 const EventConfig = @import("level_reader.zig").EventConfig;
+
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const alloc = gpa.allocator();
 const print = std.debug.print;
@@ -157,7 +162,7 @@ pub const Level = struct {
 
     pub fn init(allocator: std.mem.Allocator) !void {
 
-        //must allocate event_nb array of each lvl
+        //must allocate event_nb array for each lvl
 
         //Events Init
         level.i_event = CURRENT_EVENT;
@@ -257,11 +262,10 @@ pub const Level = struct {
         if (slots_filled == false) {
             print("EVENT {d} TRIGGERED\n", .{level.i_event});
             Inventory.slotSetting(event.inv_objects);
+            event.objectsSetUp(event.grid_objects);
+            WizardManager.set(.JUMPING);
             slots_filled = true;
         }
-
-        event.objectsSetUp(event.grid_objects);
-
         Event.slow_motion_effect(elf);
     }
 
