@@ -12,6 +12,8 @@ const Inventory = @import("../game/inventory.zig").Inventory;
 const AroundConfig = @import("../game/terrain_object.zig").AroundConfig;
 const Object = @import("../game/terrain_object.zig").Object;
 
+const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
+
 pub var grid: Grid = undefined;
 
 const GRID_X: f32 = 65;
@@ -128,6 +130,7 @@ pub const Grid = struct {
 
         grid.cacheCell = .EMPTY;
         Inventory.clearinv_cell();
+        WizardManager.reset();
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 

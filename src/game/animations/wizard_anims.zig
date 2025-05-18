@@ -12,28 +12,43 @@ pub const WizardAnimation = enum {
     IDLE,
     FALLING,
     JUMPING,
+    ATTACKING_1,
 };
 
 pub const WizardManager = struct {
     current: WizardAnimation = .IDLE,
     prev: WizardAnimation = .IDLE,
 
-    pub fn set(animation: WizardAnimation) void {
+    pub fn setCurrent(animation: WizardAnimation) void {
         wizard_anim.current = animation;
+    }
+
+    pub fn setPrev(animation: WizardAnimation) void {
+        wizard_anim.prev = animation;
+    }
+
+    pub fn getCurrentAnim() WizardAnimation {
+        return wizard_anim.current;
+    }
+
+    pub fn getPreviousAnim() WizardAnimation {
+        return wizard_anim.prev;
+    }
+
+    pub fn reset() void {
+        WizardManager.setCurrent(.IDLE);
+        WizardManager.setPrev(.IDLE);
     }
 
     pub fn update(self: *WizardManager, wizard: *Wizard) void {
         //_ = self;
         //_ = demon;
 
-        if (self.current != .IDLE) {
-            print("{any}\n", .{self.current});
-        }
-
         switch (self.current) {
             .IDLE => idle(wizard),
             .JUMPING => jumping(wizard),
             .FALLING => falling(wizard),
+            .ATTACKING_1 => attacking_1(wizard),
             // else => {},
         }
 
@@ -41,9 +56,25 @@ pub const WizardManager = struct {
     }
 
     fn idle(wizard: *Wizard) void {
+        wizard_anim.current = .IDLE;
         anim.demon_idle2.isRunning = true;
-        anim.demon_idle2.update(Elf.getCurrentTime(), 1);
+        anim.demon_idle2.update(Elf.getCurrentTime() * Elf.getTimeDivisor(), 1);
         anim.demon_idle2.draw(.init(wizard.x, wizard.y), wizard.scale, 0.0, 255, 0, 0);
+        // wizard_anim.prev = .IDLE;
+    }
+
+    fn attacking_1(wizard: *Wizard) void {
+        wizard_anim.current = .ATTACKING_1;
+        wizard_anim.prev = .IDLE;
+
+        anim.wizard_attacking_1.isRunning = true;
+        anim.wizard_attacking_1.update(Elf.getCurrentTime() * Elf.getTimeDivisor(), 1);
+        anim.wizard_attacking_1.draw(.init(wizard.x, wizard.y), wizard.scale, 0.0, 255, 0, 0);
+
+        if (anim.wizard_attacking_1.isRunning == false) {
+            wizard_anim.prev = .ATTACKING_1;
+            wizard_anim.current = .IDLE;
+        }
     }
 
     fn jumping(wizard: *Wizard) void {
