@@ -52,6 +52,9 @@ pub const WizardManager = struct {
             // else => {},
         }
 
+        anim.spawning_item.isRunning = true;
+        anim.spawning_item.update(Elf.getInitialTime(), 1);
+        anim.spawning_item.draw(.init(300, 300), 3.5, 0, 255, 0, 0);
         moving_platform(wizard);
     }
 

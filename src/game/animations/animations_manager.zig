@@ -11,6 +11,7 @@ pub var battlemage_running: AnimatedSprite = undefined;
 pub var battlemage_jumping_full: AnimatedSprite = undefined;
 pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
 pub var battlemage_dying: AnimatedSprite = undefined;
+pub var spawning_item: AnimatedSprite = undefined;
 
 //Wizard
 pub var demon_idle2: AnimatedSprite = undefined;
@@ -46,6 +47,21 @@ pub fn init() !void {
         .frame_height = 16,
         .horizontal_shift = true,
         .num_frames = 4,
+        .frame_duration = 0.1,
+    };
+
+    spawning_item = AnimatedSprite{
+        .texture = textures.green_effects,
+        .sprite = Sprite{
+            .name = "Spawning Item Effect",
+            .src = rl.Rectangle{ .x = 480, .y = 96, .width = 96, .height = 16 },
+        },
+        .start_x = 480,
+        .start_y = 96,
+        .frame_width = 16,
+        .frame_height = 16,
+        .horizontal_shift = true,
+        .num_frames = 6,
         .frame_duration = 0.1,
     };
 

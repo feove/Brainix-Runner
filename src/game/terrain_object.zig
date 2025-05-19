@@ -182,6 +182,7 @@ pub const Object = struct {
     pub fn set(self: *Object, grid: *Grid) void {
         const object_size: usize = objectSize(self.type);
         grid.cells[self.y][self.x].object.type = self.type;
+
         if (object_size == 2) {
             grid.cells[self.y][self.x + 1].object.type = self.type;
         }
