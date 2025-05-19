@@ -25,8 +25,8 @@ const print = std.debug.print;
 pub var level: Level = undefined;
 pub var slow_motion_active: bool = false;
 pub var stop_slow_motion: bool = false;
-pub var slow_motion_start_time: f64 = 0;
 var slots_filled = false;
+pub var slow_motion_start_time: f64 = 0;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
@@ -260,11 +260,12 @@ pub const Level = struct {
     fn slow_motion(elf: *Elf) !void {
         var event: Event = level.events[level.i_event];
 
+        //Need to fix item spawning anim
         if (WizardManager.getPreviousAnim() != .ATTACKING_1) {
             if (WizardManager.getCurrentAnim() != .ATTACKING_1) {
+                WizardManager.item_spawning(event.grid_objects, event.object_nb);
                 WizardManager.setCurrent(.ATTACKING_1);
             }
-
             return;
         }
 

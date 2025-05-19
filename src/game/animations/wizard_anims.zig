@@ -5,7 +5,8 @@ const rl = @import("raylib");
 const anim = @import("animations_manager.zig");
 const Elf = @import("../../entity/elf.zig").Elf;
 const Wizard = @import("../../entity/wizard.zig").Wizard;
-
+const Object = @import("../terrain_object.zig").Object;
+const Grid = @import("../../terrain/grid.zig").Grid;
 pub var wizard_anim = WizardManager{};
 
 pub const WizardAnimation = enum {
@@ -43,7 +44,7 @@ pub const WizardManager = struct {
     pub fn update(self: *WizardManager, wizard: *Wizard) void {
         //_ = self;
         //_ = demon;
-
+        //  item_spawning(100, 100);
         switch (self.current) {
             .IDLE => idle(wizard),
             .JUMPING => jumping(wizard),
@@ -52,9 +53,6 @@ pub const WizardManager = struct {
             // else => {},
         }
 
-        anim.spawning_item.isRunning = true;
-        anim.spawning_item.update(Elf.getInitialTime(), 1);
-        anim.spawning_item.draw(.init(300, 300), 3.5, 0, 255, 0, 0);
         moving_platform(wizard);
     }
 
@@ -103,5 +101,17 @@ pub const WizardManager = struct {
         anim.moving_platform.isRunning = true;
         anim.moving_platform.update(Elf.getCurrentTime(), 1);
         anim.moving_platform.draw(.init(wizard.x + wizard.width * 0.63, wizard.y + wizard.height * 1.48), wizard.scale * 2, 0.0, 255, 0, 0);
+    }
+
+    pub fn item_spawning(objects: []Object, size: usize) void {
+        for (0..size) |i| {
+            const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
+
+            anim.spawning_item.isRunning = true;
+            anim.spawning_item.update(Elf.getInitialTime(), 1);
+            anim.spawning_item.draw(.init(100, 100), 3.50, 0, 255, 0, 0); //sale : 3.5
+
+            print("Item Spawning\n at x {d} ||y {d}\n", .{ pos.x, pos.y });
+        }
     }
 };

@@ -80,6 +80,10 @@ pub const Grid = struct {
         _ = self;
     }
 
+    pub fn getFrontEndPostion(i: usize, j: usize) rl.Vector2 {
+        return .init(grid.cells[j][i].x, grid.cells[j][i].y);
+    }
+
     pub fn init(allocator: std.mem.Allocator) !void {
         const cells = try allocator.alloc([]Cell, NB_ROWS);
 

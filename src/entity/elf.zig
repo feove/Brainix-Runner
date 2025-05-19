@@ -365,7 +365,8 @@ pub const HitBox = struct {
             j_prev = j.*;
             i_and_j_assign(grid, x, y - index, i, j);
 
-            if (j.* < j_prev or j.* > grid.nb_rows) {
+            if (j.* < j_prev or j.* >= grid.nb_rows) {
+                //print("Out Of Band with j.*\n", .{});
                 break;
             }
 
