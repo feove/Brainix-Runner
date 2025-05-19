@@ -68,7 +68,7 @@ fn drawGrid() void {
                     .PAD => {
                         // print("c : {d} r : {d}\n", .{ c, r });
 
-                        anim.jumper_sprite.update(rl.getFrameTime() / (player.time_divisor / 2), 1);
+                        anim.jumper_sprite.update(rl.getFrameTime(), 1);
                         anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);
                     },
                     .UP_PAD => {

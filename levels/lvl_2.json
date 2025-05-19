@@ -48,7 +48,7 @@
 
     "event_1" : {
 
-        "object_nb" : 7,
+        "object_nb" : 8,
         "slow_motion_time" : 2.0,
         "time_divisor" :2.0,
         "already_triggered" :  false,
@@ -87,6 +87,11 @@
                 "x" : 1,
                 "y" : 5,
                 "type" : "SPIKE"
+            },
+            {
+                "x" : 0,
+                "y" : 7,
+                "type" : "SPIKE"
             }
         ],
         "inv_objects" : [   
@@ -110,7 +115,7 @@
                 "height" : 0
             },
             "completed" :   {
-                "x" : 4,
+                "x" : 8,
                 "y" : 7,
                 "width" : 1,
                 "height" : 1
