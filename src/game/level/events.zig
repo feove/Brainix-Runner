@@ -257,13 +257,17 @@ pub const Level = struct {
         slots_filled = false;
     }
 
+    pub fn getCurrentEvent() *Event {
+        return &level.events[level.i_event];
+    }
+
     fn slow_motion(elf: *Elf) !void {
         var event: Event = level.events[level.i_event];
 
         //Need to fix item spawning anim
         if (WizardManager.getPreviousAnim() != .ATTACKING_1) {
             if (WizardManager.getCurrentAnim() != .ATTACKING_1) {
-                WizardManager.item_spawning(event.grid_objects, event.object_nb);
+                WizardManager.item_spawning();
                 WizardManager.setCurrent(.ATTACKING_1);
             }
             return;

@@ -112,7 +112,7 @@ pub const Elf = struct {
     }
 
     pub fn getInitialTime() f32 {
-        return getCurrentTime() * time_divisor;
+        return rl.getFrameTime();
     }
 
     pub fn controller(self: *Elf) void {

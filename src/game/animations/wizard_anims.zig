@@ -7,6 +7,10 @@ const Elf = @import("../../entity/elf.zig").Elf;
 const Wizard = @import("../../entity/wizard.zig").Wizard;
 const Object = @import("../terrain_object.zig").Object;
 const Grid = @import("../../terrain/grid.zig").Grid;
+const events = @import("../level/events.zig");
+const Event = events.Event;
+const Level = events.Level;
+
 pub var wizard_anim = WizardManager{};
 
 pub const WizardAnimation = enum {
@@ -45,6 +49,7 @@ pub const WizardManager = struct {
         //_ = self;
         //_ = demon;
         //  item_spawning(100, 100);
+
         switch (self.current) {
             .IDLE => idle(wizard),
             .JUMPING => jumping(wizard),
@@ -71,6 +76,7 @@ pub const WizardManager = struct {
         anim.wizard_attacking_1.isRunning = true;
         anim.wizard_attacking_1.update(Elf.getCurrentTime() * Elf.getTimeDivisor(), 1);
         anim.wizard_attacking_1.draw(.init(wizard.x, wizard.y), wizard.scale, 0.0, 255, 0, 0);
+        item_spawning();
 
         if (anim.wizard_attacking_1.isRunning == false) {
             wizard_anim.prev = .ATTACKING_1;
@@ -103,15 +109,19 @@ pub const WizardManager = struct {
         anim.moving_platform.draw(.init(wizard.x + wizard.width * 0.63, wizard.y + wizard.height * 1.48), wizard.scale * 2, 0.0, 255, 0, 0);
     }
 
-    pub fn item_spawning(objects: []Object, size: usize) void {
+    pub fn item_spawning() void {
+        const event: Event = Level.getCurrentEvent().*;
+        const objects = event.grid_objects;
+        const size = event.object_nb;
+
         for (0..size) |i| {
             const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
 
             anim.spawning_item.isRunning = true;
-            anim.spawning_item.update(Elf.getInitialTime(), 1);
-            anim.spawning_item.draw(.init(100, 100), 3.50, 0, 255, 0, 0); //sale : 3.5
+            anim.spawning_item.update(Elf.getCurrentTime(), 1);
+            anim.spawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
 
-            print("Item Spawning\n at x {d} ||y {d}\n", .{ pos.x, pos.y });
+            //  print("Item Spawning\n at x {d} ||y {d}\n", .{ pos.x, pos.y });
         }
     }
 };
