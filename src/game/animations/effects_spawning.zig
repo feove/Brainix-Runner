@@ -65,7 +65,7 @@ pub const EffectManager = struct {
 
     fn none() void {
         effect_anim.current = .NONE;
-        effect_anim.prev = .NONE;
+        //    effect_anim.prev = .NONE;
     }
 
     pub fn item_spawning() void {
@@ -73,17 +73,13 @@ pub const EffectManager = struct {
         const objects = event.grid_objects;
         const size = event.object_nb;
 
-        setCurrent(.SPAWNING);
-        //setPrev(.NONE);
+        anim.spawning_item.isRunning = true;
 
         for (0..size) |i| {
             const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
 
-            anim.spawning_item.isRunning = true;
-            //anim.spawning_item.isRunning = true;
             anim.spawning_item.update(Elf.getCurrentTime(), 1);
             anim.spawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
-            //  print("Item Spawning\n at x {d} ||y {d}\n", .{ pos.x, pos.y });
         }
 
         if (anim.spawning_item.isRunning == false) {

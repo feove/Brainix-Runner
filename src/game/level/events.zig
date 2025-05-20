@@ -123,8 +123,6 @@ pub const Event = struct {
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
             Object.remove(&objects[i], &grid);
-            // _ = EffectManager.setCurrent(.SPAWNING);
-            //EffectManager.item_spawning();
         }
     }
 
@@ -267,10 +265,14 @@ pub const Level = struct {
     fn slow_motion(elf: *Elf) !void {
         var event: Event = level.events[level.i_event];
 
-        if (WizardManager.onceTime(.ATTACKING_1)) {
-            _ = EffectManager.onceTime(.SPAWNING);
+        //Flex
+        const animationState: bool = WizardManager.onceTime(.ATTACKING_1) or EffectManager.onceTime(.SPAWNING);
+
+        if (animationState) {
             return;
         }
+
+        Event.slow_motion_effect(elf);
 
         if (slots_filled == false) {
             print("EVENT {d} TRIGGERED\n", .{level.i_event});
@@ -280,7 +282,6 @@ pub const Level = struct {
 
             slots_filled = true;
         }
-        Event.slow_motion_effect(elf);
     }
 
     fn complete() void {
