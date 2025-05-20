@@ -7,6 +7,7 @@ const Elf = player.Elf;
 const wizard_anim = @import("../animations/wizard_anims.zig").wizard_anim;
 const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimation;
 const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
+const EffectManager = @import("../animations/effects_spawning.zig").EffectManager;
 const anim = @import("../animations/animations_manager.zig");
 
 const terrain = @import("../../terrain/grid.zig");
@@ -264,12 +265,8 @@ pub const Level = struct {
     fn slow_motion(elf: *Elf) !void {
         var event: Event = level.events[level.i_event];
 
-        //Need to fix item spawning anim
-        if (WizardManager.getPreviousAnim() != .ATTACKING_1) {
-            if (WizardManager.getCurrentAnim() != .ATTACKING_1) {
-                WizardManager.item_spawning();
-                WizardManager.setCurrent(.ATTACKING_1);
-            }
+        if (WizardManager.onceTime(.ATTACKING_1)) {
+            _ = EffectManager.onceTime(.SPAWNING);
             return;
         }
 

@@ -41,8 +41,8 @@ pub const WizardManager = struct {
     }
 
     pub fn reset() void {
-        WizardManager.setCurrent(.IDLE);
-        WizardManager.setPrev(.IDLE);
+        setCurrent(.IDLE);
+        setPrev(.IDLE);
     }
 
     pub fn update(self: *WizardManager, wizard: *Wizard) void {
@@ -69,18 +69,29 @@ pub const WizardManager = struct {
         // wizard_anim.prev = .IDLE;
     }
 
+    pub fn onceTime(animation: WizardAnimation) bool {
+        const alreadyPlayed: bool = getPreviousAnim() == animation;
+
+        if (!alreadyPlayed) {
+            if (getCurrentAnim() != animation) {
+                // EffectManager.setCurrent(.SPAWNING);
+                setCurrent(animation);
+            }
+        }
+        return !alreadyPlayed;
+    }
+
     fn attacking_1(wizard: *Wizard) void {
-        wizard_anim.current = .ATTACKING_1;
-        wizard_anim.prev = .IDLE;
+        setPrev(.IDLE);
+        setCurrent(.ATTACKING_1);
 
         anim.wizard_attacking_1.isRunning = true;
         anim.wizard_attacking_1.update(Elf.getCurrentTime() * Elf.getTimeDivisor(), 1);
         anim.wizard_attacking_1.draw(.init(wizard.x, wizard.y), wizard.scale, 0.0, 255, 0, 0);
-        item_spawning();
 
         if (anim.wizard_attacking_1.isRunning == false) {
-            wizard_anim.prev = .ATTACKING_1;
-            wizard_anim.current = .IDLE;
+            setPrev(.ATTACKING_1);
+            setCurrent(.IDLE);
         }
     }
 
@@ -107,21 +118,5 @@ pub const WizardManager = struct {
         anim.moving_platform.isRunning = true;
         anim.moving_platform.update(Elf.getCurrentTime(), 1);
         anim.moving_platform.draw(.init(wizard.x + wizard.width * 0.63, wizard.y + wizard.height * 1.48), wizard.scale * 2, 0.0, 255, 0, 0);
-    }
-
-    pub fn item_spawning() void {
-        const event: Event = Level.getCurrentEvent().*;
-        const objects = event.grid_objects;
-        const size = event.object_nb;
-
-        for (0..size) |i| {
-            const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
-
-            anim.spawning_item.isRunning = true;
-            anim.spawning_item.update(Elf.getCurrentTime(), 1);
-            anim.spawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
-
-            //  print("Item Spawning\n at x {d} ||y {d}\n", .{ pos.x, pos.y });
-        }
     }
 };

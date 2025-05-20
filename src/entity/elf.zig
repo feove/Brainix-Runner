@@ -26,7 +26,7 @@ pub var elf: Elf = undefined;
 pub var initGrid: Grid = undefined;
 pub var time_divisor: f32 = 1.0;
 
-const ELF_DEFAULT_SPEED: f32 = 150.0;
+const ELF_DEFAULT_SPEED: f32 = 140.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
 var RESPAWN_POINT: rl.Vector2 = .init(80, 443);
@@ -168,7 +168,7 @@ pub const Elf = struct {
 
         //self.canTrigger = self.hitBox.middleLeggs != CellType.PAD;
 
-        //HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
+        // HitBox.hitBoxDrawing(self.x, self.y, self.width, self.height);
     }
 
     fn canMoveHorizontal(self: *Elf, x_offset: f32) bool {
@@ -301,7 +301,7 @@ pub const HitBox = struct {
 
     pub fn hitBoxDrawing(x: f32, y: f32, width: f32, height: f32) void {
         const rectangle: rl.Rectangle = rl.Rectangle.init(x, y, width, height);
-        rl.drawRectangleLinesEx(rectangle, 5, .red);
+        rl.drawRectangleLinesEx(rectangle, 15, .red);
     }
 
     pub fn i_and_j_assign(grid: *Grid, x: f32, y: f32, i: *usize, j: *usize) void {

@@ -13,6 +13,7 @@ const AroundConfig = @import("../game/terrain_object.zig").AroundConfig;
 const Object = @import("../game/terrain_object.zig").Object;
 
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
+const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
 
 pub var grid: Grid = undefined;
 
@@ -134,7 +135,10 @@ pub const Grid = struct {
 
         grid.cacheCell = .EMPTY;
         Inventory.clearinv_cell();
+
+        //Anims
         WizardManager.reset();
+        EffectManager.reset();
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 

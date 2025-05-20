@@ -7,6 +7,7 @@
 - [ ] Add Animations before objects spawning/Despawning
 - [ ] Add Wizard elf detection to avoid collisions
 - [ ] Create 3 elaborated levels
+- [ ] Add Door Front end
 
 ### Tasks Completed  ✓
 - [x] Set Up a Door as end of the level

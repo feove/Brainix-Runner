@@ -1,5 +1,6 @@
 const rl = @import("raylib");
 const wizard_anims = @import("../game/animations/wizard_anims.zig");
+const effect_anims = @import("../game/animations/effects_spawning.zig");
 const textures = @import("../render/textures.zig");
 
 pub var wizard: Wizard = undefined;
@@ -29,5 +30,6 @@ pub const Wizard = struct {
 
     pub fn draw() void {
         wizard_anims.wizard_anim.update(&wizard);
+        effect_anims.EffectManager.update();
     }
 };
