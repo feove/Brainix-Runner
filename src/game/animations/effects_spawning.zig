@@ -32,7 +32,7 @@ pub const EffectManager = struct {
     }
 
     pub fn setPrev(animation: EffectAnimation) void {
-        effect_anim.current = animation;
+        effect_anim.prev = animation;
     }
 
     pub fn getPreviousAnim() EffectAnimation {
@@ -74,12 +74,13 @@ pub const EffectManager = struct {
         const size = event.object_nb;
 
         setCurrent(.SPAWNING);
-        setPrev(.NONE);
+        //setPrev(.NONE);
 
         for (0..size) |i| {
             const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
 
             anim.spawning_item.isRunning = true;
+            //anim.spawning_item.isRunning = true;
             anim.spawning_item.update(Elf.getCurrentTime(), 1);
             anim.spawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
             //  print("Item Spawning\n at x {d} ||y {d}\n", .{ pos.x, pos.y });

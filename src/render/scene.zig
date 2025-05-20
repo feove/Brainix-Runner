@@ -67,6 +67,7 @@ fn drawGrid() void {
                     },
                     .PAD => {
                         // print("c : {d} r : {d}\n", .{ c, r });
+                        //Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255, false),
 
                         anim.jumper_sprite.update(rl.getFrameTime(), 1);
                         anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);

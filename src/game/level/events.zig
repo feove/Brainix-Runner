@@ -123,6 +123,8 @@ pub const Event = struct {
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
             Object.remove(&objects[i], &grid);
+            // _ = EffectManager.setCurrent(.SPAWNING);
+            //EffectManager.item_spawning();
         }
     }
 
@@ -246,10 +248,10 @@ pub const Level = struct {
 
     fn playerStatement(elf: *Elf) !void {
         switch (playerEventstatus) {
-            PlayerEventStatus.IDLE_AREA => idle(),
-            PlayerEventStatus.SLOW_MOTION_AREA => try slow_motion(elf),
-            PlayerEventStatus.RESTRICTED_AREA => print("IN RESTRICTED AREA\n", .{}),
-            PlayerEventStatus.COMPLETED_AREA => complete(),
+            .IDLE_AREA => idle(),
+            .SLOW_MOTION_AREA => try slow_motion(elf),
+            .RESTRICTED_AREA => print("IN RESTRICTED AREA\n", .{}),
+            .COMPLETED_AREA => complete(),
         }
     }
 
@@ -291,12 +293,13 @@ pub const Level = struct {
         Inventory.clear();
         Grid.reset();
 
-        playerEventstatus = PlayerEventStatus.IDLE_AREA;
+        playerEventstatus = .IDLE_AREA;
 
         level.i_event += 1;
 
         if (level.i_event == level.event_nb) {
             levelStatement = .PRE_COMPLETED;
+            return;
         }
     }
 

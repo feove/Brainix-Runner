@@ -51,7 +51,7 @@ pub fn init() !void {
     };
 
     spawning_item = AnimatedSprite{
-        .texture = textures.green_effects,
+        .texture = textures.yellow_effects,
         .sprite = Sprite{
             .name = "Spawning Item Effect",
             .src = rl.Rectangle{ .x = 480, .y = 96, .width = 96, .height = 16 },
