@@ -7,6 +7,7 @@ const Elf = player.Elf;
 const wizard_anim = @import("../animations/wizard_anims.zig").wizard_anim;
 const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimation;
 const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
+const Wizard = @import("../../entity/wizard.zig").Wizard;
 const EffectManager = @import("../animations/effects_spawning.zig").EffectManager;
 const anim = @import("../animations/animations_manager.zig");
 
@@ -255,6 +256,7 @@ pub const Level = struct {
 
     fn idle() void {
         if (slots_filled) {
+            Wizard.reset();
             Inventory.clear();
             EffectManager.reset();
             slots_filled = false;
@@ -330,6 +332,7 @@ pub const Level = struct {
                 print("LEVEL COMPLETED \n", .{});
                 CURRENT_LEVEL += 1;
 
+                Wizard.reset();
                 if (CURRENT_LEVEL == LEVEL_NB) {
                     CURRENT_LEVEL = 0;
                     print("GAME ENDED \n", .{});

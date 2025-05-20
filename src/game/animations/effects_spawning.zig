@@ -66,16 +66,23 @@ pub const EffectManager = struct {
         const event: Event = Level.getPreviousEvent().*;
         const objects = event.grid_objects;
         const size = event.object_nb;
-        anim.despawning_item.isRunning = true;
+        anim.square_despawning_item.isRunning = true;
+        anim.spike_despawning_item.isRunning = true;
 
         for (0..size) |i| {
             const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
 
-            anim.despawning_item.update(Elf.getCurrentTime() / 2, 1);
-            anim.despawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
+            if (objects[i].type == .GROUND) {
+                anim.square_despawning_item.update(Elf.getCurrentTime() / 2, 1);
+                anim.square_despawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
+                continue;
+            }
+            anim.spike_despawning_item.update(Elf.getCurrentTime() / 2, 1);
+            anim.spike_despawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
+
         }
 
-        if (anim.despawning_item.isRunning == false) {
+        if (anim.square_despawning_item.isRunning == false or anim.spike_despawning_item.isRunning == false) {
             effect_anim.prev = .DESPAWNING;
             effect_anim.current = .NONE;
         }
