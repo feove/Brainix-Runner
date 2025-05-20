@@ -11,7 +11,9 @@ pub var battlemage_running: AnimatedSprite = undefined;
 pub var battlemage_jumping_full: AnimatedSprite = undefined;
 pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
 pub var battlemage_dying: AnimatedSprite = undefined;
+
 pub var spawning_item: AnimatedSprite = undefined;
+pub var despawning_item: AnimatedSprite = undefined;
 
 //Wizard
 pub var demon_idle2: AnimatedSprite = undefined;
@@ -65,6 +67,21 @@ pub fn init() !void {
         .frame_duration = 0.1,
     };
 
+    despawning_item = AnimatedSprite{
+        .texture = textures.yellow_effects,
+        .sprite = Sprite{
+            .name = "Spawning Item Effect",
+            .src = rl.Rectangle{ .x = 384, .y = 96, .width = 80, .height = 16 },
+        },
+        .start_x = 384,
+        .start_y = 144,
+        .frame_width = 16,
+        .frame_height = 16,
+        .horizontal_shift = true,
+        .num_frames = 6,
+        .frame_duration = 0.1,
+    };
+
     battlemage_running = AnimatedSprite{
         .texture = textures.battlemage_running,
         .sprite = Sprite{
@@ -94,6 +111,7 @@ pub fn init() !void {
         .num_frames = 10,
         .frame_duration = 0.1,
     };
+
     battlemage_jumping_going_down = AnimatedSprite{
         .texture = textures.battlemage_jump_neutral_going_down,
         .sprite = Sprite{
@@ -275,13 +293,6 @@ pub const AnimatedSprite = struct {
         };
 
         const origin = rl.Vector2{ .x = 0, .y = 0 };
-
-        // const tint = rl.Color{
-        //     .r = 255,
-        //     .g = 255,
-        //     .b = 255,
-        //     .a = alpha,
-        // };
 
         const color: rl.Color = .white;
 
