@@ -254,12 +254,21 @@ pub const Level = struct {
     }
 
     fn idle() void {
-        Inventory.clear();
-        slots_filled = false;
+        if (slots_filled) {
+            Inventory.clear();
+            EffectManager.reset();
+            slots_filled = false;
+        }
     }
 
     pub fn getCurrentEvent() *Event {
         return &level.events[level.i_event];
+    }
+
+    pub fn getPreviousEvent() *Event {
+        const i_event: usize = if (level.i_event > 0) level.i_event - 1 else 0;
+
+        return &level.events[i_event];
     }
 
     fn slow_motion(elf: *Elf) !void {
@@ -291,8 +300,10 @@ pub const Level = struct {
 
         event.objectsCleaning(event.grid_objects);
 
+        EffectManager.setCurrent(.DESPAWNING);
         Inventory.clear();
         Grid.reset();
+        //_ = EffectManager.onceTime(.SPAWNING);
 
         playerEventstatus = .IDLE_AREA;
 

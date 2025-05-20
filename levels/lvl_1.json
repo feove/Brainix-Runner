@@ -1,5 +1,5 @@
 {
-    "event_nb" : 3,
+    "event_nb" : 4,
 
     "event_0" : {
 
@@ -160,6 +160,50 @@
                 "height" : 1
             }
         }
+    },
+
+    "event_3" : {
+
+        "object_nb" : 1,
+        "slow_motion_time" : 3.0,
+        "time_divisor" : 4.0,
+        "already_triggered" :  false,
+        "grid_objects" : [
+            
+            {
+                "x" : 6,
+                "y" : 7,
+                "type" : "UP_PAD"
+            }
+            
+        ],
+        "inv_objects" : [  
+            {
+                "type" : "EMPTY",
+                "count" : 1
+            }
+        ],
+        "areas" : {
+            "triggered" : {
+                "x" : 7,
+                "y" : 7,
+                "width" : 1,
+                "height" :1
+            },
+            "restricted" :  {
+                "x" : 0,
+                "y" : 1,
+                "width" : 0,
+                "height" : 0
+            },
+            "completed" :   {
+                "x" : 4,
+                "y" : 4,
+                "width" : 4,
+                "height" : 1
+            }
+        }
     }
+
 
 }

@@ -138,7 +138,6 @@ pub const Grid = struct {
 
         //Anims
         WizardManager.reset();
-        EffectManager.reset();
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 

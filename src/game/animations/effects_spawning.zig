@@ -13,10 +13,7 @@ const Level = events.Level;
 
 pub var effect_anim: EffectManager = EffectManager{};
 
-pub const EffectAnimation = enum {
-    NONE,
-    SPAWNING,
-};
+pub const EffectAnimation = enum { NONE, SPAWNING, DESPAWNING };
 
 pub const EffectManager = struct {
     current: EffectAnimation = .NONE,
@@ -46,6 +43,7 @@ pub const EffectManager = struct {
     pub fn update() void {
         switch (effect_anim.current) {
             .SPAWNING => item_spawning(),
+            .DESPAWNING => item_despawning(),
             .NONE => none(),
         }
     }
@@ -56,16 +54,31 @@ pub const EffectManager = struct {
         //   print("{} {}\n", .{ getCurrentAnim(), getPreviousAnim() });
         if (!alreadyPlayed) {
             if (getCurrentAnim() != animation) {
-                // EffectManager.setCurrent(.SPAWNING);
                 setCurrent(animation);
             }
         }
         return !alreadyPlayed;
     }
 
-    fn none() void {
-        effect_anim.current = .NONE;
-        //    effect_anim.prev = .NONE;
+    fn none() void {}
+
+    pub fn item_despawning() void {
+        const event: Event = Level.getPreviousEvent().*;
+        const objects = event.grid_objects;
+        const size = event.object_nb;
+        anim.spawning_item.isRunning = true;
+
+        for (0..size) |i| {
+            const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
+
+            anim.spawning_item.update(Elf.getCurrentTime() / 2, 1);
+            anim.spawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
+        }
+
+        if (anim.spawning_item.isRunning == false) {
+            effect_anim.prev = .DESPAWNING;
+            effect_anim.current = .NONE;
+        }
     }
 
     pub fn item_spawning() void {
