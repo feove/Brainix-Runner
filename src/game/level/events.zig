@@ -62,6 +62,8 @@ pub const Areas = struct {
     trigger_area: rl.Vector4,
     restricted_area: rl.Vector4 = .init(0, 0, 0, 0),
     completed_area: rl.Vector4,
+    intermediate_areas: []rl.Vector4,
+    current_inter_area: usize = 0,
 
     fn player_in_trigger_area(self: *Areas, elf: *Elf) bool {
         const inAxeX: bool = elf.x > self.trigger_area.x and elf.x < self.trigger_area.x + self.trigger_area.w;
@@ -81,6 +83,17 @@ pub const Areas = struct {
         const inAxeX: bool = elf.x > self.completed_area.x and elf.x < self.completed_area.x + self.completed_area.w;
 
         const inAxeY: bool = elf.y > self.completed_area.y and elf.y < self.completed_area.y + self.completed_area.z;
+
+        return inAxeX and inAxeY;
+    }
+
+    fn player_in_intermediate(self: *Areas, elf: *Elf) bool {
+        //print("{}\n", .{self.current_inter_area});
+
+        const area = self.intermediate_areas[self.current_inter_area];
+        const inAxeX: bool = elf.x > area.x and elf.x < area.x + area.w;
+
+        const inAxeY: bool = elf.y > area.y and elf.y < area.y + area.z;
 
         return inAxeX and inAxeY;
     }
@@ -173,6 +186,7 @@ pub const Level = struct {
         const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level_paths[CURRENT_LEVEL]);
 
         level.events = eventConfig.*.events.*;
+        //print("INIT : {d} \n", .{level.events[3].areas.intermediate_areas[0].x});
         EVENT_NB = eventConfig.*.event_nb;
         level.event_nb = EVENT_NB;
         reset();
@@ -190,7 +204,7 @@ pub const Level = struct {
         levelStatement = .STARTING;
     }
 
-    pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
+    pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) *rl.Vector4 {
         const grid: Grid = Grid.selfReturn();
 
         //Need to check out of band of j + height and i + width
@@ -204,7 +218,9 @@ pub const Level = struct {
         const w: f32 = tr_cell.x - bl_cell.x;
         const h: f32 = bl_cell.y - tl_cell.y;
 
-        return .init(x, y, h, w); //flex
+        var res: rl.Vector4 = .init(x, y, h, w);
+
+        return &res; //flex
     }
 
     pub fn refresh(self: *Level) !void {
@@ -226,6 +242,8 @@ pub const Level = struct {
 
         try playerStatement(&elf);
 
+        // print("Current Area {}\n", .{playerEventstatus});
+
         // eventDrawing(level.i_event);
     }
 
@@ -238,6 +256,10 @@ pub const Level = struct {
 
         if (area.player_in_area(elf, area.restricted_area)) {
             playerEventstatus = .RESTRICTED_AREA;
+        }
+
+        if (area.player_in_intermediate(elf)) {
+            //  print("Player In INTERMEDIATE\n", .{});
         }
 
         if (area.player_in_area(elf, area.completed_area)) {

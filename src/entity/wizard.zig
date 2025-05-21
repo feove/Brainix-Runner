@@ -66,11 +66,7 @@ pub const Wizard = struct {
     pub fn controller(self: *Wizard) void {
         self.hitbox.refresh();
 
-        // const elf: Elf = Elf.selfReturn();
-        // const grid: Grid = Grid.selfReturn();
-        // print("{}\n", .{self.hitbox.isInCollision});
-        //(event.playerEventstatus == .IDLE_AREA and elf.isOnGround and @abs(elf.x - (grid.x + grid.width / 2)) < 100)
-        if (self.hitbox.isInCollision) {
+        if (self.hitbox.isInCollision or playerInTheMiddle()) {
             self.updatePos();
             self.move();
             self.updateDistance();
@@ -79,6 +75,15 @@ pub const Wizard = struct {
         const dt: f32 = rl.getFrameTime();
         var x_movement: f32 = self.speed * dt;
         self.goTo(&x_movement);
+    }
+
+    fn playerInTheMiddle() bool {
+        const grid: Grid = Grid.selfReturn();
+        const elf: Elf = Elf.selfReturn();
+
+        const inMiddle: bool = @abs(elf.x - (grid.x + grid.width / 2)) < 200;
+
+        return inMiddle and event.playerEventstatus == .COMPLETED_AREA and elf.isOnGround;
     }
 
     fn updateDistance(self: *Wizard) void {

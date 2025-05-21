@@ -91,7 +91,7 @@ pub const EventConfig = struct {
             const width_t: usize = @as(usize, @intCast(triggered.object.get("width").?.integer));
             const height_t: usize = @as(usize, @intCast(triggered.object.get("height").?.integer));
 
-            const trigger_area: rl.Vector4 = Level.usize_assign_to_f32(i_t, j_t, width_t, height_t);
+            const trigger_area: rl.Vector4 = Level.usize_assign_to_f32(i_t, j_t, width_t, height_t).*;
 
             const completed = areas.object.get("completed").?;
             const i_c = @as(usize, @intCast(completed.object.get("x").?.integer));
@@ -99,7 +99,34 @@ pub const EventConfig = struct {
             const width_c = @as(usize, @intCast(completed.object.get("width").?.integer));
             const height_c = @as(usize, @intCast(completed.object.get("height").?.integer));
 
-            const completed_area: rl.Vector4 = Level.usize_assign_to_f32(i_c, j_c, width_c, height_c);
+            const completed_area: rl.Vector4 = Level.usize_assign_to_f32(i_c, j_c, width_c, height_c).*;
+
+            const intermediate = areas.object.get("intermediate_areas").?.array;
+            var intermediate_areas = try allocator.alloc(rl.Vector4, 1); //1 cuz there is no more than 1
+
+            // for (0..1) |i_inter| {
+            //     intermediate_areas[i_inter] = rl.Vector4.init(0, 0, 0, 0);
+            // }
+
+            var i_area: usize = 0;
+            for (intermediate.items) |area| {
+                const i_i = @as(usize, @intCast(area.object.get("x").?.integer));
+                const j_i = @as(usize, @intCast(area.object.get("y").?.integer));
+                const width_i = @as(usize, @intCast(area.object.get("width").?.integer));
+                const height_i = @as(usize, @intCast(area.object.get("height").?.integer));
+                std.debug.print("i_i : {d} j_i : {d} width_i : {d} height_i : {d}\n", .{ i_i, j_i, width_i, height_i });
+
+                const vec: rl.Vector4 = usize_assign_to_f32(i_i, j_i, width_i, height_i);
+
+                // std.debug.print("vec.*.x: {d} \n", .{vec.x});
+                intermediate_areas[i_area].x = vec.x;
+                intermediate_areas[i_area].y = vec.y;
+                intermediate_areas[i_area].z = vec.z;
+                intermediate_areas[i_area].w = vec.w;
+
+                std.debug.print("intermediate_areas[i_area].x {d} \n", .{intermediate_areas[i_area].x});
+                i_area += 1;
+            }
 
             events[id].object_nb = object_nb;
             events[id].slow_motion_time = slow_motion_time;
@@ -110,6 +137,7 @@ pub const EventConfig = struct {
             events[id].areas = Areas{
                 .trigger_area = trigger_area,
                 .completed_area = completed_area,
+                .intermediate_areas = intermediate_areas,
             };
 
             id += 1;
@@ -119,6 +147,23 @@ pub const EventConfig = struct {
         return &eventConfig;
     }
 };
+
+pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
+    const grid: Grid = Grid.selfReturn();
+
+    //Need to check out of band of j + height and i + width
+
+    const tl_cell: Cell = grid.cells[j][i];
+    const bl_cell: Cell = grid.cells[j + height][i];
+    const tr_cell: Cell = grid.cells[j][i + width];
+
+    const x: f32 = tl_cell.x;
+    const y: f32 = tl_cell.y;
+    const w: f32 = tr_cell.x - bl_cell.x;
+    const h: f32 = bl_cell.y - tl_cell.y;
+
+    return .init(x, y, h, w); //flex
+}
 
 //Sad but functionnal
 pub fn stringToCellType(str: []const u8) CellType {
