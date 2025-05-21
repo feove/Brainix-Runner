@@ -2,6 +2,10 @@ const rl = @import("raylib");
 const std = @import("std");
 const print = std.debug.print;
 const player = @import("elf.zig");
+const Grid = @import("../terrain/grid.zig").Grid;
+const event = @import("../game/level/events.zig");
+const PlayerEventStatus = event.PlayerEventStatus;
+
 const Elf = player.Elf;
 const AutoMovements = @import("../game/terrain_object.zig").AutoMovements;
 const wizard_anims = @import("../game/animations/wizard_anims.zig");
@@ -10,7 +14,7 @@ const textures = @import("../render/textures.zig");
 
 pub var wizard: Wizard = undefined;
 
-const DEFAULT_POSITION: rl.Vector2 = .init(250, -80);
+const DEFAULT_POSITION: rl.Vector2 = .init(250, -50);
 const TEXTURE_SIZE: rl.Vector2 = .init(231, 190);
 const SCALE: f32 = 2.0;
 const WIZARD_SPEED: f32 = 500.0;
@@ -46,6 +50,7 @@ pub const Wizard = struct {
     height: f32,
     scale: f32,
     speed: f32,
+    distance: f32 = 0.0,
     hitbox: HitBox,
     current_pos: WizardPosition = .MIDDLE,
     animator: wizard_anims.WizardManager,
@@ -61,15 +66,24 @@ pub const Wizard = struct {
     pub fn controller(self: *Wizard) void {
         self.hitbox.refresh();
 
+        // const elf: Elf = Elf.selfReturn();
+        // const grid: Grid = Grid.selfReturn();
         // print("{}\n", .{self.hitbox.isInCollision});
-
+        //(event.playerEventstatus == .IDLE_AREA and elf.isOnGround and @abs(elf.x - (grid.x + grid.width / 2)) < 100)
         if (self.hitbox.isInCollision) {
             self.updatePos();
             self.move();
+            self.updateDistance();
         }
+
         const dt: f32 = rl.getFrameTime();
-        const x_movement: f32 = self.speed * dt;
-        self.goTo(x_movement);
+        var x_movement: f32 = self.speed * dt;
+        self.goTo(&x_movement);
+    }
+
+    fn updateDistance(self: *Wizard) void {
+        self.distance = @abs(self.x - self.hitbox.rec.x + 100);
+        self.distance = if (@abs(1 - self.distance) < 1) 0 else self.distance; //Oouf
     }
 
     fn updatePos(self: *Wizard) void {
@@ -96,12 +110,32 @@ pub const Wizard = struct {
         }
     }
 
-    fn goTo(self: *Wizard, inc: f32) void {
-        const distance: f32 = self.x - self.hitbox.rec.x + 100;
+    fn goTo(self: *Wizard, inc: *f32) void {
+        var current_distance: f32 = self.x - self.hitbox.rec.x + 100;
+        current_distance = if (@abs(1 - current_distance) < 1) 0 else current_distance;
         //print("dist : {d} and inc : {d}\n", .{ distance, inc });
         //print("BEFORE elf.x {d}\n", .{self.x});
-        self.x = if (distance < 0) self.x + inc else if (distance > 0) self.x - inc else self.x;
-        //print("AFTER elf.x {d}\n", .{self.x});
+
+        // print("distance {d} and current {d}\n", .{ self.distance, current_distance });
+        update_inc(inc, @abs(current_distance));
+
+        if (current_distance < 0) {
+            self.x += inc.*;
+        } else if (current_distance > 0) {
+            self.x -= inc.*;
+        }
+    }
+
+    fn update_inc(inc: *f32, dst: f32) void {
+        if (dst < wizard.distance * 0.05 or dst > wizard.distance * 0.85) {
+            inc.* /= 2;
+            //print("50%\n", .{});
+            return;
+        }
+
+        inc.* *= 2.5;
+
+        // inc.* = if (wizard.x + dst < wizard.distance / 2) inc.* / 2 else inc.* * 2;
     }
 
     fn setDestination(self: *Wizard, x: f32, y: f32) void {
@@ -115,14 +149,7 @@ pub const Wizard = struct {
     pub fn draw() void {
         wizard_anims.wizard_anim.update(&wizard);
         effect_anims.EffectManager.update();
-
-        const x = @as(i32, @intFromFloat(wizard.hitbox.rec.x));
-        const y = @as(i32, @intFromFloat(wizard.hitbox.rec.y));
-
-        const width = @as(i32, @intFromFloat(wizard.hitbox.rec.width));
-        const height = @as(i32, @intFromFloat(wizard.hitbox.rec.height));
-
-        rl.drawRectangleLines(x, y, width, height, .red);
+        //HitBox.draw();
     }
 };
 
@@ -135,5 +162,15 @@ pub const HitBox = struct {
         const elf_hitbox: rl.Rectangle = .init(elf.x, elf.y, elf.width, elf.height);
 
         self.isInCollision = rl.Rectangle.checkCollision(elf_hitbox, self.rec);
+    }
+
+    fn draw() void {
+        const x = @as(i32, @intFromFloat(wizard.hitbox.rec.x));
+        const y = @as(i32, @intFromFloat(wizard.hitbox.rec.y));
+
+        const width = @as(i32, @intFromFloat(wizard.hitbox.rec.width));
+        const height = @as(i32, @intFromFloat(wizard.hitbox.rec.height));
+
+        rl.drawRectangleLines(x, y, width, height, .red);
     }
 };

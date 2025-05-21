@@ -117,6 +117,6 @@ pub const WizardManager = struct {
     fn moving_platform(wizard: *Wizard) void {
         anim.moving_platform.isRunning = true;
         anim.moving_platform.update(Elf.getCurrentTime(), 1);
-        anim.moving_platform.draw(.init(wizard.x + wizard.width * 0.63, wizard.y + wizard.height * 1.48), wizard.scale * 2, 0.0, 255, 0, 0);
+        anim.moving_platform.draw(.init(wizard.x + wizard.width * 0.62, wizard.y + wizard.height * 1.48), wizard.scale * 2.2, 0.0, 255, 0, 0);
     }
 };
