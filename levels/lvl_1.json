@@ -100,8 +100,8 @@
                 {
                     "x" : 0,
                     "y" : 0,
-                    "width" : 1,
-                    "height" : 1
+                    "width" : 0,
+                    "height" : 0
                 }
             ]
         }
@@ -175,8 +175,8 @@
                 {
                     "x" : 0,
                     "y" : 0,
-                    "width" : 1,
-                    "height" : 1
+                    "width" : 0,
+                    "height" : 0
                 }
             ]
         }
@@ -234,13 +234,14 @@
             },
             "intermediate_areas" : [
                 {
-                    "x" : 6,
+                    "x" : 5,
                     "y" : 7,
                     "width" : 1,
                     "height" : 1
                 }
 
-            ]
+            ],
+            "intermediate_areas_nb" : 1
         }
     }
 

@@ -79,7 +79,7 @@ pub const Areas = struct {
         return inAxeX and inAxeY;
     }
 
-    fn player_in_end_are(self: *Areas, elf: *Elf) bool {
+    fn player_in_end_area(self: *Areas, elf: *Elf) bool {
         const inAxeX: bool = elf.x > self.completed_area.x and elf.x < self.completed_area.x + self.completed_area.w;
 
         const inAxeY: bool = elf.y > self.completed_area.y and elf.y < self.completed_area.y + self.completed_area.z;
@@ -88,7 +88,7 @@ pub const Areas = struct {
     }
 
     fn player_in_intermediate(self: *Areas, elf: *Elf) bool {
-        //print("{}\n", .{self.current_inter_area});
+        // print("{}\n", .{self.current_inter_area});
 
         const area = self.intermediate_areas[self.current_inter_area];
         const inAxeX: bool = elf.x > area.x and elf.x < area.x + area.w;
@@ -186,7 +186,7 @@ pub const Level = struct {
         const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level_paths[CURRENT_LEVEL]);
 
         level.events = eventConfig.*.events.*;
-        //print("INIT : {d} \n", .{level.events[3].areas.intermediate_areas[0].x});
+        // print("INIT : {d} \n", .{level.events[3].areas.intermediate_areas[0].x});
         EVENT_NB = eventConfig.*.event_nb;
         level.event_nb = EVENT_NB;
         reset();
@@ -204,7 +204,7 @@ pub const Level = struct {
         levelStatement = .STARTING;
     }
 
-    pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) *rl.Vector4 {
+    pub fn usize_assign_to_f32(i: usize, j: usize, width: usize, height: usize) rl.Vector4 {
         const grid: Grid = Grid.selfReturn();
 
         //Need to check out of band of j + height and i + width
@@ -218,9 +218,7 @@ pub const Level = struct {
         const w: f32 = tr_cell.x - bl_cell.x;
         const h: f32 = bl_cell.y - tl_cell.y;
 
-        var res: rl.Vector4 = .init(x, y, h, w);
-
-        return &res; //flex
+        return .init(x, y, h, w); //flex
     }
 
     pub fn refresh(self: *Level) !void {
@@ -258,12 +256,16 @@ pub const Level = struct {
             playerEventstatus = .RESTRICTED_AREA;
         }
 
-        if (area.player_in_intermediate(elf)) {
+        if (area.player_in_area(elf, area.intermediate_areas[area.current_inter_area])) {
             //  print("Player In INTERMEDIATE\n", .{});
+            area.current_inter_area += 1;
+            return;
         }
 
         if (area.player_in_area(elf, area.completed_area)) {
-            playerEventstatus = .COMPLETED_AREA;
+            if (area.intermediate_areas[area.current_inter_area].x == 0) {
+                playerEventstatus = .COMPLETED_AREA;
+            }
         }
     }
 
