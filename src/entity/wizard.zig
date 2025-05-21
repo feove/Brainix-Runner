@@ -13,6 +13,7 @@ pub var wizard: Wizard = undefined;
 const DEFAULT_POSITION: rl.Vector2 = .init(250, -80);
 const TEXTURE_SIZE: rl.Vector2 = .init(231, 190);
 const SCALE: f32 = 2.0;
+const WIZARD_SPEED: f32 = 500.0;
 
 pub const WizardPosition = enum {
     LEFT,
@@ -27,11 +28,12 @@ pub fn init() void {
         .width = TEXTURE_SIZE.x,
         .height = TEXTURE_SIZE.y,
         .scale = SCALE,
+        .speed = WIZARD_SPEED,
         .hitbox = HitBox{ .rec = rl.Rectangle.init(
             DEFAULT_POSITION.x + 100,
             DEFAULT_POSITION.y + 100,
             TEXTURE_SIZE.x,
-            TEXTURE_SIZE.y + 60,
+            TEXTURE_SIZE.y + 100,
         ) },
         .animator = wizard_anims.wizard_anim,
     };
@@ -43,13 +45,14 @@ pub const Wizard = struct {
     width: f32,
     height: f32,
     scale: f32,
+    speed: f32,
     hitbox: HitBox,
     current_pos: WizardPosition = .MIDDLE,
     animator: wizard_anims.WizardManager,
 
     pub fn reset() void {
-        wizard.x = DEFAULT_POSITION.x;
-        wizard.y = DEFAULT_POSITION.y;
+        // wizard.x = DEFAULT_POSITION.x;
+        // wizard.y = DEFAULT_POSITION.y;
         wizard.hitbox.rec.x = DEFAULT_POSITION.x + 100;
         wizard.hitbox.rec.y = DEFAULT_POSITION.y + 100;
         wizard.current_pos = .MIDDLE;
@@ -57,12 +60,16 @@ pub const Wizard = struct {
 
     pub fn controller(self: *Wizard) void {
         self.hitbox.refresh();
+
         // print("{}\n", .{self.hitbox.isInCollision});
 
         if (self.hitbox.isInCollision) {
-            Wizard.updatePos(self);
-            Wizard.move();
+            self.updatePos();
+            self.move();
         }
+        const dt: f32 = rl.getFrameTime();
+        const x_movement: f32 = self.speed * dt;
+        self.goTo(x_movement);
     }
 
     fn updatePos(self: *Wizard) void {
@@ -81,22 +88,26 @@ pub const Wizard = struct {
         self.current_pos = direction;
     }
 
-    fn move() void {
-        switch (wizard.current_pos) {
-            .LEFT => wizard.setPos(50, DEFAULT_POSITION.y),
-            .MIDDLE => wizard.setPos(DEFAULT_POSITION.x, DEFAULT_POSITION.y),
-            .RIGHT => wizard.setPos(450, DEFAULT_POSITION.y),
+    fn move(self: *Wizard) void {
+        switch (self.current_pos) {
+            .LEFT => self.setDestination(50, DEFAULT_POSITION.y),
+            .MIDDLE => self.setDestination(DEFAULT_POSITION.x, DEFAULT_POSITION.y),
+            .RIGHT => self.setDestination(450, DEFAULT_POSITION.y),
         }
     }
 
-    fn goTo(start: *f32, end: f32, inc: f32) void {
-        start.* = if (start.* < end) start.* + inc else if (start.* > end) start.* - 10 else start.*;
+    fn goTo(self: *Wizard, inc: f32) void {
+        const distance: f32 = self.x - self.hitbox.rec.x + 100;
+        //print("dist : {d} and inc : {d}\n", .{ distance, inc });
+        //print("BEFORE elf.x {d}\n", .{self.x});
+        self.x = if (distance < 0) self.x + inc else if (distance > 0) self.x - inc else self.x;
+        //print("AFTER elf.x {d}\n", .{self.x});
     }
 
-    fn setPos(self: *Wizard, x: f32, y: f32) void {
+    fn setDestination(self: *Wizard, x: f32, y: f32) void {
         //goTo(&self.x, self.hitbox.rec.x, 10);
-        self.x = x;
-        self.y = y;
+        //self.x = x;
+        //self.y = y;
         self.hitbox.rec.x = x + 100;
         self.hitbox.rec.y = y + 100;
     }
