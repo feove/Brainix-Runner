@@ -46,13 +46,9 @@
                 "height" : 1
             },
             "intermediate_areas" : [
-                {
-                    "x" : 0,
-                    "y" : 0,
-                    "width" : 1,
-                    "height" : 1
-                }
-            ]
+              
+            ],
+            "intermediate_areas_nb" : 0
         }
     },
 
@@ -97,13 +93,9 @@
                 "height" : 1
             },
             "intermediate_areas" : [
-                {
-                    "x" : 0,
-                    "y" : 0,
-                    "width" : 0,
-                    "height" : 0
-                }
-            ]
+             
+            ],
+            "intermediate_areas_nb" : 0
         }
     },
 
@@ -172,13 +164,9 @@
                 "height" : 1
             },
             "intermediate_areas" : [
-                {
-                    "x" : 0,
-                    "y" : 0,
-                    "width" : 0,
-                    "height" : 0
-                }
-            ]
+               
+            ],
+            "intermediate_areas_nb" : 0
         }
     },
 
@@ -227,7 +215,7 @@
                 "height" : 0
             },
             "completed" :   {
-                "x" : 4,
+                "x" : 1,
                 "y" : 7,
                 "width" : 1,
                 "height" : 1

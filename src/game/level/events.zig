@@ -20,6 +20,8 @@ const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
 const EventConfig = @import("level_reader.zig").EventConfig;
 
+const HUD = @import("../utils.zig").HUD;
+
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const alloc = gpa.allocator();
 const print = std.debug.print;
@@ -63,7 +65,12 @@ pub const Areas = struct {
     restricted_area: rl.Vector4 = .init(0, 0, 0, 0),
     completed_area: rl.Vector4,
     intermediate_areas: []rl.Vector4,
+    intermediate_areas_nb: usize,
     current_inter_area: usize = 0,
+
+    pub fn increaseInter() void {
+        level.events[level.i_event].areas.current_inter_area += 1;
+    }
 
     fn player_in_trigger_area(self: *Areas, elf: *Elf) bool {
         const inAxeX: bool = elf.x > self.trigger_area.x and elf.x < self.trigger_area.x + self.trigger_area.w;
@@ -241,7 +248,7 @@ pub const Level = struct {
         try playerStatement(&elf);
 
         // print("Current Area {}\n", .{playerEventstatus});
-
+        //drawIntermediateArea(level.i_event);
         // eventDrawing(level.i_event);
     }
 
@@ -256,14 +263,16 @@ pub const Level = struct {
             playerEventstatus = .RESTRICTED_AREA;
         }
 
-        if (area.player_in_area(elf, area.intermediate_areas[area.current_inter_area])) {
-            //  print("Player In INTERMEDIATE\n", .{});
-            area.current_inter_area += 1;
+        if (area.intermediate_areas_nb != 0 and area.current_inter_area != area.intermediate_areas_nb and area.player_in_area(elf, area.intermediate_areas[area.current_inter_area])) {
+            //    print("Player In INTERMEDIATE\n", .{});
+            //print("{d}, {d}\n", .{ area.current_inter_area, area.intermediate_areas_nb });
+            Areas.increaseInter();
+
             return;
         }
 
         if (area.player_in_area(elf, area.completed_area)) {
-            if (area.intermediate_areas[area.current_inter_area].x == 0) {
+            if (area.intermediate_areas_nb == 0 or area.current_inter_area == area.intermediate_areas_nb or area.intermediate_areas[area.current_inter_area].x == 0) {
                 playerEventstatus = .COMPLETED_AREA;
             }
         }
@@ -377,6 +386,28 @@ pub const Level = struct {
     fn openTheDoor() bool {
         //Anims
         return Elf.playerInDoor();
+    }
+
+    fn drawIntermediateArea(event_num: usize) void {
+        const event: Event = level.events[event_num];
+        if (event.areas.intermediate_areas_nb == 0 or event.areas.intermediate_areas_nb == event.areas.current_inter_area) {
+            return;
+        }
+
+        const c_x: f32 = event.areas.intermediate_areas[event.areas.current_inter_area].x;
+        const c_y: f32 = event.areas.intermediate_areas[event.areas.current_inter_area].y;
+        const c_w: f32 = event.areas.intermediate_areas[event.areas.current_inter_area].w;
+        const c_h: f32 = event.areas.intermediate_areas[event.areas.current_inter_area].z;
+        // print("OK {d} {d} {d} {d}\n", .{ c_x, c_y, c_w, c_h });
+
+        const rec: rl.Rectangle = .init(c_x, c_y, c_w, c_h);
+        const rec2: rl.Rectangle = .init(HUD.selfReturn().mouseX, HUD.selfReturn().mouseY, 10, 10);
+
+        if (rl.Rectangle.checkCollision(rec, rec2)) {
+            //  print("OK {d} {d} {d} {d}\n", .{ c_x, c_y, c_w, c_h });
+        }
+
+        rl.drawRectangleRec(.init(c_x, c_y, c_w, c_h), rl.Color.alpha(.yellow, 255));
     }
 
     fn eventDrawing(event_num: usize) void {

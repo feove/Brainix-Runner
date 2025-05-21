@@ -101,8 +101,9 @@ pub const EventConfig = struct {
 
             const completed_area: rl.Vector4 = Level.usize_assign_to_f32(i_c, j_c, width_c, height_c);
 
+            const intermediate_nb = @as(usize, @intCast(areas.object.get("intermediate_areas_nb").?.integer));
             const intermediate = areas.object.get("intermediate_areas").?.array;
-            var intermediate_areas = try allocator.alloc(rl.Vector4, 1); //1 cuz there is no more than 1
+            var intermediate_areas = try allocator.alloc(rl.Vector4, intermediate_nb);
 
             // for (0..1) |i_inter| {
             //     intermediate_areas[i_inter] = rl.Vector4.init(0, 0, 0, 0);
@@ -132,6 +133,7 @@ pub const EventConfig = struct {
                 .trigger_area = trigger_area,
                 .completed_area = completed_area,
                 .intermediate_areas = intermediate_areas,
+                .intermediate_areas_nb = intermediate_nb,
             };
 
             id += 1;
