@@ -209,12 +209,15 @@ pub const Elf = struct {
             if (((self.hitBox.rightBody == .GROUND or self.hitBox.rightLeggs == .GROUND) and x > 0) or self.x + self.width >= grid.x + grid.width - 10) {
                 self.x -= self.repulsive_force * dt;
 
-                self.physics.auto_moving = .LEFT;
+                //self.physics.auto_moving = .LEFT;
+                self.physics.set(.LEFT);
             } else if (((self.hitBox.leftBody == .GROUND or self.hitBox.leftLeggs == .GROUND) and x < 0) or self.x - 10 <= grid.x) {
                 self.x += self.repulsive_force * dt;
-                self.physics.auto_moving = .RIGHT;
+                self.physics.set(.RIGHT);
+                //self.physics.auto_moving = .RIGHT;
             } else {
                 self.x += x;
+                self.physics.newSens = false;
             }
         }
 
@@ -270,6 +273,8 @@ pub const Elf = struct {
 
         return elf.hitBox.middleBody == .DOOR or elf.hitBox.middleLeggs == .DOOR;
     }
+
+    pub fn differentPlayerSens() bool {}
 
     pub fn drawElf() void {
         //   rl.drawTextureEx(textures.elf, rl.Vector2.init(self.x, self.y), 0, 0.1, .white);

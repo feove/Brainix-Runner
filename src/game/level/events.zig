@@ -27,10 +27,14 @@ const alloc = gpa.allocator();
 const print = std.debug.print;
 
 pub var level: Level = undefined;
+var slots_filled = false;
+
 pub var slow_motion_active: bool = false;
 pub var stop_slow_motion: bool = false;
-var slots_filled = false;
 pub var slow_motion_start_time: f64 = 0;
+
+pub var quick_slow_motion_active: bool = false;
+pub var quick_slow_motion_start_time: f64 = 0;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
@@ -50,7 +54,6 @@ pub const PlayerEventStatus = enum {
     IDLE_AREA,
     SLOW_MOTION_AREA,
     RESTRICTED_AREA,
-    INTERMEDIATE_AREA,
     COMPLETED_AREA,
 };
 
@@ -152,6 +155,10 @@ pub const Event = struct {
     fn objectsSetUp(event: *Event, objects: []Object) void { //Important
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
+            if (objects[i].key != Areas.getCurrentInterKey()) {
+                continue;
+            }
+
             Object.set(&objects[i], &grid);
         }
     }
@@ -160,6 +167,25 @@ pub const Event = struct {
         var grid: Grid = Grid.selfReturn();
         for (0..event.object_nb) |i| {
             Object.remove(&objects[i], &grid);
+        }
+    }
+
+    pub fn quick_slow_motion() void {
+        const current_time = rl.getTime();
+
+        if (!quick_slow_motion_active) {
+            player.time_divisor = 4;
+            quick_slow_motion_active = true;
+            quick_slow_motion_start_time = current_time;
+            return;
+        }
+
+        const elapsed = current_time - quick_slow_motion_start_time;
+        //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
+        if (elapsed >= 1 or Elf.selfReturn().physics.newSens) {
+            quick_slow_motion_active = false;
+            quick_slow_motion_start_time = 0;
+            player.time_divisor = 1;
         }
     }
 
@@ -224,6 +250,7 @@ pub const Level = struct {
         }
 
         Grid.reset();
+        Inventory.clear();
 
         levelStatement = .STARTING;
     }
@@ -280,15 +307,26 @@ pub const Level = struct {
             playerEventstatus = .RESTRICTED_AREA;
         }
 
-        print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
+        //print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
 
-        if (!Areas.noMoreInterArea() and area.player_in_area(elf, area.intermediate_areas[area.current_inter_area])) {
-            //    print("Player In INTERMEDIATE\n", .{});
-            //print("{d}, {d}\n", .{ area.current_inter_area, area.intermediate_areas_nb });
+        if (elf.physics.newSens) {
+            print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
+        }
+        print("{} {d}\n", .{ quick_slow_motion_active, quick_slow_motion_start_time });
+        if (!Areas.noMoreInterArea()) {
+            const inter_area = area.intermediate_areas[area.current_inter_area];
 
-            playerEventstatus = .INTERMEDIATE_AREA;
+            //(elf.physics.newSens)
+            if (area.player_in_area(elf, inter_area)) {
+                // print("Player In INTERMEDIATE\n", .{});
+                // print("{d}, {d}\n", .{ area.current_inter_area, area.intermediate_areas_nb });
 
-            //return;
+                intermediate();
+
+                // quick_slow_motion_active = false;
+                // quick_slow_motion_start_time = 0;
+            }
+            return;
         }
 
         if (area.player_in_area(elf, area.completed_area)) {
@@ -301,16 +339,27 @@ pub const Level = struct {
             .IDLE_AREA => idle(),
             .SLOW_MOTION_AREA => try slow_motion(elf),
             .RESTRICTED_AREA => print("IN RESTRICTED AREA\n", .{}),
-            .INTERMEDIATE_AREA => intermediate(),
             .COMPLETED_AREA => complete(),
         }
     }
 
     fn intermediate() void {
-        const event: Event = level.events[level.i_event];
+        var event: Event = level.events[level.i_event];
 
         Areas.increaseInter();
         Inventory.slotSetting(event.inv_objects);
+        event.objectsSetUp(event.grid_objects);
+
+        Event.quick_slow_motion();
+        //Wizard.reset();
+        //EffectManager.reset();
+
+        //Inventory.clear();
+        //slots_filled = false;
+        //slow_motion_active = false;
+
+        //playerEventstatus = .SLOW_MOTION_AREA;
+
     }
 
     fn idle() void {
@@ -345,7 +394,7 @@ pub const Level = struct {
         Event.slow_motion_effect(elf);
 
         if (slots_filled == false) {
-            print("EVENT {d} TRIGGERED\n", .{level.i_event});
+            // print("EVENT {d} TRIGGERED\n", .{level.i_event});
 
             Inventory.slotSetting(event.inv_objects);
             event.objectsSetUp(event.grid_objects);

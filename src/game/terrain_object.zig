@@ -36,9 +36,15 @@ pub const PhysicObject = struct {
     velocity_x: f32 = 0,
     acceleration: f32 = 0,
     auto_moving: AutoMovements = AutoMovements.RIGHT,
+    newSens: bool = false,
     jump: bool = false,
 
     const gravity: f32 = 9.8;
+
+    pub fn set(self: *PhysicObject, new: AutoMovements) void {
+        self.auto_moving = new;
+        self.newSens = true;
+    }
 
     pub fn applyPhysics(self: *PhysicObject, dt: f32) void {
         self.acceleration = self.mass * gravity;
