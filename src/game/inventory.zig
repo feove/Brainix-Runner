@@ -7,7 +7,7 @@ const CellType = terrain.CellType;
 const std = @import("std");
 const HUD = @import("utils.zig").HUD;
 const Object = @import("terrain_object.zig").Object;
-
+const Areas = @import("../game/level/events.zig").Areas;
 pub var inv: Inventory = undefined;
 
 const SLOT_NB: usize = 4;
@@ -88,6 +88,15 @@ pub const Inventory = struct {
     pub fn slotSetting(objects: []Object) void {
         if (invEmpty()) {
             for (0..SLOT_NB) |i| {
+                // if (inv.slots[i].object.type != .EMPTY and inv.slots[i].object.key != Areas.getCurrentInterKey()) {
+                //     std.debug.print("Areas Current Key {d}\n", .{Areas.getCurrentInterKey()});
+
+                // }
+                // std.debug.print("Areas Current Key : {d} == {d} : Key\n", .{ Areas.getCurrentInterKey(), objects[i].key });
+
+                if (objects[i].key != Areas.getCurrentInterKey()) {
+                    continue;
+                }
                 inv.slots[i].object.type = objects[i].type;
                 inv.slots[i].object.count = 0;
                 if (inv.slots[i].object.type != .EMPTY) {

@@ -12,18 +12,22 @@
             {
                 "x" : 7,
                 "y" : 7,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 8,
                 "y" : 7,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
+
             }
         ],
         "inv_objects" : [  
             {
                 "type" : "PAD",
-                "count" : 1
+                "count" : 1,
+                "key" : 0
             }
         ],
         "areas" : {
@@ -63,14 +67,16 @@
             {
                 "x" : 7,
                 "y" : 7,
-                "type" : "UP_PAD"
+                "type" : "UP_PAD",
+                "key" : 0
             }
             
         ],
         "inv_objects" : [  
             {
                 "type" : "EMPTY",
-                "count" : 1
+                "count" : 1,
+                "key" : 0
             }
         ],
         "areas" : {
@@ -110,38 +116,45 @@
             {
                 "x" : 3,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 4,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 5,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 3,
                 "y" : 6,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 4,
                 "y" : 6,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 5,
                 "y" : 6,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             }
         ],
         "inv_objects" : [  
             {
                 "type" : "GROUND",
-                "count" : 2
+                "count" : 2,
+                "key" : 0
             }
         ],
         "areas" : {
@@ -181,24 +194,35 @@
             {
                 "x" : 7,
                 "y" : 7,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 8,
                 "y" : 6,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 8,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             }
             
         ],
         "inv_objects" : [  
             {
                 "type" : "GROUND",
-                "count" : 1
+                "count" : 1,
+                "key" : 1
+               
+            },
+            {
+                "type" : "PAD",
+                "count" : 1,
+                "key" : 2
+               
             }
         ],
         "areas" : {
@@ -215,21 +239,27 @@
                 "height" : 0
             },
             "completed" :   {
-                "x" : 1,
+                "x" : 8,
                 "y" : 7,
                 "width" : 1,
                 "height" : 1
             },
             "intermediate_areas" : [
                 {
-                    "x" : 5,
+                    "x" : 4,
+                    "y" : 7,
+                    "width" : 1,
+                    "height" : 1
+                },
+                {
+                    "x" : 2,
                     "y" : 7,
                     "width" : 1,
                     "height" : 1
                 }
 
             ],
-            "intermediate_areas_nb" : 1
+            "intermediate_areas_nb" : 2
         }
     }
 

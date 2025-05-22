@@ -66,7 +66,8 @@ pub const EventConfig = struct {
                 const str: []const u8 = item.object.get("type").?.string;
                 const celltype: CellType = stringToCellType(str);
                 const count: i64 = item.object.get("count").?.integer;
-                Object.add(&inv_objects, celltype, count, false);
+                const key: usize = @as(usize, @intCast(item.object.get("key").?.integer));
+                Object.add(&inv_objects, celltype, count, false, key);
             }
 
             for (0..object_nb) |j| {
@@ -77,9 +78,10 @@ pub const EventConfig = struct {
                 const obj: Object = Object{
                     .x = @as(usize, @intCast(obs.object.get("x").?.integer)),
                     .y = @as(usize, @intCast(obs.object.get("y").?.integer)),
+                    .key = @as(usize, @intCast(obs.object.get("key").?.integer)),
                 };
                 grid_objects[e] = obj;
-                Object.add(&grid_objects, stringToCellType(obs.object.get("type").?.string), 1, true);
+                Object.add(&grid_objects, stringToCellType(obs.object.get("type").?.string), 1, true, obj.key);
                 e += 1;
             }
 

@@ -53,6 +53,7 @@ pub const Wizard = struct {
     distance: f32 = 0.0,
     hitbox: HitBox,
     current_pos: WizardPosition = .MIDDLE,
+    prev_pos: WizardPosition = .LEFT,
     animator: wizard_anims.WizardManager,
 
     pub fn reset() void {
@@ -75,6 +76,29 @@ pub const Wizard = struct {
         const dt: f32 = rl.getFrameTime();
         var x_movement: f32 = self.speed * dt;
         self.goTo(&x_movement);
+    }
+
+    // const rec1: rl.Rectangle = .init(elf.x, elf.y, elf.width, elf.height);
+    // const rec2: rl.Rectangle = .init(Grid.getGroundPos().x, grid.cells[6][0].y, grid.cells[0][0].width, grid.cells[0][0].height);
+
+    // const OnTheEdge: bool = rl.Rectangle.checkCollision(rec1, rec2);
+
+    fn playerOnTheEdge() bool {
+        const grid: Grid = Grid.selfReturn();
+        const elf: Elf = Elf.selfReturn();
+
+        const rec1: rl.Rectangle = .init(elf.x, elf.y, elf.width, elf.height);
+        const rec2: rl.Rectangle = .init(Grid.getGroundPos().x, grid.cells[6][0].y, grid.cells[0][0].width, grid.cells[0][0].height);
+        const rec3: rl.Rectangle = .init(grid.cells[6][grid.nb_cols - 1].x, grid.cells[6][0].y, grid.cells[0][0].width, grid.cells[0][0].height);
+
+        const OnTheEdge: bool = rl.Rectangle.checkCollision(rec1, rec2) or rl.Rectangle.checkCollision(rec1, rec3);
+
+        const res: bool = wizard.prev_pos != wizard.current_pos and elf.isOnGround and OnTheEdge;
+        if (res) {
+            wizard.prev_pos = wizard.current_pos;
+        }
+
+        return res;
     }
 
     fn playerInTheMiddle() bool {

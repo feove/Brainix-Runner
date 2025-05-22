@@ -50,6 +50,7 @@ pub const PlayerEventStatus = enum {
     IDLE_AREA,
     SLOW_MOTION_AREA,
     RESTRICTED_AREA,
+    INTERMEDIATE_AREA,
     COMPLETED_AREA,
 };
 
@@ -67,6 +68,21 @@ pub const Areas = struct {
     intermediate_areas: []rl.Vector4,
     intermediate_areas_nb: usize,
     current_inter_area: usize = 0,
+
+    pub fn getCurrentInterKey() usize {
+        return level.events[level.i_event].areas.current_inter_area;
+    }
+
+    fn getCurrentInterArea() rl.Vector4 {
+        return undefined;
+    }
+
+    fn noMoreInterArea() bool {
+        const area = level.events[level.i_event].areas;
+        const ReachedTheLast: bool = getCurrentInterKey() == area.intermediate_areas_nb;
+
+        return ReachedTheLast;
+    }
 
     pub fn increaseInter() void {
         level.events[level.i_event].areas.current_inter_area += 1;
@@ -204,6 +220,7 @@ pub const Level = struct {
 
         for (0..level.event_nb) |i| {
             level.events[i].already_triggered = false;
+            level.events[i].areas.current_inter_area = 0;
         }
 
         Grid.reset();
@@ -263,18 +280,19 @@ pub const Level = struct {
             playerEventstatus = .RESTRICTED_AREA;
         }
 
-        if (area.intermediate_areas_nb != 0 and area.current_inter_area != area.intermediate_areas_nb and area.player_in_area(elf, area.intermediate_areas[area.current_inter_area])) {
+        print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
+
+        if (!Areas.noMoreInterArea() and area.player_in_area(elf, area.intermediate_areas[area.current_inter_area])) {
             //    print("Player In INTERMEDIATE\n", .{});
             //print("{d}, {d}\n", .{ area.current_inter_area, area.intermediate_areas_nb });
-            Areas.increaseInter();
 
-            return;
+            playerEventstatus = .INTERMEDIATE_AREA;
+
+            //return;
         }
 
         if (area.player_in_area(elf, area.completed_area)) {
-            if (area.intermediate_areas_nb == 0 or area.current_inter_area == area.intermediate_areas_nb or area.intermediate_areas[area.current_inter_area].x == 0) {
-                playerEventstatus = .COMPLETED_AREA;
-            }
+            playerEventstatus = .COMPLETED_AREA;
         }
     }
 
@@ -283,8 +301,16 @@ pub const Level = struct {
             .IDLE_AREA => idle(),
             .SLOW_MOTION_AREA => try slow_motion(elf),
             .RESTRICTED_AREA => print("IN RESTRICTED AREA\n", .{}),
+            .INTERMEDIATE_AREA => intermediate(),
             .COMPLETED_AREA => complete(),
         }
+    }
+
+    fn intermediate() void {
+        const event: Event = level.events[level.i_event];
+
+        Areas.increaseInter();
+        Inventory.slotSetting(event.inv_objects);
     }
 
     fn idle() void {

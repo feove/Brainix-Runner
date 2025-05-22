@@ -51,8 +51,8 @@ pub const PhysicObject = struct {
         const horizontal_boost: f32 = 0.08;
 
         self.velocity_x = switch (self.auto_moving) {
-            AutoMovements.RIGHT => horizontal_boost,
-            AutoMovements.LEFT => -horizontal_boost,
+            .RIGHT => horizontal_boost,
+            .LEFT => -horizontal_boost,
         };
 
         self.jump = false;
@@ -173,9 +173,10 @@ pub const Object = struct {
     x: usize = 0,
     y: usize = 0,
     width: usize = 1,
-    type: CellType = CellType.EMPTY,
+    type: CellType = .EMPTY,
     tail: bool = false, //Only For Boost
     canPlayerTake: bool = false,
+    key: usize = 0,
 
     count: i64 = 1,
 
@@ -192,7 +193,7 @@ pub const Object = struct {
         grid.cells[self.y][self.x].object.type = CellType.AIR;
     }
 
-    pub fn add(self: *[]Object, cell: CellType, count: i64, is_grid_objects: bool) void {
+    pub fn add(self: *[]Object, cell: CellType, count: i64, is_grid_objects: bool, key: usize) void {
         var object_size: usize = objectSize(cell);
         if (is_grid_objects) {
             object_size = 1; //Grid exception
@@ -206,6 +207,7 @@ pub const Object = struct {
                         self.*[j + i].width = object_size;
                         self.*[j + i].canPlayerTake = true;
                         self.*[j + i].count = count;
+                        self.*[j + i].key = key;
                     }
 
                     return;

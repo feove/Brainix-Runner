@@ -11,17 +11,20 @@
             {
                 "x" : 5,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             }
         ],
         "inv_objects" : [   
             {
                 "type" : "PAD",
-                "count" : 1
+                "count" : 1,
+                "key" : 0
             }  ,
             {
                 "type" : "GROUND",
-                "count" : 1
+                "count" : 1,
+                "key" : 0
             } 
         ],
         "areas" : {
@@ -60,48 +63,57 @@
             {
                 "x" : 6,
                 "y" : 7,
-                "type" : "PAD"
+                "type" : "PAD",
+                "key" : 0
             },
             {
                 "x" : 2,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 2,
                 "y" : 6,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 2,
                 "y" : 5,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 1,
                 "y" : 7,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 1,
                 "y" : 6,
-                "type" : "GROUND"
+                "type" : "GROUND",
+                "key" : 0
             },
             {
                 "x" : 1,
                 "y" : 5,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             },
             {
                 "x" : 0,
                 "y" : 7,
-                "type" : "SPIKE"
+                "type" : "SPIKE",
+                "key" : 0
             }
         ],
         "inv_objects" : [   
             {
                 "type" : "GROUND",
-                "count" : 1
+                "count" : 1,
+                "key" : 0
             }  
          
         ],
