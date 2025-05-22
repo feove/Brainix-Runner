@@ -25,6 +25,7 @@ pub var demon_idle2: rl.Texture2D = undefined;
 pub var wizard_jumping: rl.Texture2D = undefined;
 pub var wizard_falling: rl.Texture2D = undefined;
 pub var wizard_attacking_1: rl.Texture2D = undefined;
+pub var wizard_attacking_2: rl.Texture2D = undefined;
 
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
@@ -62,6 +63,7 @@ pub fn init() !void {
     wizard_jumping = try rl.loadTexture("assets/textures/wizard/Jump.png");
     wizard_falling = try rl.loadTexture("assets/textures/wizard/Fall.png");
     wizard_attacking_1 = try rl.loadTexture("assets/textures/wizard/Attack1.png");
+    wizard_attacking_2 = try rl.loadTexture("assets/textures/wizard/Attack2.png");
 
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");

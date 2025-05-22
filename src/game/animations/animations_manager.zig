@@ -21,6 +21,7 @@ pub var demon_idle2: AnimatedSprite = undefined;
 pub var wizard_jumping: AnimatedSprite = undefined;
 pub var wizard_falling: AnimatedSprite = undefined;
 pub var wizard_attacking_1: AnimatedSprite = undefined;
+pub var wizard_attacking_2: AnimatedSprite = undefined;
 
 pub fn init() !void {
     jumper_sprite = AnimatedSprite{
@@ -207,6 +208,21 @@ pub fn init() !void {
         .texture = textures.wizard_attacking_1,
         .sprite = Sprite{
             .name = "Wizard is Attacking (1)",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1848, .height = 190 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 231,
+        .frame_height = 190,
+        .horizontal_shift = true,
+        .num_frames = 8,
+        .frame_duration = 0.1,
+    };
+
+    wizard_attacking_2 = AnimatedSprite{
+        .texture = textures.wizard_attacking_2,
+        .sprite = Sprite{
+            .name = "Wizard is Attacking (2)",
             .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1848, .height = 190 },
         },
         .start_x = 0,

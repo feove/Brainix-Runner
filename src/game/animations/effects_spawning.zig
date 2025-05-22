@@ -10,6 +10,7 @@ const Grid = @import("../../terrain/grid.zig").Grid;
 const events = @import("../level/events.zig");
 const Event = events.Event;
 const Level = events.Level;
+const Areas = events.Areas;
 
 pub var effect_anim: EffectManager = EffectManager{};
 
@@ -96,6 +97,10 @@ pub const EffectManager = struct {
         anim.spawning_item.isRunning = true;
 
         for (0..size) |i| {
+            if (objects[i].key != Areas.getCurrentInterKey()) {
+                continue;
+            }
+
             const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
 
             anim.spawning_item.update(Elf.getCurrentTime(), 1);

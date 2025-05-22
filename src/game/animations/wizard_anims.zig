@@ -18,6 +18,7 @@ pub const WizardAnimation = enum {
     FALLING,
     JUMPING,
     ATTACKING_1,
+    ATTACKING_2,
 };
 
 pub const WizardManager = struct {
@@ -55,6 +56,7 @@ pub const WizardManager = struct {
             .JUMPING => jumping(wizard),
             .FALLING => falling(wizard),
             .ATTACKING_1 => attacking_1(wizard),
+            .ATTACKING_2 => attacking_2(wizard),
             // else => {},
         }
 
@@ -91,6 +93,20 @@ pub const WizardManager = struct {
 
         if (anim.wizard_attacking_1.isRunning == false) {
             setPrev(.ATTACKING_1);
+            setCurrent(.IDLE);
+        }
+    }
+
+    fn attacking_2(wizard: *Wizard) void {
+        setPrev(.IDLE);
+        setCurrent(.ATTACKING_2);
+
+        anim.wizard_attacking_2.isRunning = true;
+        anim.wizard_attacking_2.update(Elf.getCurrentTime() * Elf.getTimeDivisor(), 1);
+        anim.wizard_attacking_2.draw(.init(wizard.x, wizard.y), wizard.scale, 0.0, 255, 0, 0);
+
+        if (anim.wizard_attacking_2.isRunning == false) {
+            setPrev(.ATTACKING_2);
             setCurrent(.IDLE);
         }
     }

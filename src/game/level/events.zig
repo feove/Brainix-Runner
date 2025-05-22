@@ -73,7 +73,9 @@ pub const Areas = struct {
     current_inter_area: usize = 0,
 
     pub fn getCurrentInterKey() usize {
-        return level.events[level.i_event].areas.current_inter_area;
+        const index = if (level.i_event == level.event_nb) level.i_event - 1 else level.i_event;
+
+        return level.events[index].areas.current_inter_area;
     }
 
     fn getCurrentInterArea() rl.Vector4 {
@@ -186,6 +188,10 @@ pub const Event = struct {
         if (elapsed >= 1.0) {
             quick_slow_motion_active = false;
             player.time_divisor = 1;
+
+            if (Level.wizardHasPlaced()) {
+                WizardManager.setCurrent(.ATTACKING_2);
+            }
         }
     }
 
@@ -316,6 +322,7 @@ pub const Level = struct {
         if (quick_slow_motion_active) {
             Event.quick_slow_motion();
         }
+
         if (!Areas.noMoreInterArea()) {
             const inter_area = area.intermediate_areas[area.current_inter_area];
             //(elf.physics.newSens)
@@ -344,21 +351,16 @@ pub const Level = struct {
 
     fn intermediate() void {
         var event: Event = level.events[level.i_event];
-
-        Areas.increaseInter();
-        Inventory.slotSetting(event.inv_objects);
-        event.objectsSetUp(event.grid_objects);
+        Wizard.reset();
+        EffectManager.reset();
         Event.quick_slow_motion();
 
-        //Wizard.reset();
-        //EffectManager.reset();
+        //EffectManager.setCurrent(.SPAWNING);
 
-        //Inventory.clear();
-        //slots_filled = false;
-        //slow_motion_active = false;
-
-        //playerEventstatus = .SLOW_MOTION_AREA;
-
+        //_ = WizardManager.onceTime(.ATTACKING_1) or EffectManager.onceTime(.SPAWNING);
+        Inventory.slotSetting(event.inv_objects);
+        event.objectsSetUp(event.grid_objects);
+        Areas.increaseInter();
     }
 
     fn idle() void {
@@ -378,6 +380,18 @@ pub const Level = struct {
         const i_event: usize = if (level.i_event > 0) level.i_event - 1 else 0;
 
         return &level.events[i_event];
+    }
+
+    pub fn wizardHasPlaced() bool {
+        const event = Level.getCurrentEvent();
+        const currentKey = Areas.getCurrentInterKey();
+        for (event.inv_objects) |obj| {
+            if (obj.key == currentKey + 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     fn slow_motion(elf: *Elf) !void {
