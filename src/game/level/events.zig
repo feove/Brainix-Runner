@@ -182,9 +182,9 @@ pub const Event = struct {
 
         const elapsed = current_time - quick_slow_motion_start_time;
         //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
-        if (elapsed >= 1 or Elf.selfReturn().physics.newSens) {
+        //or Elf.selfReturn().physics.newSens
+        if (elapsed >= 1.0) {
             quick_slow_motion_active = false;
-            quick_slow_motion_start_time = 0;
             player.time_divisor = 1;
         }
     }
@@ -310,21 +310,20 @@ pub const Level = struct {
         //print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
 
         if (elf.physics.newSens) {
-            print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
+            // print("no More Areas {} Key : {d}\n", .{ Areas.noMoreInterArea(), Areas.getCurrentInterKey() });
         }
-        print("{} {d}\n", .{ quick_slow_motion_active, quick_slow_motion_start_time });
+        //print("{} {d}\n", .{ quick_slow_motion_active, quick_slow_motion_start_time });
+        if (quick_slow_motion_active) {
+            Event.quick_slow_motion();
+        }
         if (!Areas.noMoreInterArea()) {
             const inter_area = area.intermediate_areas[area.current_inter_area];
-
             //(elf.physics.newSens)
             if (area.player_in_area(elf, inter_area)) {
                 // print("Player In INTERMEDIATE\n", .{});
                 // print("{d}, {d}\n", .{ area.current_inter_area, area.intermediate_areas_nb });
 
                 intermediate();
-
-                // quick_slow_motion_active = false;
-                // quick_slow_motion_start_time = 0;
             }
             return;
         }
@@ -349,8 +348,8 @@ pub const Level = struct {
         Areas.increaseInter();
         Inventory.slotSetting(event.inv_objects);
         event.objectsSetUp(event.grid_objects);
-
         Event.quick_slow_motion();
+
         //Wizard.reset();
         //EffectManager.reset();
 
