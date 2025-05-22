@@ -3,15 +3,21 @@
 
     "event_0" : {
 
-        "object_nb" : 1,
+        "object_nb" : 2,
         "slow_motion_time" : 2.0,
-        "time_divisor" : 3.0,
+        "time_divisor" : 5.0,
         "already_triggered" :  false,
         "grid_objects" : [
             {
-                "x" : 5,
+                "x" : 8,
                 "y" : 7,
                 "type" : "GROUND",
+                "key" : 0
+            },
+            {
+                "x" : 5,
+                "y" : 7,
+                "type" : "PAD",
                 "key" : 0
             }
         ],
@@ -29,7 +35,7 @@
         ],
         "areas" : {
             "triggered" : {
-                "x" : 3,
+                "x" : 6,
                 "y" : 7,
                 "width" : 1,
                 "height" :1
@@ -41,7 +47,7 @@
                 "height" : 0
             },
             "completed" :   {
-                "x" : 8,
+                "x" : 11,
                 "y" : 7,
                 "width" : 1,
                 "height" : 1
