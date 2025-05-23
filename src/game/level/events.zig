@@ -36,6 +36,10 @@ pub var slow_motion_start_time: f64 = 0;
 pub var quick_slow_motion_active: bool = false;
 pub var quick_slow_motion_start_time: f64 = 0;
 
+pub var auto_death_timer_active: bool = false;
+pub var auto_death_start_time: f64 = 0;
+pub var auto_death_time_max: f64 = 10.0;
+
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement = LevelStatement.STARTING;
 
@@ -297,9 +301,27 @@ pub const Level = struct {
 
         try playerStatement(&elf);
 
+        autoDeathTimer();
+
         // print("Current Area {}\n", .{playerEventstatus});
         //drawIntermediateArea(level.i_event);
         // eventDrawing(level.i_event);
+    }
+
+    fn autoDeathTimer() void {
+        const current_time = rl.getTime();
+        if (auto_death_timer_active == false) {
+            auto_death_start_time = current_time;
+            return;
+        }
+
+        const elapsed = current_time - auto_death_start_time;
+        //print("{d} \n", .{elapsed});
+
+        if (elapsed > auto_death_time_max) {
+            Elf.set_state(.DEAD);
+            auto_death_timer_active = false;
+        }
     }
 
     fn areaSetting(elf: *Elf) void {
@@ -411,6 +433,7 @@ pub const Level = struct {
 
             Inventory.slotSetting(event.inv_objects);
             event.objectsSetUp(event.grid_objects);
+            auto_death_timer_active = true;
 
             slots_filled = true;
         }
@@ -427,6 +450,7 @@ pub const Level = struct {
         Inventory.clear();
         Grid.reset();
         //_ = EffectManager.onceTime(.SPAWNING);
+        auto_death_timer_active = false;
 
         playerEventstatus = .IDLE_AREA;
 

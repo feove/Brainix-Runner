@@ -115,6 +115,10 @@ pub const Elf = struct {
         return rl.getFrameTime();
     }
 
+    pub fn set_state(state: PlayerState) void {
+        elf.state = state;
+    }
+
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();
@@ -253,7 +257,7 @@ pub const Elf = struct {
     fn updatePlayerStatement() void {
         switch (elf.state) {
             .DEAD => {
-                elf_anims.ElfManager.setAnim(.DYING);
+                elf_anims.ElfManager.setAnim(.DYING); //Auto respawning
                 elf.speed *= 0.999;
             },
             .RESPAWNING => {
