@@ -258,6 +258,7 @@ pub const Elf = struct {
         switch (elf.state) {
             .DEAD => {
                 elf_anims.ElfManager.setAnim(.DYING); //Auto respawning
+                event.auto_death_timer_active = false;
                 elf.speed *= 0.999;
             },
             .RESPAWNING => {

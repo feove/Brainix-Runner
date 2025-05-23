@@ -319,8 +319,10 @@ pub const Level = struct {
         //print("{d} \n", .{elapsed});
 
         if (elapsed > auto_death_time_max) {
-            Elf.set_state(.DEAD);
             auto_death_timer_active = false;
+            //  EffectManager.setCurrent(.SMALL_LIGHTING_EFFECT);
+            _ = EffectManager.onceTime(.SMALL_LIGHTING_EFFECT);
+            Elf.set_state(.DEAD);
         }
     }
 

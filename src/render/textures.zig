@@ -45,6 +45,7 @@ pub var all_weapons: rl.Texture2D = undefined;
 
 pub var green_effects: rl.Texture2D = undefined;
 pub var yellow_effects: rl.Texture2D = undefined;
+pub var effects_sheet_506: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
@@ -83,6 +84,7 @@ pub fn init() !void {
     green_effects = try rl.loadTexture("assets/textures/pack/effects/green_effect.png");
     yellow_effects = try rl.loadTexture("assets/textures/pack/effects/yellow_effect.png");
     all_weapons = try rl.loadTexture("assets/textures/pack/trap_and_weapon/all.png");
+    effects_sheet_506 = try rl.loadTexture("assets/textures/pack/effects/Free/506.png");
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
     moving_platform = try rl.loadTexture("assets/textures/pack/trap_and_weapon/moving_platform.png");

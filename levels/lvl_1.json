@@ -28,6 +28,11 @@
                 "type" : "PAD",
                 "count" : 1,
                 "key" : 0
+            },
+            {
+                "type" : "GROUND",
+                "count" : 1,
+                "key" : 0
             }
         ],
         "areas" : {

@@ -14,7 +14,12 @@ const Areas = events.Areas;
 
 pub var effect_anim: EffectManager = EffectManager{};
 
-pub const EffectAnimation = enum { NONE, SPAWNING, DESPAWNING };
+pub const EffectAnimation = enum {
+    NONE,
+    SPAWNING,
+    DESPAWNING,
+    SMALL_LIGHTING_EFFECT,
+};
 
 pub const EffectManager = struct {
     current: EffectAnimation = .NONE,
@@ -46,6 +51,7 @@ pub const EffectManager = struct {
             .SPAWNING => item_spawning(),
             .DESPAWNING => item_despawning(),
             .NONE => none(),
+            .SMALL_LIGHTING_EFFECT => small_lighting(),
         }
     }
 
@@ -62,6 +68,19 @@ pub const EffectManager = struct {
     }
 
     fn none() void {}
+
+    pub fn small_lighting() void {
+        const elf: Elf = Elf.selfReturn();
+        anim.small_lighting_0.isRunning = true;
+
+        anim.small_lighting_0.update(Elf.getCurrentTime() / 2, 1);
+        anim.small_lighting_0.draw(.init(elf.x - elf.width / 2, elf.y - elf.height * 0.10), 2.0, 0, 255, 0, 0); //sale : 3.5
+
+        if (anim.small_lighting_0.isRunning == false) {
+            effect_anim.prev = .SMALL_LIGHTING_EFFECT;
+            effect_anim.current = .NONE;
+        }
+    }
 
     pub fn item_despawning() void {
         const event: Event = Level.getPreviousEvent().*;
