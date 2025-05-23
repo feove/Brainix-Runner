@@ -18,6 +18,7 @@ const LevelStatement = event.LevelStatement;
 const anim = @import("../game/animations/animations_manager.zig");
 const elf_anims = @import("../game/animations/elf_anims.zig");
 const ElfManager = elf_anims.ElfManager;
+const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
 const Object = @import("../game/terrain_object.zig").Object;
 
 const print = @import("std").debug.print;
@@ -35,6 +36,11 @@ pub const PlayerState = enum {
     ALIVE,
     RESPAWNING,
     DEAD,
+};
+
+pub const DeathPurpose = enum {
+    SPIKE,
+    TIME_OUT,
 };
 
 pub fn initElf() void {
@@ -74,6 +80,7 @@ pub const Elf = struct {
     jump_force: f32 = jump_force,
     boost_force: f32 = boost_force,
     state: PlayerState = PlayerState.RESPAWNING,
+    death_purpose: DeathPurpose = .SPIKE,
     animator: elf_anims.ElfManager,
 
     pub fn respawn() void {
@@ -117,6 +124,10 @@ pub const Elf = struct {
 
     pub fn set_state(state: PlayerState) void {
         elf.state = state;
+    }
+
+    pub fn set_death_purpose(death_purpose: DeathPurpose) void {
+        elf.death_purpose = death_purpose;
     }
 
     pub fn controller(self: *Elf) void {
@@ -257,6 +268,7 @@ pub const Elf = struct {
     fn updatePlayerStatement() void {
         switch (elf.state) {
             .DEAD => {
+                animDeathPurpose();
                 elf_anims.ElfManager.setAnim(.DYING); //Auto respawning
                 event.auto_death_timer_active = false;
                 elf.speed *= 0.999;
@@ -270,6 +282,13 @@ pub const Elf = struct {
                 elf.state = .ALIVE;
             },
             .ALIVE => {},
+        }
+    }
+
+    fn animDeathPurpose() void {
+        switch (elf.death_purpose) {
+            .SPIKE => EffectManager.setCurrent(.SMALL_LIGHTING_EFFECT),
+            .TIME_OUT => EffectManager.setCurrent(.SCRATCH),
         }
     }
 

@@ -100,19 +100,24 @@ fn drawGrid() void {
 }
 
 fn drawBackgrounds() void {
+    // const grid = Grid.selfReturn();
 
-    // textures.Sprite.draw(textures.forest_background, textures.sprites.forest_background, .init(-100, 0), 0.85);
+    // textures .Sprite.draw(textures.forest_background, textures.sprites.forest_background, .init(-100, 0), 0.85);
     textures.Sprite.draw(textures.oak_bg_lyr_1, textures.sprites.oak_bg_lyr_1, .init(-100, 0), 3.5, .white);
     textures.Sprite.draw(textures.oak_bg_lyr_2, textures.sprites.oak_bg_lyr_2, .init(-100 + 0.02 * player.elf.x, 0), 3.5 + 0.00001 * player.elf.x, .white);
     textures.Sprite.draw(textures.oak_bg_lyr_3, textures.sprites.oak_bg_lyr_3, .init(-100 - 0.01 * player.elf.x, 0), 3.5, .white);
 
-    drawBorders();
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_ceiling, .init(56, 382), 4.0, .white);
 
-    // textures.Sprite.draw(textures.spriteSheet, textures.sprites.bushGreenBorders, .init(300, 600), 4, .white);
-    //textures.Sprite.draw(textures.oak_woods_tileset, textures.sprites.oak_woods_tileset, .init(0, 600), 3, .white);
-    //textures.Sprite.draw(textures.top_far_bgrnd, textures.sprites.scared_forest_grd, .init(200, 500), 1);
-    //textures.Sprite.draw(textures.top_far_bgrnd, textures.sprites.dark_forest_grd, .init(-50, 550), 2);
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_1, .init(126, 446), 4.1, .gray);
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_2, .init(126, 512), 4.1, .gray);
+
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_1, .init(60, 446), 4.1, .gray);
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_2, .init(60, 512), 4.1, .gray);
+
+    drawBorders();
 }
+
 fn drawBorders() void {
     const height: usize = Grid.selfReturn().nb_rows + 2;
 

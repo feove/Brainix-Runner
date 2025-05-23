@@ -39,6 +39,8 @@ pub var oak_woods_tileset: rl.Texture2D = undefined;
 pub var top_far_bgrnd: rl.Texture2D = undefined;
 pub var env_ground: rl.Texture2D = undefined;
 
+pub var dungeons_tile: rl.Texture2D = undefined;
+
 pub var pad: rl.Texture2D = undefined;
 pub var moving_platform: rl.Texture2D = undefined;
 pub var all_weapons: rl.Texture2D = undefined;
@@ -46,6 +48,8 @@ pub var all_weapons: rl.Texture2D = undefined;
 pub var green_effects: rl.Texture2D = undefined;
 pub var yellow_effects: rl.Texture2D = undefined;
 pub var effects_sheet_506: rl.Texture2D = undefined;
+pub var effects_sheet_516: rl.Texture2D = undefined;
+pub var effects_sheet_526: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
@@ -66,6 +70,9 @@ pub fn init() !void {
     wizard_attacking_1 = try rl.loadTexture("assets/textures/wizard/Attack1.png");
     wizard_attacking_2 = try rl.loadTexture("assets/textures/wizard/Attack2.png");
 
+    //Dungeons
+    dungeons_tile = try rl.loadTexture("assets/textures/pack/oak_woods/dungeons_tile.png");
+
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");
 
@@ -85,6 +92,8 @@ pub fn init() !void {
     yellow_effects = try rl.loadTexture("assets/textures/pack/effects/yellow_effect.png");
     all_weapons = try rl.loadTexture("assets/textures/pack/trap_and_weapon/all.png");
     effects_sheet_506 = try rl.loadTexture("assets/textures/pack/effects/Free/506.png");
+    effects_sheet_516 = try rl.loadTexture("assets/textures/pack/effects/Free/516.png");
+    effects_sheet_526 = try rl.loadTexture("assets/textures/pack/effects/Free/526.png");
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
     moving_platform = try rl.loadTexture("assets/textures/pack/trap_and_weapon/moving_platform.png");
@@ -169,6 +178,12 @@ pub const Sprites = struct {
     scared_forest_grd: Sprite,
     env_ground_leaves: Sprite,
 
+    dungeon_ceiling: Sprite,
+    dungeon_wall_right_1: Sprite,
+    dungeon_wall_right_2: Sprite,
+    dungeon_wall_left_1: Sprite,
+    dungeon_wall_left_2: Sprite,
+
     pub fn init() Sprites {
         return Sprites{
             .granite_l4 = .{ .name = "Granite_L4", .src = rl.Rectangle{ .x = 0, .y = 0, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
@@ -181,29 +196,29 @@ pub const Sprites = struct {
             .granite_pure_l4 = .{ .name = "Granite_Pure_L4", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 0, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .granite_pure_l3 = .{ .name = "Granite_Pure_L3", .src = rl.Rectangle{ .x = 2 * BLOCK_SIZE, .y = 2 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .granite_border = .{ .name = "Granite Border", .src = rl.Rectangle{ .x = BLOCK_SIZE, .y = 6 * BLOCK_SIZE, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
-
             .bushGreen = .{ .name = "GreenBush", .src = rl.Rectangle{ .x = 96, .y = 0, .width = 96, .height = 96 } },
             .bushGreenBorders = .{ .name = "Bush Green Borders", .src = rl.Rectangle{ .x = 145, .y = 0, .width = 78, .height = 78 } },
-
             .bushDark = .{ .name = "DarkBush", .src = rl.Rectangle{ .x = 192, .y = 0, .width = 96, .height = 96 } },
             .water = .{ .name = "Water", .src = rl.Rectangle{ .x = 96, .y = 96, .width = 96, .height = 96 } },
             .portal = .{ .name = "Portal", .src = rl.Rectangle{ .x = 0, .y = 96, .width = 96, .height = 96 } },
-
             .forest_background = .{ .name = "Forest Background", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1747, .height = 984 } },
             .inventory_hud = .{ .name = "Inventory HUD", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 278, .height = 103 } },
             .simple_inventory_hud = .{ .name = "Simple Inventory HUD", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 77, .height = 26 } },
-
             .oak_bg_lyr_1 = .{ .name = "Oak Background Layer 1", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_bg_lyr_2 = .{ .name = "Oak Background Layer 2", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_bg_lyr_3 = .{ .name = "Oak Background Layer 3", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_woods_tileset = .{ .name = "Oak Wookd Tileset", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 100, .height = 100 } },
-
             .scared_forest_grd = .{ .name = "Scared Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 600, .height = 100 } },
             .dark_forest_grd = .{ .name = "Dark Forest Ground", .src = rl.Rectangle{ .x = 0, .y = 700, .width = 600, .height = 100 } },
             .env_ground_leaves = .{ .name = "Environment Ground With Orange Leaves", .src = rl.Rectangle{ .x = 120, .y = 250, .width = 150, .height = 30 } },
             .simple_spike = .{ .name = "Simple Spike", .src = rl.Rectangle{ .x = 415, .y = 320, .width = 16, .height = 14 } },
             .wood_block_spikes = .{ .name = "Wood Block Spikes", .src = rl.Rectangle{ .x = 160, .y = 70, .width = 30, .height = 30 } },
             .arrow_icn = .{ .name = "Arrow Icon", .src = rl.Rectangle{ .x = 300, .y = 160, .width = 20, .height = 15 } },
+            .dungeon_ceiling = .{ .name = "Dungeon Ceiling", .src = rl.Rectangle{ .x = 78, .y = 16, .width = 48, .height = 16 } },
+            .dungeon_wall_right_1 = .{ .name = "Dungeon Wall Right 1", .src = rl.Rectangle{ .x = 94, .y = 32, .width = 16, .height = 16 } },
+            .dungeon_wall_right_2 = .{ .name = "Dungeon Wall Right 2", .src = rl.Rectangle{ .x = 94, .y = 48, .width = 16, .height = 16 } },
+            .dungeon_wall_left_1 = .{ .name = "Dungeon Wall Left 1", .src = rl.Rectangle{ .x = 78, .y = 32, .width = 16, .height = 16 } },
+            .dungeon_wall_left_2 = .{ .name = "Dungeon Wall Left 2", .src = rl.Rectangle{ .x = 78, .y = 48, .width = 16, .height = 16 } },
         };
     }
 };

@@ -19,6 +19,7 @@ pub const EffectAnimation = enum {
     SPAWNING,
     DESPAWNING,
     SMALL_LIGHTING_EFFECT,
+    SCRATCH,
 };
 
 pub const EffectManager = struct {
@@ -52,6 +53,7 @@ pub const EffectManager = struct {
             .DESPAWNING => item_despawning(),
             .NONE => none(),
             .SMALL_LIGHTING_EFFECT => small_lighting(),
+            .SCRATCH => scratch(),
         }
     }
 
@@ -74,10 +76,23 @@ pub const EffectManager = struct {
         anim.small_lighting_0.isRunning = true;
 
         anim.small_lighting_0.update(Elf.getCurrentTime() / 2, 1);
-        anim.small_lighting_0.draw(.init(elf.x - elf.width / 2, elf.y - elf.height * 0.10), 2.0, 0, 255, 0, 0); //sale : 3.5
+        anim.small_lighting_0.draw(.init(elf.x - elf.width / 2, elf.y - elf.height * 0.50), 2.0, 0, 255, 0, 0); //sale : 3.5
 
         if (anim.small_lighting_0.isRunning == false) {
             effect_anim.prev = .SMALL_LIGHTING_EFFECT;
+            effect_anim.current = .NONE;
+        }
+    }
+
+    pub fn scratch() void {
+        const elf: Elf = Elf.selfReturn();
+        anim.scratch.isRunning = true;
+
+        anim.scratch.update(Elf.getCurrentTime() / 2, 1);
+        anim.scratch.draw(.init(elf.x, elf.y + elf.height * 0.2), 2.0, 0, 255, 0, 0); //sale : 3.5
+
+        if (anim.scratch.isRunning == false) {
+            effect_anim.prev = .SCRATCH;
             effect_anim.current = .NONE;
         }
     }

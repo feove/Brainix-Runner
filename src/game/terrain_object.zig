@@ -319,6 +319,7 @@ pub const Object = struct {
 
         if (HitBox.isInCollision(SpikeDetectionSides[0..], CellType.SPIKE)) {
             if (elf.state == .ALIVE) {
+                Elf.set_death_purpose(.SPIKE);
                 elf.state = .DEAD;
             }
         }

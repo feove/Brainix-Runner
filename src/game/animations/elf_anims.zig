@@ -37,8 +37,8 @@ pub const ElfManager = struct {
         anim.battlemage_dying.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
 
         if (anim.battlemage_dying.isRunning == false) {
-            elf.state = .RESPAWNING;
             setAnim(.RUNNING);
+            elf.state = .RESPAWNING;
         }
     }
 

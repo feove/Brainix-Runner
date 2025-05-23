@@ -16,6 +16,7 @@ pub var spawning_item: AnimatedSprite = undefined;
 pub var square_despawning_item: AnimatedSprite = undefined;
 pub var spike_despawning_item: AnimatedSprite = undefined;
 pub var small_lighting_0: AnimatedSprite = undefined;
+pub var scratch: AnimatedSprite = undefined;
 
 //Wizard
 pub var demon_idle2: AnimatedSprite = undefined;
@@ -77,11 +78,26 @@ pub fn init() !void {
             .src = rl.Rectangle{ .x = 0, .y = 128, .width = 704, .height = 576 },
         },
         .start_x = 0,
-        .start_y = 128,
+        .start_y = 64 * 7,
         .frame_width = 64,
         .frame_height = 64,
         .horizontal_shift = true,
         .num_frames = 11,
+        .frame_duration = 0.1,
+    };
+
+    scratch = AnimatedSprite{
+        .texture = textures.effects_sheet_526,
+        .sprite = Sprite{
+            .name = "Scratch effect",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 832, .height = 576 },
+        },
+        .start_x = 0,
+        .start_y = 64 * 1,
+        .frame_width = 64,
+        .frame_height = 64,
+        .horizontal_shift = true,
+        .num_frames = 12,
         .frame_duration = 0.1,
     };
 
