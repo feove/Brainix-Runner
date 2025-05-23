@@ -178,11 +178,13 @@ pub const Sprites = struct {
     scared_forest_grd: Sprite,
     env_ground_leaves: Sprite,
 
-    dungeon_ceiling: Sprite,
+    dungeon_stair_right: Sprite,
     dungeon_wall_right_1: Sprite,
     dungeon_wall_right_2: Sprite,
     dungeon_wall_left_1: Sprite,
     dungeon_wall_left_2: Sprite,
+    dungeon_long_wall_1: Sprite,
+    dungeon_door: Sprite,
 
     pub fn init() Sprites {
         return Sprites{
@@ -214,11 +216,16 @@ pub const Sprites = struct {
             .simple_spike = .{ .name = "Simple Spike", .src = rl.Rectangle{ .x = 415, .y = 320, .width = 16, .height = 14 } },
             .wood_block_spikes = .{ .name = "Wood Block Spikes", .src = rl.Rectangle{ .x = 160, .y = 70, .width = 30, .height = 30 } },
             .arrow_icn = .{ .name = "Arrow Icon", .src = rl.Rectangle{ .x = 300, .y = 160, .width = 20, .height = 15 } },
-            .dungeon_ceiling = .{ .name = "Dungeon Ceiling", .src = rl.Rectangle{ .x = 78, .y = 16, .width = 48, .height = 16 } },
+
+            .dungeon_stair_right = .{ .name = "Dungeon Stair Right", .src = rl.Rectangle{ .x = 94, .y = 16, .width = 16, .height = 16 } },
+
             .dungeon_wall_right_1 = .{ .name = "Dungeon Wall Right 1", .src = rl.Rectangle{ .x = 94, .y = 32, .width = 16, .height = 16 } },
             .dungeon_wall_right_2 = .{ .name = "Dungeon Wall Right 2", .src = rl.Rectangle{ .x = 94, .y = 48, .width = 16, .height = 16 } },
             .dungeon_wall_left_1 = .{ .name = "Dungeon Wall Left 1", .src = rl.Rectangle{ .x = 78, .y = 32, .width = 16, .height = 16 } },
             .dungeon_wall_left_2 = .{ .name = "Dungeon Wall Left 2", .src = rl.Rectangle{ .x = 78, .y = 48, .width = 16, .height = 16 } },
+
+            .dungeon_long_wall_1 = .{ .name = "Dungeon Long Wall 1", .src = rl.Rectangle{ .x = 126, .y = 16, .width = 32, .height = 16 } },
+            .dungeon_door = .{ .name = "Dungeon Door", .src = rl.Rectangle{ .x = 206, .y = 160, .width = 20, .height = 32 } },
         };
     }
 };

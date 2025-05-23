@@ -107,15 +107,37 @@ fn drawBackgrounds() void {
     textures.Sprite.draw(textures.oak_bg_lyr_2, textures.sprites.oak_bg_lyr_2, .init(-100 + 0.02 * player.elf.x, 0), 3.5 + 0.00001 * player.elf.x, .white);
     textures.Sprite.draw(textures.oak_bg_lyr_3, textures.sprites.oak_bg_lyr_3, .init(-100 - 0.01 * player.elf.x, 0), 3.5, .white);
 
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_ceiling, .init(56, 382), 4.0, .white);
+    Spawndoor();
+    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_ceiling, .init(56, 382), 4.0, .white);
 
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_1, .init(126, 446), 4.1, .gray);
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_2, .init(126, 512), 4.1, .gray);
+    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_1, .init(126, 446), 4.1, .gray);
+    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_2, .init(126, 512), 4.1, .gray);
 
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_1, .init(60, 446), 4.1, .gray);
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_2, .init(60, 512), 4.1, .gray);
+    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_1, .init(60, 446), 4.1, .gray);
+    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_2, .init(60, 512), 4.1, .gray);
 
     drawBorders();
+}
+
+fn Spawndoor() void {
+    const scale = 4.0;
+    const x: f32 = 56;
+    const y: f32 = 382;
+    const bw: f32 = 16 * scale;
+    const bh: f32 = 16 * scale;
+    const color: rl.Color = .gray;
+    const door_color: rl.Color = .gray;
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_stair_right, .init(x, y), scale, color);
+
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_stair_right, .init(x + bw, y + bh), scale, color);
+
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_stair_right, .init(x + bw * 2, y + bh * 2), scale, color);
+
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_1, .init(x, y + bh), scale, color);
+
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_long_wall_1, .init(x, y + bh * 2), scale, color);
+
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_door, .init(x + 25, y + bh + 25), 3.2, door_color);
 }
 
 fn drawBorders() void {
