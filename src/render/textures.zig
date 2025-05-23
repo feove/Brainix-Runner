@@ -184,7 +184,8 @@ pub const Sprites = struct {
     dungeon_wall_left_1: Sprite,
     dungeon_wall_left_2: Sprite,
     dungeon_long_wall_1: Sprite,
-    dungeon_door: Sprite,
+    dungeon_closed_door: Sprite,
+    dungeon_opened_door: Sprite,
 
     pub fn init() Sprites {
         return Sprites{
@@ -225,7 +226,8 @@ pub const Sprites = struct {
             .dungeon_wall_left_2 = .{ .name = "Dungeon Wall Left 2", .src = rl.Rectangle{ .x = 78, .y = 48, .width = 16, .height = 16 } },
 
             .dungeon_long_wall_1 = .{ .name = "Dungeon Long Wall 1", .src = rl.Rectangle{ .x = 126, .y = 16, .width = 32, .height = 16 } },
-            .dungeon_door = .{ .name = "Dungeon Door", .src = rl.Rectangle{ .x = 206, .y = 160, .width = 20, .height = 32 } },
+            .dungeon_closed_door = .{ .name = "Dungeon Closed Door", .src = rl.Rectangle{ .x = 206, .y = 160, .width = 20, .height = 32 } },
+            .dungeon_opened_door = .{ .name = "Dungeon Opened Door", .src = rl.Rectangle{ .x = 1866, .y = 160, .width = 16, .height = 32 } },
         };
     }
 };

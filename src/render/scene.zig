@@ -120,13 +120,17 @@ fn drawBackgrounds() void {
 }
 
 fn Spawndoor() void {
+    const door_is_opened: bool = true;
+
     const scale = 4.0;
     const x: f32 = 56;
     const y: f32 = 382;
     const bw: f32 = 16 * scale;
     const bh: f32 = 16 * scale;
     const color: rl.Color = .gray;
-    const door_color: rl.Color = .gray;
+
+    const door_color: rl.Color = if (door_is_opened) .black else .white;
+
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_stair_right, .init(x, y), scale, color);
 
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_stair_right, .init(x + bw, y + bh), scale, color);
@@ -137,7 +141,11 @@ fn Spawndoor() void {
 
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_long_wall_1, .init(x, y + bh * 2), scale, color);
 
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_door, .init(x + 25, y + bh + 25), 3.2, door_color);
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_closed_door, .init(x + 25, y + bh + 25), 3.2, door_color);
+
+    if (door_is_opened) {
+        textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, .white);
+    }
 }
 
 fn drawBorders() void {
