@@ -43,7 +43,7 @@ pub var auto_death_start_time: f64 = 0;
 pub var auto_death_time_max: f64 = 10.0;
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
-pub var levelStatement = LevelStatement.STARTING;
+pub var levelStatement: LevelStatement = .STARTING;
 
 const LEVEL_NB: usize = 2;
 var CURRENT_LEVEL: usize = 0;
@@ -289,8 +289,6 @@ pub const Level = struct {
                     Elf.setState(player.PlayerState.ALIVE);
                     levelStatement = .ONGOING;
                 }
-
-                // if (ElfManager.getPrevAnim() == .IDLE) {}
             },
             .ONGOING => {
                 try refresh();
@@ -304,6 +302,7 @@ pub const Level = struct {
 
                 Wizard.reset();
                 ElfManager.reset();
+                CutScene.reset();
 
                 if (CURRENT_LEVEL == LEVEL_NB) {
                     CURRENT_LEVEL = 0;
@@ -449,7 +448,6 @@ pub const Level = struct {
                 return true;
             }
         }
-
         return false;
     }
 

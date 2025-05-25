@@ -48,6 +48,8 @@ pub const EffectManager = struct {
     }
 
     pub fn update() void {
+        // print("Current Effect Anim {}\n", .{effect_anim.current});
+
         switch (effect_anim.current) {
             .SPAWNING => item_spawning(),
             .DESPAWNING => item_despawning(),

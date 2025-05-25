@@ -42,8 +42,8 @@ pub fn wait() bool {
 }
 
 pub const CutSceneManager = struct {
-    last_done: Scene = .NONE,
     current_scene: Scene = .LEVEL_STARTING,
+    last_done: Scene = .NONE,
 
     pub fn setQuiet(quiet: bool) void {
         quiet_closed_door = quiet;
@@ -51,6 +51,14 @@ pub const CutSceneManager = struct {
 
     pub fn lastDone() Scene {
         return cut_scene_manager.last_done;
+    }
+
+    pub fn reset() void {
+        cut_scene_manager.current_scene = .LEVEL_STARTING;
+        cut_scene_manager.last_done = .NONE;
+        door_opened = false;
+        quiet_closed_door = false;
+        time_to_wait = 2.0;
     }
 
     pub fn run() void {
@@ -73,8 +81,6 @@ pub const CutSceneManager = struct {
         if (ElfManager.getPrevAnim() == .IDLE) {
             cut_scene_manager.last_done = .LEVEL_STARTING;
             cut_scene_manager.current_scene = .NONE;
-
-            time_to_wait = 2.0;
         }
         //Doors Anims
 

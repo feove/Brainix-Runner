@@ -321,13 +321,17 @@ pub const AnimatedSprite = struct {
         self.y = y;
     }
 
+    pub fn resetPos(self: *AnimatedSprite) void {
+        self.x = 0;
+        self.y = 0;
+    }
+
     pub fn update(self: *AnimatedSprite, delta_time: f32, loop_limit: usize) void {
         if (self.loop >= loop_limit) {
             self.isRunning = false;
             self.loop = 0;
             self.current_frame = 0;
-            self.x = 0;
-            self.y = 0;
+            self.resetPos();
             return;
         }
 

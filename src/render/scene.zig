@@ -67,11 +67,22 @@ fn drawGrid() void {
                         Sprite.draw(textures.all_weapons, textures.sprites.wood_block_spikes, .init(cell.x - 10, cell.y - 8), 2.80, .white);
                     },
                     .PAD => {
-                        // print("c : {d} r : {d}\n", .{ c, r });
-                        //Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = slot.pos.x, .y = slot.pos.y + slot.height / 5 }, 2.7, 0, 255, false),
-
-                        anim.jumper_sprite.update(rl.getFrameTime(), 1);
-                        anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);
+                        //anim.jumper_sprite.resetPos();
+                        if (anim.jumper_sprite.x != c and anim.jumper_sprite.y != r) {
+                            Sprite.drawWithRotation(
+                                anim.jumper_sprite.texture,
+                                anim.jumper_sprite.sprite,
+                                rl.Vector2{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 },
+                                2.7,
+                                0,
+                                255,
+                                false,
+                            );
+                        } else {
+                            anim.jumper_sprite.isRunning = true;
+                            anim.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
+                            anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 2.7, 0, 255, c, r);
+                        }
                     },
                     .UP_PAD => {
                         anim.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);

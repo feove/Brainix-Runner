@@ -16,6 +16,7 @@ const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
 const anim = @import("animations/animations_manager.zig");
 const elf_anims = @import("../game/animations/elf_anims.zig");
+const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
 
 const print = std.debug.print;
 
@@ -267,13 +268,8 @@ pub const Object = struct {
 
                 findObject(elf, &i, &j, .PAD);
 
-                print("i : {d} j : {d}\n", .{ i, j });
-
+                //print("i : {d} j : {d}\n", .{ i, j });
                 anim.jumper_sprite.setPos(i, j);
-
-                anim.jumper_sprite.isRunning = true;
-                //elf.canTrigger = false;
-
             }
         }
     }
