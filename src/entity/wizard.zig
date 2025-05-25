@@ -55,6 +55,15 @@ pub const Wizard = struct {
     current_pos: WizardPosition = .MIDDLE,
     prev_pos: WizardPosition = .LEFT,
     animator: wizard_anims.WizardManager,
+    canDraw: bool = true,
+
+    pub fn SelfReturn() Wizard {
+        return wizard;
+    }
+
+    pub fn setDrawing(canDraw: bool) void {
+        wizard.canDraw = canDraw;
+    }
 
     pub fn reset() void {
         // wizard.x = DEFAULT_POSITION.x;

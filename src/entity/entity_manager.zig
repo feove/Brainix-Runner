@@ -13,7 +13,7 @@ pub const Entity = struct {
     }
 
     pub fn draw() void {
-        Elf.drawElf();
-        Wizard.draw();
+        if (Elf.selfReturn().canDraw) Elf.drawElf();
+        if (Wizard.SelfReturn().canDraw) Wizard.draw();
     }
 };

@@ -30,7 +30,7 @@ pub var time_divisor: f32 = 1.0;
 const ELF_DEFAULT_SPEED: f32 = 140.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
-var RESPAWN_POINT: rl.Vector2 = .init(85, 465);
+var RESPAWN_POINT: rl.Vector2 = .init(110, 465);
 
 pub const PlayerState = enum {
     ALIVE,
@@ -82,6 +82,7 @@ pub const Elf = struct {
     state: PlayerState = PlayerState.RESPAWNING,
     death_purpose: DeathPurpose = .SPIKE,
     animator: elf_anims.ElfManager,
+    canDraw: bool = true,
 
     pub fn respawn() void {
         elf.x = RESPAWN_POINT.x;
@@ -92,6 +93,10 @@ pub const Elf = struct {
 
     pub fn selfReturn() Elf {
         return elf;
+    }
+
+    pub fn setDrawing(canDraw: bool) void {
+        elf.canDraw = canDraw;
     }
 
     pub fn setDefaultSpeed(self: *Elf) void {
@@ -145,6 +150,7 @@ pub const Elf = struct {
 
         if (rl.isKeyPressed(rl.KeyboardKey.r) or Level.getLevelStatement() == .STARTING) {
             respawn();
+            return;
         }
 
         self.isOnGround = self.hitBox.bottomLeggs == CellType.GROUND;

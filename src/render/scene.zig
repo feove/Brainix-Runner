@@ -12,6 +12,7 @@ const Sprite = @import("textures.zig").Sprite;
 const player = @import("../entity/elf.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
 const HUD = @import("../game/utils.zig").HUD;
+const scenarios = @import("../game/level/cutscene_manager.zig");
 
 //Tmp Drawing
 pub fn drawScene() !void {
@@ -120,7 +121,8 @@ fn drawBackgrounds() void {
 }
 
 fn Spawndoor() void {
-    const door_is_opened: bool = true;
+    const door_is_opened: bool = scenarios.door_opened;
+    const quiet_door: bool = scenarios.quiet_closed_door;
 
     const scale = 4.0;
     const x: f32 = 56;
@@ -130,6 +132,7 @@ fn Spawndoor() void {
     const color: rl.Color = .gray;
 
     const door_color: rl.Color = if (door_is_opened) .black else .white;
+    const closed_door_color: rl.Color = if (quiet_door) .gray else .white;
 
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_stair_right, .init(x, y), scale, color);
 
@@ -144,7 +147,7 @@ fn Spawndoor() void {
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_closed_door, .init(x + 25, y + bh + 25), 3.2, door_color);
 
     if (door_is_opened) {
-        textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, .gray);
+        textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, closed_door_color);
     }
 }
 

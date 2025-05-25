@@ -6,6 +6,7 @@ const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
 const Level = @import("../game/level/events.zig").Level;
 const Entity = @import("../entity/entity_manager.zig").Entity;
+const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
@@ -24,6 +25,7 @@ pub fn run() !void {
 
     try Level.stateLevelManager();
 
+    CutScene.run();
     try render();
 }
 

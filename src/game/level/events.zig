@@ -285,10 +285,8 @@ pub const Level = struct {
     pub fn stateLevelManager() !void {
         switch (levelStatement) {
             .STARTING => {
-                Elf.setState(player.PlayerState.ALIVE);
-                CutScene.run();
-
                 if (CutScene.lastDone() == .LEVEL_STARTING) {
+                    Elf.setState(player.PlayerState.ALIVE);
                     levelStatement = .ONGOING;
                 }
 
@@ -460,6 +458,7 @@ pub const Level = struct {
 
         //Flex
         const animationState: bool = WizardManager.onceTime(.ATTACKING_1) or EffectManager.onceTime(.SPAWNING);
+        if (level.i_event == 0) CutScene.setQuiet(true);
 
         if (animationState) {
             return;
