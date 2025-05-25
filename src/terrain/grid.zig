@@ -9,7 +9,8 @@ const HitBox = player.HitBox;
 const HUD = @import("../game/utils.zig").HUD;
 const Inventory = @import("../game/inventory.zig").Inventory;
 
-const AroundConfig = @import("../game/terrain_object.zig").AroundConfig;
+const terrain = @import("../game/terrain_object.zig");
+const AroundConfig = terrain.AroundConfig;
 const Object = @import("../game/terrain_object.zig").Object;
 
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;

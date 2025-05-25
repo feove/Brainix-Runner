@@ -5,6 +5,7 @@ const terrain = @import("../terrain/grid.zig");
 const Grid = terrain.Grid;
 const CellType = terrain.CellType;
 
+const object = @import("../game/terrain_object.zig");
 const rl = @import("raylib");
 const textures = @import("textures.zig");
 const anim = @import("../game/animations/animations_manager.zig");
@@ -120,13 +121,6 @@ fn drawBackgrounds() void {
     textures.Sprite.draw(textures.oak_bg_lyr_3, textures.sprites.oak_bg_lyr_3, .init(-100 - 0.01 * player.elf.x, 0), 3.5, .white);
 
     Spawndoor();
-    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_ceiling, .init(56, 382), 4.0, .white);
-
-    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_1, .init(126, 446), 4.1, .gray);
-    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_right_2, .init(126, 512), 4.1, .gray);
-
-    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_1, .init(60, 446), 4.1, .gray);
-    // textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_wall_left_2, .init(60, 512), 4.1, .gray);
 
     drawBorders();
 }
@@ -142,6 +136,8 @@ fn Spawndoor() void {
     const bh: f32 = 16 * scale;
     const color: rl.Color = .gray;
 
+    object.DoorPos = rl.Vector2.init(x + 25, y + bh + 25);
+
     const door_color: rl.Color = if (door_is_opened) .black else .white;
     const closed_door_color: rl.Color = if (quiet_door) .gray else .white;
 
@@ -155,7 +151,7 @@ fn Spawndoor() void {
 
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_long_wall_1, .init(x, y + bh * 2), scale, color);
 
-    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_closed_door, .init(x + 25, y + bh + 25), 3.2, door_color);
+    textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_closed_door, .init(object.DoorPos.x, object.DoorPos.y), 3.2, door_color);
 
     if (door_is_opened) {
         textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, closed_door_color);

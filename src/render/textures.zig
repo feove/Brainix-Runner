@@ -50,6 +50,8 @@ pub var green_effects: rl.Texture2D = undefined;
 pub var yellow_effects: rl.Texture2D = undefined;
 pub var effects_sheet_506: rl.Texture2D = undefined;
 pub var effects_sheet_516: rl.Texture2D = undefined;
+pub var effects_sheet_517: rl.Texture2D = undefined;
+pub var effects_sheet_519: rl.Texture2D = undefined;
 pub var effects_sheet_526: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
@@ -95,6 +97,8 @@ pub fn init() !void {
     all_weapons = try rl.loadTexture("assets/textures/pack/trap_and_weapon/all.png");
     effects_sheet_506 = try rl.loadTexture("assets/textures/pack/effects/Free/506.png");
     effects_sheet_516 = try rl.loadTexture("assets/textures/pack/effects/Free/516.png");
+    effects_sheet_517 = try rl.loadTexture("assets/textures/pack/effects/Free/517.png");
+    effects_sheet_519 = try rl.loadTexture("assets/textures/pack/effects/Free/519.png");
     effects_sheet_526 = try rl.loadTexture("assets/textures/pack/effects/Free/526.png");
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");

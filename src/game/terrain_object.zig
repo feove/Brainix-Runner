@@ -20,6 +20,8 @@ const EffectManager = @import("../game/animations/effects_spawning.zig").EffectM
 
 const print = std.debug.print;
 
+pub var DoorPos: rl.Vector2 = undefined;
+
 const ItemSpec = struct {
     up_pad_force: f32 = -1000,
 };

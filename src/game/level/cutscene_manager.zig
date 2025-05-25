@@ -4,11 +4,12 @@ const std = @import("std");
 const Elf = @import("../../entity/elf.zig").Elf;
 const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../animations/wizard_anims.zig").WizardManager;
+const EffectManager = @import("../animations/effects_spawning.zig").EffectManager;
 
 pub var cut_scene_manager = CutSceneManager{};
 pub var wait_active: bool = false;
 pub var wait_start_time: f64 = 0.0;
-pub var time_to_wait: f64 = 1.0;
+pub var time_to_wait: f64 = 2.0;
 var current_elapsed_time: f64 = 0.0;
 
 pub var door_opened: bool = false;
@@ -72,10 +73,15 @@ pub const CutSceneManager = struct {
     fn level_starting() void {
         Elf.setDrawing(false);
 
-        door_opened = current_elapsed_time > time_to_wait / 2;
+        const half_time: bool = current_elapsed_time > time_to_wait / 2;
+        door_opened = half_time;
+        if (half_time) {
+            EffectManager.setCurrent(.WOOSH);
+        }
 
         if (wait()) return;
 
+        EffectManager.setCurrent(.ENTITY_SPAWN);
         Elf.setDrawing(true);
 
         if (ElfManager.getPrevAnim() == .IDLE) {

@@ -13,11 +13,14 @@ pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
 pub var battlemage_dying: AnimatedSprite = undefined;
 pub var battlemage_idle: AnimatedSprite = undefined;
 
+//Effects
 pub var spawning_item: AnimatedSprite = undefined;
 pub var square_despawning_item: AnimatedSprite = undefined;
 pub var spike_despawning_item: AnimatedSprite = undefined;
 pub var small_lighting_0: AnimatedSprite = undefined;
 pub var scratch: AnimatedSprite = undefined;
+pub var entity_spawn: AnimatedSprite = undefined;
+pub var woosh: AnimatedSprite = undefined;
 
 //Wizard
 pub var demon_idle2: AnimatedSprite = undefined;
@@ -55,6 +58,36 @@ pub fn init() !void {
         .horizontal_shift = true,
         .num_frames = 4,
         .frame_duration = 0.1,
+    };
+
+    entity_spawn = AnimatedSprite{
+        .texture = textures.effects_sheet_517,
+        .sprite = Sprite{
+            .name = "Spawn effect",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 768, .height = 576 },
+        },
+        .start_x = 64,
+        .start_y = 64 * 5,
+        .frame_width = 64,
+        .frame_height = 64,
+        .horizontal_shift = true,
+        .num_frames = 12,
+        .frame_duration = 0.05,
+    };
+
+    woosh = AnimatedSprite{
+        .texture = textures.effects_sheet_519,
+        .sprite = Sprite{
+            .name = "Woosh effect",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 768, .height = 576 },
+        },
+        .start_x = 0,
+        .start_y = 64 * 5,
+        .frame_width = 64,
+        .frame_height = 64,
+        .horizontal_shift = true,
+        .num_frames = 12,
+        .frame_duration = 0.05,
     };
 
     spawning_item = AnimatedSprite{
@@ -350,7 +383,7 @@ pub const AnimatedSprite = struct {
         self.mirror = mirror;
     }
 
-    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: u8, x: usize, y: usize) void {
+    pub fn draw(self: AnimatedSprite, position: rl.Vector2, scale: f32, rotation: f32, alpha: f32, x: usize, y: usize) void {
         var x_apply: f32 = 0;
         var y_apply: f32 = 0;
 
@@ -380,7 +413,7 @@ pub const AnimatedSprite = struct {
 
         const color: rl.Color = .white;
 
-        const tint: rl.Color = rl.Color.alpha(color, @as(f32, @floatFromInt(alpha / 255)));
+        const tint: rl.Color = rl.Color.alpha(color, alpha);
 
         rl.drawTexturePro(self.texture, src, dest, origin, rotation, tint);
     }

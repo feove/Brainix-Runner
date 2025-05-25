@@ -5,7 +5,8 @@ const print = std.debug.print;
 const anim = @import("animations_manager.zig");
 const Elf = @import("../../entity/elf.zig").Elf;
 const Wizard = @import("../../entity/wizard.zig").Wizard;
-const Object = @import("../terrain_object.zig").Object;
+const object = @import("../terrain_object.zig");
+const Object = object.Object;
 const Grid = @import("../../terrain/grid.zig").Grid;
 const events = @import("../level/events.zig");
 const Event = events.Event;
@@ -20,6 +21,8 @@ pub const EffectAnimation = enum {
     DESPAWNING,
     SMALL_LIGHTING_EFFECT,
     SCRATCH,
+    ENTITY_SPAWN,
+    WOOSH,
 };
 
 pub const EffectManager = struct {
@@ -56,6 +59,8 @@ pub const EffectManager = struct {
             .NONE => none(),
             .SMALL_LIGHTING_EFFECT => small_lighting(),
             .SCRATCH => scratch(),
+            .ENTITY_SPAWN => entity_spawn(),
+            .WOOSH => woosh(),
         }
     }
 
@@ -72,6 +77,31 @@ pub const EffectManager = struct {
     }
 
     fn none() void {}
+
+    fn woosh() void {
+        anim.woosh.isRunning = true;
+
+        anim.woosh.update(Elf.getCurrentTime() / 2, 1);
+        anim.woosh.draw(.init(object.DoorPos.x - 25, object.DoorPos.y), 1.5, 0, 0.3, 0, 0); //sale : 3.5
+
+        if (anim.woosh.isRunning == false) {
+            effect_anim.prev = .WOOSH;
+            effect_anim.current = .NONE;
+        }
+    }
+
+    fn entity_spawn() void {
+        const elf: Elf = Elf.selfReturn();
+        anim.entity_spawn.isRunning = true;
+
+        anim.entity_spawn.update(Elf.getCurrentTime() / 2, 1);
+        anim.entity_spawn.draw(.init(elf.x - elf.width * 0.23, elf.y + elf.height * 0.45), 1.5, 0, 255, 0, 0); //sale : 3.5
+
+        if (anim.entity_spawn.isRunning == false) {
+            effect_anim.prev = .ENTITY_SPAWN;
+            effect_anim.current = .NONE;
+        }
+    }
 
     pub fn small_lighting() void {
         const elf: Elf = Elf.selfReturn();
