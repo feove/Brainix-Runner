@@ -144,7 +144,7 @@ fn Spawndoor() void {
     textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_closed_door, .init(x + 25, y + bh + 25), 3.2, door_color);
 
     if (door_is_opened) {
-        textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, .white);
+        textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, .gray);
     }
 }
 

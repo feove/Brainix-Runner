@@ -4,7 +4,7 @@ const wizard = @import("../entity/wizard.zig");
 const terrain = @import("../terrain/grid.zig");
 const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
-const objects = @import("../game/level/events.zig");
+const Level = @import("../game/level/events.zig").Level;
 const Entity = @import("../entity/entity_manager.zig").Entity;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
@@ -21,7 +21,8 @@ pub fn run() !void {
 
     //Update Cursor's position
     utils.hud.refresh();
-    try objects.level.refresh();
+
+    try Level.stateLevelManager();
 
     try render();
 }

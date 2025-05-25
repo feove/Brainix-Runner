@@ -11,6 +11,7 @@ pub var battlemage_running: AnimatedSprite = undefined;
 pub var battlemage_jumping_full: AnimatedSprite = undefined;
 pub var battlemage_jumping_going_down: AnimatedSprite = undefined;
 pub var battlemage_dying: AnimatedSprite = undefined;
+pub var battlemage_idle: AnimatedSprite = undefined;
 
 pub var spawning_item: AnimatedSprite = undefined;
 pub var square_despawning_item: AnimatedSprite = undefined;
@@ -97,8 +98,8 @@ pub fn init() !void {
         .frame_width = 64,
         .frame_height = 64,
         .horizontal_shift = true,
-        .num_frames = 12,
-        .frame_duration = 0.1,
+        .num_frames = 7,
+        .frame_duration = 0.05,
     };
 
     spike_despawning_item = AnimatedSprite{
@@ -128,6 +129,21 @@ pub fn init() !void {
         .frame_height = 16,
         .horizontal_shift = true,
         .num_frames = 6,
+        .frame_duration = 0.1,
+    };
+
+    battlemage_idle = AnimatedSprite{
+        .texture = textures.battlemage_idle,
+        .sprite = Sprite{
+            .name = "Battle Mage is in Idle State",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 56, .height = 384 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 56,
+        .frame_height = 48,
+        .horizontal_shift = false,
+        .num_frames = 8,
         .frame_duration = 0.1,
     };
 

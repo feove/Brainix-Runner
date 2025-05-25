@@ -11,11 +11,25 @@ pub const ElfAnimation = enum {
     JUMPING,
     FALLING,
     DYING,
+    NONE,
 };
 
 pub const ElfManager = struct {
-    current: ElfAnimation = .RUNNING,
-    prev: ElfAnimation = .RUNNING,
+    current: ElfAnimation = .IDLE,
+    prev: ElfAnimation = .NONE,
+
+    pub fn getCurrentAnim() ElfAnimation {
+        return elf_anim.current;
+    }
+
+    pub fn getPrevAnim() ElfAnimation {
+        return elf_anim.prev;
+    }
+
+    pub fn reset() void {
+        elf_anim.current = .IDLE;
+        elf_anim.prev = .NONE;
+    }
 
     pub fn update(self: *ElfManager, elf: *Elf) void {
         applyMirrorEffect(elf);
@@ -23,11 +37,22 @@ pub const ElfManager = struct {
 
         //Flex
         switch (self.current) {
+            .IDLE => idle(elf),
             .RUNNING => running(elf),
             .JUMPING => jumping(elf),
             .FALLING => falling(elf),
             .DYING => dying(elf),
             else => {},
+        }
+    }
+
+    fn idle(elf: *Elf) void {
+        anim.battlemage_idle.isRunning = true;
+        anim.battlemage_idle.update(Elf.getCurrentTime(), 1);
+        anim.battlemage_idle.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
+
+        if (anim.battlemage_idle.isRunning == false) {
+            elf_anim.prev = .IDLE;
         }
     }
 
@@ -46,6 +71,7 @@ pub const ElfManager = struct {
         anim.battlemage_running.isRunning = true;
         anim.battlemage_running.update(Elf.getCurrentTime(), 1);
         anim.battlemage_running.draw(.{ .x = elf.x - elf.width * 0.85, .y = elf.y - elf.height * 0.3 }, 3.00, 0.0, 255, 0, 0);
+        elf_anim.prev = .RUNNING;
     }
 
     fn jumping(elf: *Elf) void {
@@ -77,10 +103,6 @@ pub const ElfManager = struct {
                 else => {},
             }
         }
-    }
-
-    pub fn getCurrentAnim() ElfAnimation {
-        return elf_anim.current;
     }
 
     pub fn setAnim(animation: ElfAnimation) void {

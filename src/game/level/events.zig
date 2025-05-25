@@ -8,7 +8,9 @@ const wizard_anim = @import("../animations/wizard_anims.zig").wizard_anim;
 const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimation;
 const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
 const Wizard = @import("../../entity/wizard.zig").Wizard;
+const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
 const EffectManager = @import("../animations/effects_spawning.zig").EffectManager;
+const CutScene = @import("cutscene_manager.zig").CutSceneManager;
 const anim = @import("../animations/animations_manager.zig");
 
 const terrain = @import("../../terrain/grid.zig");
@@ -237,8 +239,6 @@ pub const Level = struct {
 
     pub fn init(allocator: std.mem.Allocator) !void {
 
-        //must allocate event_nb array for each lvl
-
         //Events Init
         level.i_event = CURRENT_EVENT;
 
@@ -282,18 +282,55 @@ pub const Level = struct {
         return .init(x, y, h, w); //flex
     }
 
-    pub fn refresh(self: *Level) !void {
-        var elf: Elf = Elf.selfReturn();
-        _ = self;
+    pub fn stateLevelManager() !void {
+        switch (levelStatement) {
+            .STARTING => {
+                Elf.setState(player.PlayerState.ALIVE);
+                CutScene.run();
 
-        if (levelStatement == .STARTING) {
-            Elf.setState(player.PlayerState.ALIVE);
-            levelStatement = .ONGOING;
+                if (CutScene.lastDone() == .LEVEL_STARTING) {
+                    levelStatement = .ONGOING;
+                }
+
+                // if (ElfManager.getPrevAnim() == .IDLE) {}
+            },
+            .ONGOING => {
+                try refresh();
+            },
+            .PRE_COMPLETED => {
+                in_ending_level();
+            },
+            .COMPLETED => {
+                print("LEVEL COMPLETED \n", .{});
+                CURRENT_LEVEL += 1;
+
+                Wizard.reset();
+                ElfManager.reset();
+
+                if (CURRENT_LEVEL == LEVEL_NB) {
+                    CURRENT_LEVEL = 0;
+                    print("GAME ENDED \n", .{});
+                    return;
+                }
+
+                try init(alloc);
+            },
         }
+    }
+
+    pub fn refresh() !void {
+        var elf: Elf = Elf.selfReturn();
+
+        //print("Level statement {}\n",.{levelStatement});
+
+        // if (levelStatement == .STARTING) {
+        //     Elf.setState(player.PlayerState.ALIVE);
+        //     levelStatement = .ONGOING;
+        // }
 
         //TMP Conditions
         if (levelStatement == .PRE_COMPLETED or levelStatement == .COMPLETED) {
-            try levelState();
+            // try Level.stateLevelManager();
             return;
         }
 
@@ -466,29 +503,6 @@ pub const Level = struct {
 
     pub fn getLevelStatement() LevelStatement {
         return levelStatement;
-    }
-
-    fn levelState() !void {
-        switch (levelStatement) {
-            .STARTING => {},
-            .ONGOING => {},
-            .PRE_COMPLETED => {
-                in_ending_level();
-            },
-            .COMPLETED => {
-                print("LEVEL COMPLETED \n", .{});
-                CURRENT_LEVEL += 1;
-
-                Wizard.reset();
-                if (CURRENT_LEVEL == LEVEL_NB) {
-                    CURRENT_LEVEL = 0;
-                    print("GAME ENDED \n", .{});
-                    return;
-                }
-
-                try init(alloc);
-            },
-        }
     }
 
     fn in_ending_level() void {

@@ -30,7 +30,7 @@ pub var time_divisor: f32 = 1.0;
 const ELF_DEFAULT_SPEED: f32 = 140.0;
 const SLOW_MOTION_SPEED: f32 = 50.0;
 
-var RESPAWN_POINT: rl.Vector2 = .init(80, 443);
+var RESPAWN_POINT: rl.Vector2 = .init(85, 465);
 
 pub const PlayerState = enum {
     ALIVE,
@@ -281,7 +281,11 @@ pub const Elf = struct {
                 respawn();
                 elf.state = .ALIVE;
             },
-            .ALIVE => {},
+            .ALIVE => {
+                if (Level.getLevelStatement() == .ONGOING and ElfManager.getPrevAnim() == .IDLE) {
+                    ElfManager.setAnim(.RUNNING);
+                }
+            },
         }
     }
 

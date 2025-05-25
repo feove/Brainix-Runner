@@ -19,6 +19,7 @@ pub var battlemage_running: rl.Texture2D = undefined;
 pub var battlemage_jump_neutral: rl.Texture2D = undefined;
 pub var battlemage_jump_neutral_going_down: rl.Texture2D = undefined;
 pub var battlemage_dying: rl.Texture2D = undefined;
+pub var battlemage_idle: rl.Texture2D = undefined;
 
 //Wizard Anims
 pub var demon_idle2: rl.Texture2D = undefined;
@@ -62,6 +63,7 @@ pub fn init() !void {
     battlemage_jump_neutral = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/battlemage_jump_neutral.png");
     battlemage_jump_neutral_going_down = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/going_down/jump_neutral_going_down.png");
     battlemage_dying = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/death/battlemage_death.png");
+    battlemage_idle = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/idle/battlemage_idle.png");
 
     //Demon
     demon_idle2 = try rl.loadTexture("assets/textures/wizard/Idle.png");
