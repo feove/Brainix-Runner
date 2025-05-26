@@ -109,6 +109,7 @@ pub const Inventory = struct {
     pub fn clear() void {
         for (0..SLOT_NB) |i| {
             inv.slots[i].object.type = CellType.EMPTY;
+            inv.slots[i].object.count = 0;
         }
     }
 

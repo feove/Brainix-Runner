@@ -7,9 +7,11 @@ const CellType = terrain.CellType;
 
 const object = @import("../game/terrain_object.zig");
 const rl = @import("raylib");
-const textures = @import("textures.zig");
 const anim = @import("../game/animations/animations_manager.zig");
-const Sprite = @import("textures.zig").Sprite;
+const textures = @import("textures.zig");
+const Sprite = textures.Sprite;
+const SpriteDefaultConfig = textures.SpriteDefaultConfig;
+
 const player = @import("../entity/elf.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
 const HUD = @import("../game/utils.zig").HUD;
@@ -26,7 +28,7 @@ pub fn drawScene() !void {
     drawUnderGroundDeco();
     drawInventory();
 
-    try drawItemNumber();
+    //try drawItemNumber();
 
     HUD.spriteUnderCursor();
 }
@@ -267,6 +269,19 @@ fn drawInventory() void {
         }
 
         //drawcell(, slot.width, slot.height / 4, 0, true, .yellow),
+
+        if (slot.object.count != 0) {
+            const count: f32 = @as(f32, @floatFromInt(slot.object.count));
+            Sprite.drawCustom(
+                textures.keys_sheet,
+                SpriteDefaultConfig{
+                    .sprite = textures.sprites.one_key,
+                    .position = .init(slot.pos.x + slot.width / 2, slot.pos.y + slot.padding),
+                    .x_offset = (count - 1) * (textures.sprites.one_key.src.width - 1),
+                    .scale = 2.5,
+                },
+            );
+        }
 
         if (slot.isSelected) {
             drawSelectedSlot(

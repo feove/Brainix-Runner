@@ -54,13 +54,19 @@ pub var effects_sheet_517: rl.Texture2D = undefined;
 pub var effects_sheet_519: rl.Texture2D = undefined;
 pub var effects_sheet_526: rl.Texture2D = undefined;
 
+pub var keys_sheet: rl.Texture2D = undefined;
+
 pub const BLOCK_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
 
 pub fn init() !void {
-    elf = try rl.loadTexture("assets/textures/elf/pers.png");
+    //Hud
+    inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
+    simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
+    keys_sheet = try rl.loadTexture("assets/textures/buttons/keys.png");
 
     //Battle mage
+    elf = try rl.loadTexture("assets/textures/elf/pers.png"); //The Original
     battlemage_running = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/Running/battlemage_running.png");
     battlemage_jump_neutral = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/battlemage_jump_neutral.png");
     battlemage_jump_neutral_going_down = try rl.loadTexture("assets/textures/elf/battlemage/completed_sprite/jump_neutal/going_down/jump_neutral_going_down.png");
@@ -89,8 +95,6 @@ pub fn init() !void {
 
     top_far_bgrnd = try rl.loadTexture("assets/textures/pack/DarkForest/top_far_bgrnd.png");
     env_ground = try rl.loadTexture("assets/textures/pack/DarkForest/env_ground.png");
-    inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
-    simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
 
     green_effects = try rl.loadTexture("assets/textures/pack/effects/green_effect.png");
     yellow_effects = try rl.loadTexture("assets/textures/pack/effects/yellow_effect.png");
@@ -105,12 +109,47 @@ pub fn init() !void {
     moving_platform = try rl.loadTexture("assets/textures/pack/trap_and_weapon/moving_platform.png");
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
+
     sprites = Sprites.init();
 }
+
+pub const SpriteDefaultConfig = struct {
+    sprite: Sprite,
+    x_offset: f32 = 0, //good Idea
+    y_offset: f32 = 0,
+    position: rl.Vector2,
+    scale: f32 = 1.0,
+    rotation: f32 = 0,
+    origin: rl.Vector2 = rl.Vector2{ .x = 0, .y = 0 },
+    canPlace: bool = true,
+    alpha: f32 = 1.0,
+};
 
 pub const Sprite = struct {
     name: []const u8,
     src: rl.Rectangle,
+
+    fn update_offset(self: *Sprite, dx: f32, dy: f32) void {
+        self.src.x += dx;
+        self.src.y += dy;
+    }
+
+    pub fn drawCustom(sheet: rl.Texture2D, config: SpriteDefaultConfig) void {
+        var sprite: Sprite = config.sprite;
+        sprite.update_offset(config.x_offset, config.y_offset);
+        const dest = rl.Rectangle{
+            .x = config.position.x,
+            .y = config.position.y,
+            .width = sprite.src.width * config.scale,
+            .height = sprite.src.height * config.scale,
+        };
+        const rotation: f32 = config.rotation;
+        const origin = config.origin;
+        var color: rl.Color = if (config.canPlace) .white else .red;
+        color = color.alpha(config.alpha);
+
+        rl.drawTexturePro(sheet, sprite.src, dest, origin, rotation, color);
+    }
 
     pub fn draw(sheet: rl.Texture2D, self: Sprite, position: rl.Vector2, scale: f32, tint: rl.Color) void {
         const dest = rl.Rectangle{
@@ -193,6 +232,17 @@ pub const Sprites = struct {
     dungeon_closed_door: Sprite,
     dungeon_opened_door: Sprite,
 
+    // zero_key: Sprite,
+    one_key: Sprite,
+    // two_key: Sprite,
+    // three_key: Sprite,
+    // four_key: Sprite,
+    // five_key: Sprite,
+    // six_key: Sprite,
+    // seven_key: Sprite,
+    // eight_key: Sprite,
+    // nine_key: Sprite,
+
     pub fn init() Sprites {
         return Sprites{
             .granite_l4 = .{ .name = "Granite_L4", .src = rl.Rectangle{ .x = 0, .y = 0, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
@@ -234,6 +284,7 @@ pub const Sprites = struct {
             .dungeon_long_wall_1 = .{ .name = "Dungeon Long Wall 1", .src = rl.Rectangle{ .x = 126, .y = 16, .width = 32, .height = 16 } },
             .dungeon_closed_door = .{ .name = "Dungeon Closed Door", .src = rl.Rectangle{ .x = 206, .y = 160, .width = 20, .height = 32 } },
             .dungeon_opened_door = .{ .name = "Dungeon Opened Door", .src = rl.Rectangle{ .x = 1866, .y = 160, .width = 16, .height = 32 } },
+            .one_key = .{ .name = "One Button", .src = rl.Rectangle{ .x = 58, .y = 490, .width = 14, .height = 22 } },
         };
     }
 };
