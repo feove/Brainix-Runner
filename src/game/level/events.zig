@@ -186,6 +186,7 @@ pub const Event = struct {
             player.time_divisor = 4;
             quick_slow_motion_active = true;
             quick_slow_motion_start_time = current_time;
+
             return;
         }
 
@@ -389,6 +390,7 @@ pub const Level = struct {
         if (!Areas.noMoreInterArea()) {
             const inter_area = area.intermediate_areas[area.current_inter_area];
             //(elf.physics.newSens)
+
             if (area.player_in_area(elf, inter_area)) {
                 // print("Player In INTERMEDIATE\n", .{});
                 // print("{d}, {d}\n", .{ area.current_inter_area, area.intermediate_areas_nb });
@@ -415,6 +417,10 @@ pub const Level = struct {
     fn intermediate() void {
         var event: Event = level.events[level.i_event];
         Wizard.reset();
+        // Wizard.reset();
+
+        WizardManager.setCurrent(.ATTACKING_1);
+
         //EffectManager.reset();
         Event.quick_slow_motion();
 
@@ -422,8 +428,9 @@ pub const Level = struct {
 
         //_ = WizardManager.onceTime(.ATTACKING_1) or EffectManager.onceTime(.SPAWNING);
         Inventory.slotSetting(event.inv_objects);
-        event.objectsSetUp(event.grid_objects);
+
         Areas.increaseInter();
+        event.objectsSetUp(event.grid_objects);
     }
 
     fn idle() void {

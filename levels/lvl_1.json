@@ -58,7 +58,7 @@
 
   "event_1": {
     "object_nb": 9,
-    "slow_motion_time": 4.0,
+    "slow_motion_time": 6.0,
     "time_divisor": 4.0,
     "already_triggered": false,
     "grid_objects": [
@@ -152,7 +152,7 @@
         },
         {
           "x": 4,
-          "y": 4,
+          "y": 5,
           "width": 1,
           "height": 1
         }
