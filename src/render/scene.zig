@@ -4,6 +4,7 @@ const print = std.debug.print;
 const terrain = @import("../terrain/grid.zig");
 const Grid = terrain.Grid;
 const CellType = terrain.CellType;
+const Cell = terrain.Cell;
 
 const object = @import("../game/terrain_object.zig");
 const rl = @import("raylib");
@@ -71,25 +72,10 @@ fn drawGrid() void {
                     },
                     .PAD => {
                         //anim.jumper_sprite.resetPos();
-                        if (anim.jumper_sprite.x != c and anim.jumper_sprite.y != r) {
-                            Sprite.drawWithRotation(
-                                anim.jumper_sprite.texture,
-                                anim.jumper_sprite.sprite,
-                                rl.Vector2{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 },
-                                2.7,
-                                0,
-                                255,
-                                false,
-                            );
-                        } else {
-                            anim.jumper_sprite.isRunning = true;
-                            anim.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
-                            anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 2.7, 0, 255, c, r);
-                        }
+                        pad_drawing(c, r, cell);
                     },
                     .UP_PAD => {
-                        anim.jumper_sprite.update(rl.getFrameTime() / player.time_divisor, 1);
-                        anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 3.00, 0.0, 255, c, r);
+                        pad_drawing(c, r, cell);
                     },
                     .DOOR => {
                         //drawcell(cell.x, cell.y, cell.width, cell.height, 0, true, .brown);
@@ -111,6 +97,24 @@ fn drawGrid() void {
                 }
             }
         }
+    }
+}
+
+fn pad_drawing(c: usize, r: usize, cell: Cell) void {
+    if (anim.jumper_sprite.x != c and anim.jumper_sprite.y != r) {
+        Sprite.drawWithRotation(
+            anim.jumper_sprite.texture,
+            anim.jumper_sprite.sprite,
+            rl.Vector2{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 },
+            2.7,
+            0,
+            255,
+            false,
+        );
+    } else {
+        anim.jumper_sprite.isRunning = true;
+        anim.jumper_sprite.update(rl.getFrameTime(), 1);
+        anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 2.7, 0, 255, c, r);
     }
 }
 

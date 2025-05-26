@@ -8,6 +8,7 @@ const std = @import("std");
 const HUD = @import("utils.zig").HUD;
 const Object = @import("terrain_object.zig").Object;
 const Areas = @import("../game/level/events.zig").Areas;
+const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
 pub var inv: Inventory = undefined;
 
 const SLOT_NB: usize = 4;
@@ -17,6 +18,8 @@ var SLOT_HEIGHT: f32 = undefined;
 
 const SLOT_PADDING: f32 = 15;
 const INV_MARGIN: f32 = 10;
+
+pub var save_inv: []InvCell = undefined;
 
 fn slotSizeInit(inventory_width: f32, cell_width: f32, cell_height: f32) void {
     SLOT_WIDTH = inventory_width / @as(f32, @floatFromInt(SLOT_NB));
@@ -48,6 +51,7 @@ pub const Inventory = struct {
         const grid: Grid = Grid.selfReturn();
 
         const slots = try allocator.alloc(InvCell, SLOT_NB);
+        save_inv = try allocator.alloc(InvCell, SLOT_NB);
 
         const inventory_width: f32 = grid.width / 3;
 
@@ -108,8 +112,10 @@ pub const Inventory = struct {
 
     pub fn clear() void {
         for (0..SLOT_NB) |i| {
+            save_inv[i] = inv.slots[i];
             inv.slots[i].object.type = CellType.EMPTY;
             inv.slots[i].object.count = 0;
+            // std.debug.print("save_inv[{d}] = {any} \n", .{ i, save_inv[i].object.type });
         }
     }
 

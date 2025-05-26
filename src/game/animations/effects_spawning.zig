@@ -8,6 +8,9 @@ const Wizard = @import("../../entity/wizard.zig").Wizard;
 const object = @import("../terrain_object.zig");
 const Object = object.Object;
 const Grid = @import("../../terrain/grid.zig").Grid;
+const inventory = @import("../inventory.zig");
+const InvCell = inventory.InvCell;
+const Inventory = inventory.Inventory;
 const events = @import("../level/events.zig");
 const Event = events.Event;
 const Level = events.Level;
@@ -23,6 +26,7 @@ pub const EffectAnimation = enum {
     SCRATCH,
     ENTITY_SPAWN,
     WOOSH,
+    SLOT_CLEANNING,
 };
 
 pub const EffectManager = struct {
@@ -51,11 +55,13 @@ pub const EffectManager = struct {
     }
 
     pub fn update() void {
-        // print("Current Effect Anim {}\n", .{effect_anim.current});
+        //  print("Current Effect Anim {}\n", .{effect_anim.current});
+        // if (getCurrentAnim() == .SLOT_CLEANNING and )
 
         switch (effect_anim.current) {
             .SPAWNING => item_spawning(),
             .DESPAWNING => item_despawning(),
+            .SLOT_CLEANNING => slot_cleanning(),
             .NONE => none(),
             .SMALL_LIGHTING_EFFECT => small_lighting(),
             .SCRATCH => scratch(),
@@ -67,7 +73,6 @@ pub const EffectManager = struct {
     pub fn onceTime(animation: EffectAnimation) bool {
         const alreadyPlayed: bool = getPreviousAnim() == animation;
 
-        //   print("{} {}\n", .{ getCurrentAnim(), getPreviousAnim() });
         if (!alreadyPlayed) {
             if (getCurrentAnim() != animation) {
                 setCurrent(animation);
@@ -125,6 +130,24 @@ pub const EffectManager = struct {
 
         if (anim.scratch.isRunning == false) {
             effect_anim.prev = .SCRATCH;
+            effect_anim.current = .NONE;
+        }
+    }
+
+    pub fn slot_cleanning() void {
+        const inv: Inventory = Inventory.selfReturn();
+
+        anim.slot_cleanning.isRunning = true;
+        for (0..inv.slots.len) |i| {
+            if (inventory.save_inv[i].object.type != .EMPTY) {
+                anim.slot_cleanning.update(Elf.getCurrentTime() / 2, 1);
+                anim.slot_cleanning.draw(.init(inv.slots[i].pos.x, inv.slots[i].pos.y + 4), 4.0, 0, 255, 0, 0); //sale : 3.5
+            }
+        }
+
+        if (anim.slot_cleanning.isRunning == false) {
+            //print("Is Running {}\n", .{anim.slot_cleanning.isRunning});
+            effect_anim.prev = .SLOT_CLEANNING;
             effect_anim.current = .NONE;
         }
     }

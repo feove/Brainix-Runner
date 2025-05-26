@@ -173,6 +173,7 @@ pub const Event = struct {
 
     fn objectsCleaning(event: *Event, objects: []Object) void {
         var grid: Grid = Grid.selfReturn();
+
         for (0..event.object_nb) |i| {
             Object.remove(&objects[i], &grid);
         }
@@ -222,6 +223,9 @@ pub const Event = struct {
                 stop_slow_motion = false;
 
                 player.time_divisor = 1;
+                if (level.events[level.i_event].areas.intermediate_areas_nb == 0) {
+                    EffectManager.setCurrent(.SLOT_CLEANNING);
+                }
                 playerEventstatus = .IDLE_AREA;
             }
         }
@@ -260,6 +264,7 @@ pub const Level = struct {
         }
 
         Grid.reset();
+
         Inventory.clear();
 
         levelStatement = .STARTING;
@@ -410,7 +415,7 @@ pub const Level = struct {
     fn intermediate() void {
         var event: Event = level.events[level.i_event];
         Wizard.reset();
-        EffectManager.reset();
+        //EffectManager.reset();
         Event.quick_slow_motion();
 
         //EffectManager.setCurrent(.SPAWNING);
@@ -425,7 +430,7 @@ pub const Level = struct {
         if (slots_filled) {
             Wizard.reset();
             Inventory.clear();
-            EffectManager.reset();
+            // EffectManager.reset();
             slots_filled = false;
         }
     }
@@ -480,11 +485,11 @@ pub const Level = struct {
 
         print("EVENT {d} COMPLETED\n", .{level.i_event});
 
-        event.objectsCleaning(event.grid_objects);
-
-        EffectManager.setCurrent(.DESPAWNING);
         Inventory.clear();
+
+        event.objectsCleaning(event.grid_objects);
         Grid.reset();
+        EffectManager.setCurrent(.DESPAWNING);
         //_ = EffectManager.onceTime(.SPAWNING);
         auto_death_timer_active = false;
 

@@ -21,6 +21,7 @@ pub var small_lighting_0: AnimatedSprite = undefined;
 pub var scratch: AnimatedSprite = undefined;
 pub var entity_spawn: AnimatedSprite = undefined;
 pub var woosh: AnimatedSprite = undefined;
+pub var slot_cleanning: AnimatedSprite = undefined;
 
 //Wizard
 pub var demon_idle2: AnimatedSprite = undefined;
@@ -42,6 +43,21 @@ pub fn init() !void {
         .frame_height = 16,
         .horizontal_shift = true,
         .num_frames = 8, //8
+        .frame_duration = 0.1,
+    };
+
+    slot_cleanning = AnimatedSprite{
+        .texture = textures.yellow_effects,
+        .sprite = Sprite{
+            .name = "Slot Cleanning",
+            .src = rl.Rectangle{ .x = 304, .y = 190, .width = 16, .height = 16 },
+        },
+        .start_x = 304,
+        .start_y = 194,
+        .frame_width = 16,
+        .frame_height = 14,
+        .horizontal_shift = true,
+        .num_frames = 4,
         .frame_duration = 0.1,
     };
 
