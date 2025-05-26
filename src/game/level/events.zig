@@ -193,13 +193,11 @@ pub const Event = struct {
         const elapsed = current_time - quick_slow_motion_start_time;
         //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
         //or Elf.selfReturn().physics.newSens
-        if (elapsed >= 1.0) {
+        if (elapsed >= 3) {
             quick_slow_motion_active = false;
             player.time_divisor = 1;
 
-            if (Level.wizardHasPlaced()) {
-                WizardManager.setCurrent(.ATTACKING_2);
-            }
+            //EffectManager.setCurrent(.SLOT_CLEANNING);
         }
     }
 
@@ -416,10 +414,13 @@ pub const Level = struct {
 
     fn intermediate() void {
         var event: Event = level.events[level.i_event];
-        Wizard.reset();
-        // Wizard.reset();
 
-        WizardManager.setCurrent(.ATTACKING_1);
+        if (WizardManager.onceTime(.ATTACKING_1) or WizardManager.getCurrentAnim() == .ATTACKING_1) {
+            return;
+        }
+
+        //WizardManager.setCurrent(.ATTACKING_1);
+        //WizardManager.setCurrent(.ATTACKING_1);
 
         //EffectManager.reset();
         Event.quick_slow_motion();
@@ -431,11 +432,14 @@ pub const Level = struct {
 
         Areas.increaseInter();
         event.objectsSetUp(event.grid_objects);
+
+        //WizardManager.reset();
     }
 
     fn idle() void {
         if (slots_filled) {
             Wizard.reset();
+            WizardManager.reset();
             Inventory.clear();
             // EffectManager.reset();
             slots_filled = false;

@@ -57,7 +57,7 @@
   },
 
   "event_1": {
-    "object_nb": 9,
+    "object_nb": 7,
     "slow_motion_time": 6.0,
     "time_divisor": 4.0,
     "already_triggered": false,
@@ -87,12 +87,6 @@
         "key": 1
       },
       {
-        "x": 5,
-        "y": 7,
-        "type": "GROUND",
-        "key": 1
-      },
-      {
         "x": 2,
         "y": 6,
         "type": "SPIKE",
@@ -106,12 +100,6 @@
       },
       {
         "x": 4,
-        "y": 6,
-        "type": "SPIKE",
-        "key": 1
-      },
-      {
-        "x": 5,
         "y": 6,
         "type": "SPIKE",
         "key": 1
@@ -145,19 +133,13 @@
       },
       "intermediate_areas": [
         {
-          "x": 4,
-          "y": 4,
-          "width": 1,
-          "height": 1
-        },
-        {
-          "x": 4,
-          "y": 5,
-          "width": 1,
+          "x": 6,
+          "y": 3,
+          "width": 2,
           "height": 1
         }
       ],
-      "intermediate_areas_nb": 2
+      "intermediate_areas_nb": 1
     }
   },
 
