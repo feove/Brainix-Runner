@@ -10,6 +10,7 @@ const Object = @import("terrain_object.zig").Object;
 const Areas = @import("../game/level/events.zig").Areas;
 const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
 const Selector = @import("../interface/selector.zig").Selector;
+const Interface = @import("../interface/hud.zig").Interface;
 pub var inv: Inventory = undefined;
 
 pub const SLOT_NB: usize = 4;
@@ -107,6 +108,21 @@ pub const Inventory = struct {
                 if (inv.slots[i].object.type != .EMPTY) {
                     inv.slots[i].object.count = objects[i].count;
                 }
+            }
+        }
+    }
+
+    pub fn add(itemType: CellType) void {
+        for (0..SLOT_NB) |i| {
+            if (inv.slots[i].object.type == itemType) {
+                inv.slots[i].object.count += 1;
+                return;
+            }
+
+            if (inv.slots[i].object.type == .EMPTY) {
+                inv.slots[i].object.count = 1;
+                inv.slots[i].object.type = itemType;
+                return;
             }
         }
     }
@@ -210,10 +226,35 @@ pub const Inventory = struct {
             }
         }
 
+        std.debug.print("Last Taken {d}\n", .{Selector.SelfReturn().last_taken});
+
         if (Selector.keyIsPressed()) {
             const i = Selector.getIndexKey();
             if (tookItem(i)) return;
+
+            swap(i);
         }
+    }
+
+    fn swap(i: usize) void {
+        const last_taken: usize = Selector.SelfReturn().last_taken;
+        const dest_type = inv.slots[last_taken].object.type;
+        const src_type = inv.cell.type;
+
+        if (dest_type != .EMPTY and dest_type != inv.cell.type) {
+            return;
+        }
+
+        //Give Item Back
+        if (dest_type == .EMPTY) {
+            inv.slots[last_taken].object.type = src_type;
+            inv.slots[last_taken].object.count = 1;
+        } else {
+            inv.slots[last_taken].object.count += 1;
+        }
+
+        inv.cell.type = inv.slots[i].object.type;
+        decreaseSlotCount(i);
     }
 
     fn tookItem(i: usize) bool {
@@ -222,6 +263,7 @@ pub const Inventory = struct {
             //Take Item fom Inventory
             inv.cell.type = inv.slots[i].object.type;
             remove(i, inv.slots[i].object.type);
+            Interface.SelfReturn().selector.last_taken = i;
             return true;
         }
         return false;
@@ -261,6 +303,7 @@ pub const Inventory = struct {
                 return true;
             }
         }
+
         return false;
     }
 

@@ -148,7 +148,7 @@ pub const Elf = struct {
         //print("{d}\n", .{self.time_divisor});
         // print("{}\n", .{Level.getLevelStatement()});
 
-        if (rl.isKeyPressed(rl.KeyboardKey.r) or Level.getLevelStatement() == .STARTING) {
+        if (rl.isKeyPressed(rl.KeyboardKey.z) or Level.getLevelStatement() == .STARTING) {
             respawn();
             return;
         }

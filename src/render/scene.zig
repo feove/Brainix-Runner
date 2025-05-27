@@ -262,8 +262,8 @@ fn drawIndications() void {
                 .position = .init(slot.pos.x + slot.padding / 3, slot.pos.y - slot.height - slot.padding),
                 .sprite = sprite,
                 .scale = if (slot.isSelected) 3.1 else 3.0,
-                .alpha = if (slot.isSelected) 1.00 else 0.90,
-                .color = if (slot.isSelected) rl.Color.blue else .white,
+                .alpha = if (slot.isSelected) 0.70 else 0.90,
+                .color = if (slot.isSelected) .gray else .white,
             },
         );
     }

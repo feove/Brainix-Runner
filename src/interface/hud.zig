@@ -39,8 +39,8 @@ pub const Interface = struct {
         };
     }
 
-    pub fn SelfReturn() Interface {
-        return interface;
+    pub fn SelfReturn() *Interface {
+        return &interface;
     }
 
     pub fn getSelector() Selector {
