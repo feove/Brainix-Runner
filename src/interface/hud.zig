@@ -21,9 +21,9 @@ pub const Interface = struct {
         controlKeys = try allocator.alloc(rl.KeyboardKey, inventory.SLOT_NB);
 
         controlHintSprites[0] = textures.keyboard_sprites.d;
-        controlHintSprites[1] = textures.keyboard_sprites.d;
-        controlHintSprites[2] = textures.keyboard_sprites.d;
-        controlHintSprites[3] = textures.keyboard_sprites.d;
+        controlHintSprites[1] = textures.keyboard_sprites.f;
+        controlHintSprites[2] = textures.keyboard_sprites.e;
+        controlHintSprites[3] = textures.keyboard_sprites.r;
 
         controlKeys[0] = rl.KeyboardKey.d;
         controlKeys[1] = rl.KeyboardKey.f;
@@ -41,5 +41,9 @@ pub const Interface = struct {
 
     pub fn SelfReturn() Interface {
         return interface;
+    }
+
+    pub fn getSelector() Selector {
+        return interface.selector;
     }
 };

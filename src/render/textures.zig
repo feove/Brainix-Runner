@@ -128,6 +128,7 @@ pub const SpriteDefaultConfig = struct {
     origin: rl.Vector2 = rl.Vector2{ .x = 0, .y = 0 },
     canPlace: bool = true,
     alpha: f32 = 1.0,
+    color: rl.Color = .white,
 };
 
 pub const Sprite = struct {
@@ -150,7 +151,7 @@ pub const Sprite = struct {
         };
         const rotation: f32 = config.rotation;
         const origin = config.origin;
-        var color: rl.Color = if (config.canPlace) .white else .red;
+        var color: rl.Color = if (config.canPlace) config.color else .red;
         color = color.alpha(config.alpha);
 
         rl.drawTexturePro(sheet, sprite.src, dest, origin, rotation, color);
@@ -196,13 +197,16 @@ pub const Sprite = struct {
 
 pub const KeyboardSprites = struct {
     d: Sprite,
-    // f: Sprite,
-    // e: Sprite,
-    // r: Sprite,
+    f: Sprite,
+    e: Sprite,
+    r: Sprite,
 
     fn init() KeyboardSprites {
         return KeyboardSprites{
             .d = .{ .name = "d key", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .f = .{ .name = "f key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .e = .{ .name = "e key", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .r = .{ .name = "r key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
         };
     }
 };

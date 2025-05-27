@@ -9,6 +9,7 @@ const CursorManager = @import("utils.zig").CursorManager;
 const Object = @import("terrain_object.zig").Object;
 const Areas = @import("../game/level/events.zig").Areas;
 const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
+const Selector = @import("../interface/selector.zig").Selector;
 pub var inv: Inventory = undefined;
 
 pub const SLOT_NB: usize = 4;
@@ -171,6 +172,61 @@ pub const Inventory = struct {
         }
     }
 
+    fn cellRemaings(invCell: []InvCell) usize {
+        var counter: usize = 0;
+        for (invCell) |cell| {
+            if (cell.object.type == .EMPTY) {
+                counter += 1;
+            }
+        }
+        return counter;
+    }
+
+    pub fn unselectSlots() void {
+        for (0..SLOT_NB) |i| {
+            inv.slots[i].isSelected = false;
+        }
+    }
+
+    fn slotManagement() void {
+        //const grid: Grid = Grid.selfReturn();
+        unselectSlots();
+
+        const cursorInInventory = CursorManager.cursorInInventory();
+        if (cursorInInventory) {
+            for (0..SLOT_NB) |i| {
+                if (CursorManager.cursorInSlot(inv.slots[i])) {
+                    inv.slots[i].isSelected = true;
+
+                    if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
+                        if (tookItem(i)) continue;
+
+                        if (place(i, inv.cell.type)) {
+                            increaseSlotCount(i);
+                            inv.cell.type = CellType.EMPTY;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (Selector.keyIsPressed()) {
+            const i = Selector.getIndexKey();
+            if (tookItem(i)) return;
+        }
+    }
+
+    fn tookItem(i: usize) bool {
+        if (inv.cell.type == CellType.EMPTY and inv.slots[i].object.type != .EMPTY) {
+
+            //Take Item fom Inventory
+            inv.cell.type = inv.slots[i].object.type;
+            remove(i, inv.slots[i].object.type);
+            return true;
+        }
+        return false;
+    }
+
     fn place(current: usize, cell: CellType) bool {
         const object_size: usize = Object.objectSize(cell);
         const slot = inv.slots[current].object.type;
@@ -206,56 +262,6 @@ pub const Inventory = struct {
             }
         }
         return false;
-    }
-
-    fn cellRemaings(invCell: []InvCell) usize {
-        var counter: usize = 0;
-        for (invCell) |cell| {
-            if (cell.object.type == .EMPTY) {
-                counter += 1;
-            }
-        }
-        return counter;
-    }
-
-    pub fn unselectSlots() void {
-        for (0..SLOT_NB) |i| {
-            inv.slots[i].isSelected = false;
-        }
-    }
-
-    fn slotManagement() void {
-        //const grid: Grid = Grid.selfReturn();
-        unselectSlots();
-
-        const cursorInInventory = CursorManager.cursorInInventory();
-        if (cursorInInventory) {
-            for (0..SLOT_NB) |i| {
-                if (CursorManager.cursorInSlot(inv.slots[i])) {
-                    inv.slots[i].isSelected = true;
-
-                    if (rl.isMouseButtonPressed(rl.MouseButton.left)) {
-                        // std.debug.print("\n========================================= \n", .{});
-                        // for (inv.slots) |it| {
-                        //     std.debug.print("\n Object : {any} \n", .{it.object});
-                        // }
-
-                        if (inv.cell.type == CellType.EMPTY and inv.slots[i].object.type != .EMPTY) {
-
-                            //Take Item fom Inventory
-                            inv.cell.type = inv.slots[i].object.type;
-                            remove(i, inv.slots[i].object.type);
-                            continue;
-                        }
-
-                        if (place(i, inv.cell.type)) {
-                            increaseSlotCount(i);
-                            inv.cell.type = CellType.EMPTY;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     pub fn clearinv_cell() void {

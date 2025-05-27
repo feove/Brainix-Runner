@@ -22,8 +22,23 @@ pub const Selector = struct {
         self.cur_slot -= inc;
     }
 
-    pub fn currentSprite() Sprite {
-        const interface = Interface.SelfReturn();
-        return interface.selector.controls_sprites[interface.selector.cur_slot];
+    pub fn indexToSprite(index: usize) Sprite {
+        const selector = Interface.getSelector();
+        return selector.controls_sprites[index];
+    }
+
+    pub fn keyIsPressed() bool {
+        const selector = Interface.getSelector();
+        return getIndexKey() != selector.max_range;
+    }
+
+    pub fn getIndexKey() usize {
+        const selector = Interface.getSelector();
+        for (0..selector.max_range) |i| {
+            if (rl.isKeyPressed(selector.controls_keys[i])) {
+                return i;
+            }
+        }
+        return selector.max_range;
     }
 };

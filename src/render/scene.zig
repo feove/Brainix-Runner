@@ -30,8 +30,8 @@ pub fn drawScene() !void {
     drawGround();
 
     drawUnderGroundDeco();
-    drawInventory();
     drawIndications();
+    drawInventory();
 
     //try drawItemNumber();
 
@@ -251,18 +251,22 @@ pub fn getRandomNumber(min: u32, max: u32) u32 {
 }
 
 fn drawIndications() void {
-    const sprite: Sprite = Selector.currentSprite();
-    //selector.indexAssignToKey(selector.cur_slot)
-    textures.Sprite.drawCustom(
-        textures.keyboard_btns,
-        .{
-            .position = .init(100, 100),
-            .sprite = sprite,
-            .scale = 3.0,
-        },
-    );
-    //Controls Sprites
+    const inv = Inventory.selfReturn();
+    for (0..inv.size) |i| {
+        const sprite: Sprite = Selector.indexToSprite(i);
+        const slot = inv.slots[i];
 
+        textures.Sprite.drawCustom(
+            textures.keyboard_btns,
+            .{
+                .position = .init(slot.pos.x + slot.padding / 3, slot.pos.y - slot.height - slot.padding),
+                .sprite = sprite,
+                .scale = if (slot.isSelected) 3.1 else 3.0,
+                .alpha = if (slot.isSelected) 1.00 else 0.90,
+                .color = if (slot.isSelected) rl.Color.blue else .white,
+            },
+        );
+    }
 }
 
 fn drawInventory() void {
