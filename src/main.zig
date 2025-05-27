@@ -9,6 +9,7 @@ const textures = @import("render/textures.zig");
 const anim = @import("game/animations/animations_manager.zig");
 const Level = @import("game/level/events.zig").Level;
 const Entity = @import("entity/entity_manager.zig").Entity;
+const Interface = @import("interface/hud.zig").Interface;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
@@ -25,8 +26,9 @@ pub fn main() anyerror!void {
     try Inventory.init(allocator);
     try Level.init(allocator);
     try Entity.init();
+    try Interface.init(allocator);
 
-    //window.clear();
+    window.clear();
 
     while (!rl.windowShouldClose()) {
 

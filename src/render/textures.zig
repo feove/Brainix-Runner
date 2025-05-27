@@ -8,7 +8,7 @@ const CellType = terrain.CellType;
 
 const Elf = @import("../entity/elf.zig").Elf;
 const anim = @import("../game/animations/animations_manager.zig");
-const HUD = @import("../game/utils.zig").HUD;
+const CursorManager = @import("../game/utils.zig").CursorManager;
 const Inventory = @import("../game/inventory.zig").Inventory;
 
 pub var elf: rl.Texture2D = undefined;
@@ -55,15 +55,19 @@ pub var effects_sheet_519: rl.Texture2D = undefined;
 pub var effects_sheet_526: rl.Texture2D = undefined;
 
 pub var keys_sheet: rl.Texture2D = undefined;
+pub var keyboard_btns: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
+const KEY_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
+pub var keyboard_sprites: KeyboardSprites = undefined;
 
 pub fn init() !void {
     //Hud
     inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/inventory.png");
     simple_inventory_hud = try rl.loadTexture("assets/textures/pack/oak_woods/simple_inventory.png");
     keys_sheet = try rl.loadTexture("assets/textures/buttons/keys.png");
+    keyboard_btns = try rl.loadTexture("assets/textures/buttons/all_buttons.png");
 
     //Battle mage
     elf = try rl.loadTexture("assets/textures/elf/pers.png"); //The Original
@@ -110,6 +114,7 @@ pub fn init() !void {
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
 
+    keyboard_sprites = KeyboardSprites.init();
     sprites = Sprites.init();
 }
 
@@ -189,6 +194,19 @@ pub const Sprite = struct {
     }
 };
 
+pub const KeyboardSprites = struct {
+    d: Sprite,
+    // f: Sprite,
+    // e: Sprite,
+    // r: Sprite,
+
+    fn init() KeyboardSprites {
+        return KeyboardSprites{
+            .d = .{ .name = "d key", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+        };
+    }
+};
+
 pub const Sprites = struct {
     granite_pure_l4: Sprite,
     granite_pure_l3: Sprite,
@@ -261,8 +279,8 @@ pub const Sprites = struct {
             .water = .{ .name = "Water", .src = rl.Rectangle{ .x = 96, .y = 96, .width = 96, .height = 96 } },
             .portal = .{ .name = "Portal", .src = rl.Rectangle{ .x = 0, .y = 96, .width = 96, .height = 96 } },
             .forest_background = .{ .name = "Forest Background", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 1747, .height = 984 } },
-            .inventory_hud = .{ .name = "Inventory HUD", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 278, .height = 103 } },
-            .simple_inventory_hud = .{ .name = "Simple Inventory HUD", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 77, .height = 26 } },
+            .inventory_hud = .{ .name = "Inventory CursorManager", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 278, .height = 103 } },
+            .simple_inventory_hud = .{ .name = "Simple Inventory CursorManager", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 77, .height = 26 } },
             .oak_bg_lyr_1 = .{ .name = "Oak Background Layer 1", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_bg_lyr_2 = .{ .name = "Oak Background Layer 2", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },
             .oak_bg_lyr_3 = .{ .name = "Oak Background Layer 3", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 320, .height = 180 } },

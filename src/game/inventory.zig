@@ -5,13 +5,13 @@ const Grid = terrain.Grid;
 const CellType = terrain.CellType;
 
 const std = @import("std");
-const HUD = @import("utils.zig").HUD;
+const CursorManager = @import("utils.zig").CursorManager;
 const Object = @import("terrain_object.zig").Object;
 const Areas = @import("../game/level/events.zig").Areas;
 const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
 pub var inv: Inventory = undefined;
 
-const SLOT_NB: usize = 4;
+pub const SLOT_NB: usize = 4;
 
 var SLOT_WIDTH: f32 = undefined;
 var SLOT_HEIGHT: f32 = undefined;
@@ -228,10 +228,10 @@ pub const Inventory = struct {
         //const grid: Grid = Grid.selfReturn();
         unselectSlots();
 
-        const cursorInInventory = HUD.cursorInInventory();
+        const cursorInInventory = CursorManager.cursorInInventory();
         if (cursorInInventory) {
             for (0..SLOT_NB) |i| {
-                if (HUD.cursorInSlot(inv.slots[i])) {
+                if (CursorManager.cursorInSlot(inv.slots[i])) {
                     inv.slots[i].isSelected = true;
 
                     if (rl.isMouseButtonPressed(rl.MouseButton.left)) {

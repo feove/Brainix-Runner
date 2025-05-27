@@ -22,7 +22,7 @@ const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
 const EventConfig = @import("level_reader.zig").EventConfig;
 
-const HUD = @import("../utils.zig").HUD;
+const CursorManager = @import("../utils.zig").CursorManager;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const alloc = gpa.allocator();
@@ -546,7 +546,7 @@ pub const Level = struct {
         // print("OK {d} {d} {d} {d}\n", .{ c_x, c_y, c_w, c_h });
 
         const rec: rl.Rectangle = .init(c_x, c_y, c_w, c_h);
-        const rec2: rl.Rectangle = .init(HUD.selfReturn().mouseX, HUD.selfReturn().mouseY, 10, 10);
+        const rec2: rl.Rectangle = .init(CursorManager.selfReturn().mouseX, CursorManager.selfReturn().mouseY, 10, 10);
 
         if (rl.Rectangle.checkCollision(rec, rec2)) {
             //  print("OK {d} {d} {d} {d}\n", .{ c_x, c_y, c_w, c_h });

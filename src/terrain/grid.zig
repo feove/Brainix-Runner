@@ -6,7 +6,7 @@ const player = @import("../entity/elf.zig");
 const Elf = player.Elf;
 const HitBox = player.HitBox;
 
-const HUD = @import("../game/utils.zig").HUD;
+const CursorManager = @import("../game/utils.zig").CursorManager;
 const Inventory = @import("../game/inventory.zig").Inventory;
 
 const terrain = @import("../game/terrain_object.zig");
@@ -213,21 +213,21 @@ pub const Grid = struct {
     }
 
     pub fn cellManagement() void {
-        // const hud = HUD.selfReturn();
+        // const hud = CursorManager.selfReturn();
         const inv = Inventory.selfReturn();
 
         var canBePlaced: bool = true;
         var left_click: bool = false;
         var anyCellSelected: bool = false;
-        const cursorInGrid: bool = HUD.cursorInGrid();
-        //HUD.setPlaceAllowing(inv.anySlotSelected);
+        const cursorInGrid: bool = CursorManager.cursorInGrid();
+        //CursorManager.setPlaceAllowing(inv.anySlotSelected);
 
         if (cursorInGrid) {
             for (0..grid.nb_cols) |i| {
                 for (0..grid.nb_rows) |j| {
                     grid.cells[j][i].isSelected = false;
 
-                    if (HUD.cursorInCell(grid.cells[j][i])) {
+                    if (CursorManager.cursorInCell(grid.cells[j][i])) {
                         grid.cells[j][i].isSelected = true;
                         anyCellSelected = true;
 
@@ -266,9 +266,9 @@ pub const Grid = struct {
             }
             canBePlaced = canBePlaced and anyCellSelected;
         }
-        canBePlaced = canBePlaced and (cursorInGrid != HUD.cursorInInventory());
+        canBePlaced = canBePlaced and (cursorInGrid != CursorManager.cursorInInventory());
 
-        HUD.setPlaceAllowing(canBePlaced);
+        CursorManager.setPlaceAllowing(canBePlaced);
     }
 
     pub fn getGroundPos() rl.Vector2 {

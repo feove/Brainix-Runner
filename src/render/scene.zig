@@ -15,7 +15,10 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 
 const player = @import("../entity/elf.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
-const HUD = @import("../game/utils.zig").HUD;
+const CursorManager = @import("../game/utils.zig").CursorManager;
+const hud = @import("../interface/hud.zig");
+const Interface = hud.Interface;
+const Selector = @import("../interface/selector.zig").Selector;
 const scenarios = @import("../game/level/cutscene_manager.zig");
 
 //Tmp Drawing
@@ -28,10 +31,11 @@ pub fn drawScene() !void {
 
     drawUnderGroundDeco();
     drawInventory();
+    drawIndications();
 
     //try drawItemNumber();
 
-    HUD.spriteUnderCursor();
+    CursorManager.spriteUnderCursor();
 }
 
 fn drawGrid() void {
@@ -244,6 +248,21 @@ pub fn getRandomNumber(min: u32, max: u32) u32 {
     // var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
     var prng = std.Random.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
     return prng.random().intRangeAtMost(u32, min, max);
+}
+
+fn drawIndications() void {
+    const sprite: Sprite = Selector.currentSprite();
+    //selector.indexAssignToKey(selector.cur_slot)
+    textures.Sprite.drawCustom(
+        textures.keyboard_btns,
+        .{
+            .position = .init(100, 100),
+            .sprite = sprite,
+            .scale = 3.0,
+        },
+    );
+    //Controls Sprites
+
 }
 
 fn drawInventory() void {

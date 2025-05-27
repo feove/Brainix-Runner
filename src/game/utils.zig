@@ -10,14 +10,14 @@ const InvCell = @import("inventory.zig").InvCell;
 const textures = @import("../render/textures.zig");
 const anim = @import("animations/animations_manager.zig");
 const Sprite = textures.Sprite;
-pub var hud = HUD{};
+pub var hud = CursorManager{};
 
-pub const HUD = struct {
+pub const CursorManager = struct {
     mouseX: f32 = undefined,
     mouseY: f32 = undefined,
     CanPlaced: bool = false,
 
-    pub fn selfReturn() HUD {
+    pub fn selfReturn() CursorManager {
         return hud;
     }
 
@@ -25,7 +25,7 @@ pub const HUD = struct {
         hud.CanPlaced = canPlaced;
     }
 
-    pub fn refresh(self: *HUD) void {
+    pub fn refresh(self: *CursorManager) void {
         self.mouseX = @as(f32, @floatFromInt(rl.getMouseX()));
         self.mouseY = @as(f32, @floatFromInt(rl.getMouseY()));
     }
