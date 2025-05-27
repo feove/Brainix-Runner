@@ -110,6 +110,7 @@ pub const EventConfig = struct {
             // for (0..1) |i_inter| {
             //     intermediate_areas[i_inter] = rl.Vector4.init(0, 0, 0, 0);
             // }
+            const quick_motions = if (intermediate_nb != 0) try allocator.alloc(f64, intermediate_nb) else null;
 
             var i_area: usize = 0;
             for (intermediate.items) |area| {
@@ -117,13 +118,16 @@ pub const EventConfig = struct {
                 const j_i = @as(usize, @intCast(area.object.get("y").?.integer));
                 const width_i = @as(usize, @intCast(area.object.get("width").?.integer));
                 const height_i = @as(usize, @intCast(area.object.get("height").?.integer));
+                const quick_motion: f64 = @as(f64, @floatCast(area.object.get("quick_motion").?.float));
                 // std.debug.print("i_i : {d} j_i : {d} width_i : {d} height_i : {d}\n", .{ i_i, j_i, width_i, height_i });
 
                 intermediate_areas[i_area] = Level.usize_assign_to_f32(i_i, j_i, width_i, height_i);
-
+                quick_motions.?[i_area] = quick_motion;
                 //std.debug.print("intermediate_areas[i_area].x {d} \n", .{intermediate_areas[i_area].x});
                 i_area += 1;
             }
+
+            //Quik Slow motion assign
 
             events[id].object_nb = object_nb;
             events[id].slow_motion_time = slow_motion_time;
@@ -137,6 +141,7 @@ pub const EventConfig = struct {
                 .intermediate_areas = intermediate_areas,
                 .intermediate_areas_nb = intermediate_nb,
             };
+            events[id].quick_slow_motion_time = quick_motions;
 
             id += 1;
         }

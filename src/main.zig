@@ -26,7 +26,7 @@ pub fn main() anyerror!void {
     try Level.init(allocator);
     try Entity.init();
 
-    window.clear();
+    //window.clear();
 
     while (!rl.windowShouldClose()) {
 

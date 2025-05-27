@@ -157,6 +157,7 @@ pub const Event = struct {
     inv_objects: []Object,
     areas: Areas,
     slow_motion_time: f32,
+    quick_slow_motion_time: ?[]f64,
     time_divisor: f32,
     already_triggered: bool = false,
 
@@ -191,9 +192,12 @@ pub const Event = struct {
         }
 
         const elapsed = current_time - quick_slow_motion_start_time;
+
+        const limit: f64 = Level.getCurrentEvent().quick_slow_motion_time.?[Areas.getCurrentInterKey() - 1];
+
         //or (Inventory.invEmpty() and Inventory.cacheEmpty()) but better without
         //or Elf.selfReturn().physics.newSens
-        if (elapsed >= 3) {
+        if (elapsed >= limit) {
             quick_slow_motion_active = false;
             player.time_divisor = 1;
 
@@ -205,7 +209,7 @@ pub const Event = struct {
         const current_time = rl.getTime();
         _ = elf;
         if (!slow_motion_active) {
-            if (playerEventstatus == PlayerEventStatus.SLOW_MOTION_AREA and !level.events[level.i_event].already_triggered) {
+            if (playerEventstatus == .SLOW_MOTION_AREA and !level.events[level.i_event].already_triggered) {
                 player.time_divisor = level.events[level.i_event].time_divisor;
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;

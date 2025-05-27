@@ -136,7 +136,8 @@
           "x": 6,
           "y": 3,
           "width": 2,
-          "height": 1
+          "height": 1,
+          "quick_motion": 3.0
         }
       ],
       "intermediate_areas_nb": 1
@@ -210,19 +211,22 @@
           "x": 5,
           "y": 7,
           "width": 1,
-          "height": 1
+          "height": 1,
+          "quick_motion": 1.0
         },
         {
           "x": 3,
           "y": 7,
           "width": 1,
-          "height": 1
+          "height": 1,
+          "quick_motion": 1.0
         },
         {
           "x": 4,
           "y": 7,
           "width": 1,
-          "height": 1
+          "height": 1,
+          "quick_motion": 1.0
         }
       ],
       "intermediate_areas_nb": 3
