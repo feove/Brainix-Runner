@@ -163,11 +163,11 @@ pub const EffectManager = struct {
             const pos: rl.Vector2 = Grid.getFrontEndPostion(objects[i].x, objects[i].y);
 
             if (objects[i].type == .GROUND) {
-                anim.square_despawning_item.update(Elf.getCurrentTime() / 2, 1);
+                anim.square_despawning_item.update(Elf.getInitialTime(), 1);
                 anim.square_despawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
                 continue;
             }
-            anim.spike_despawning_item.update(Elf.getCurrentTime() / 2, 1);
+            anim.spike_despawning_item.update(Elf.getInitialTime(), 1);
             anim.spike_despawning_item.draw(.init(pos.x, pos.y), 3.50, 0, 255, 0, 0); //sale : 3.5
 
         }

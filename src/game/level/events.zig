@@ -40,7 +40,7 @@ pub var quick_slow_motion_start_time: f64 = 0;
 
 pub var auto_death_timer_active: bool = false;
 pub var auto_death_start_time: f64 = 0;
-pub var auto_death_time_max: f64 = 30.0; //10
+pub var auto_death_time_max: f64 = 10.0; //10
 
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement: LevelStatement = .STARTING;

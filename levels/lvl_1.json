@@ -1,9 +1,9 @@
 {
-  "event_nb": 3,
+  "event_nb": 4,
 
   "event_0": {
     "object_nb": 2,
-    "slow_motion_time": 200.0,
+    "slow_motion_time": 2.0,
     "time_divisor": 3.0,
     "already_triggered": false,
     "grid_objects": [
@@ -57,8 +57,8 @@
   },
 
   "event_1": {
-    "object_nb": 7,
-    "slow_motion_time": 6.0,
+    "object_nb": 1,
+    "slow_motion_time": 3.0,
     "time_divisor": 4.0,
     "already_triggered": false,
     "grid_objects": [
@@ -67,48 +67,12 @@
         "y": 7,
         "type": "UP_PAD",
         "key": 0
-      },
-      {
-        "x": 2,
-        "y": 7,
-        "type": "GROUND",
-        "key": 1
-      },
-      {
-        "x": 3,
-        "y": 7,
-        "type": "GROUND",
-        "key": 1
-      },
-      {
-        "x": 4,
-        "y": 7,
-        "type": "GROUND",
-        "key": 1
-      },
-      {
-        "x": 2,
-        "y": 6,
-        "type": "SPIKE",
-        "key": 1
-      },
-      {
-        "x": 3,
-        "y": 6,
-        "type": "SPIKE",
-        "key": 1
-      },
-      {
-        "x": 4,
-        "y": 6,
-        "type": "SPIKE",
-        "key": 1
       }
     ],
     "inv_objects": [
       {
-        "type": "GROUND",
-        "count": 2,
+        "type": "EMPTY",
+        "count": 1,
         "key": 0
       }
     ],
@@ -126,25 +90,103 @@
         "height": 0
       },
       "completed": {
+        "x": 4,
+        "y": 4,
+        "width": 4,
+        "height": 1
+      },
+      "intermediate_areas": [],
+      "intermediate_areas_nb": 0
+    }
+  },
+
+  "event_2": {
+    "object_nb": 8,
+    "slow_motion_time": 2.0,
+    "time_divisor": 5.0,
+    "already_triggered": false,
+    "grid_objects": [
+      {
+        "x": 2,
+        "y": 7,
+        "type": "GROUND",
+        "key": 0
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "type": "GROUND",
+        "key": 0
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "type": "GROUND",
+        "key": 0
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "type": "GROUND",
+        "key": 0
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "type": "SPIKE",
+        "key": 0
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "type": "SPIKE",
+        "key": 0
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "type": "SPIKE",
+        "key": 0
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "type": "SPIKE",
+        "key": 0
+      }
+    ],
+    "inv_objects": [
+      {
+        "type": "GROUND",
+        "count": 2,
+        "key": 0
+      }
+    ],
+    "areas": {
+      "triggered": {
+        "x": 4,
+        "y": 2,
+        "width": 4,
+        "height": 1
+      },
+      "restricted": {
+        "x": 0,
+        "y": 1,
+        "width": 0,
+        "height": 0
+      },
+      "completed": {
         "x": 1,
         "y": 4,
         "width": 1,
         "height": 3
       },
-      "intermediate_areas": [
-        {
-          "x": 6,
-          "y": 3,
-          "width": 2,
-          "height": 1,
-          "quick_motion": 3.0
-        }
-      ],
-      "intermediate_areas_nb": 1
+      "intermediate_areas": [],
+      "intermediate_areas_nb": 0
     }
   },
 
-  "event_2": {
+  "event_3": {
     "object_nb": 4,
     "slow_motion_time": 0.0,
     "time_divisor": 4.0,
@@ -201,7 +243,7 @@
         "height": 0
       },
       "completed": {
-        "x": 10,
+        "x": 9,
         "y": 7,
         "width": 1,
         "height": 1

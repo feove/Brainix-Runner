@@ -10,7 +10,7 @@
 - [X] Add Door Front end
 - [X] Add Wizard elf detection to avoid collisions
 - [X] Add Animations before objects spawning/Despawning
-- [x] Set Up a Door as end of the level
+- [x] Set Up a Door Animation when level starting
 - [x] Level Transitions
 - [X] Allocate an integer array of  event's level number
 - [X] Add boost Item
