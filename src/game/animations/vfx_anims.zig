@@ -27,6 +27,7 @@ pub const EffectAnimation = enum {
     ENTITY_SPAWN,
     WOOSH,
     SLOT_CLEANNING,
+    FALLING_PLATFORM,
 };
 
 pub const EffectManager = struct {
@@ -62,11 +63,13 @@ pub const EffectManager = struct {
             .SPAWNING => item_spawning(),
             .DESPAWNING => item_despawning(),
             .SLOT_CLEANNING => slot_cleanning(),
-            .NONE => none(),
+
             .SMALL_LIGHTING_EFFECT => small_lighting(),
             .SCRATCH => scratch(),
             .ENTITY_SPAWN => entity_spawn(),
             .WOOSH => woosh(),
+            .FALLING_PLATFORM => falling_platform(),
+            else => {},
         }
     }
 
@@ -81,7 +84,18 @@ pub const EffectManager = struct {
         return !alreadyPlayed;
     }
 
-    fn none() void {}
+    pub fn falling_platform() void {
+        //const elf: Elf = Elf.selfReturn();
+        const endPos: rl.Vector4 = Grid.getExitDoor();
+        anim.falling_platform.isRunning = true;
+        anim.falling_platform.update(Elf.getInitialTime(), 1);
+        anim.falling_platform.draw(.init(endPos.x + endPos.z * 0.2, endPos.y + endPos.w * 1.1), 3.00, 0.0, 1.0, 0, 0);
+
+        if (anim.falling_platform.isRunning == false) {
+            effect_anim.prev = .FALLING_PLATFORM;
+            effect_anim.current = .NONE;
+        }
+    }
 
     fn woosh() void {
         anim.woosh.isRunning = true;

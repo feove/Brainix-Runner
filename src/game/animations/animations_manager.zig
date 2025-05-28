@@ -3,9 +3,11 @@ const print = @import("std").debug.print;
 const textures = @import("../../render/textures.zig");
 const Sprite = textures.Sprite;
 
+//Items
 pub var jumper_sprite: AnimatedSprite = undefined;
 pub var moving_platform: AnimatedSprite = undefined;
 pub var boost_sprite: AnimatedSprite = undefined;
+pub var falling_platform: AnimatedSprite = undefined;
 
 pub var battlemage_running: AnimatedSprite = undefined;
 pub var battlemage_jumping_full: AnimatedSprite = undefined;
@@ -31,18 +33,33 @@ pub var wizard_attacking_1: AnimatedSprite = undefined;
 pub var wizard_attacking_2: AnimatedSprite = undefined;
 
 pub fn init() !void {
+    falling_platform = AnimatedSprite{
+        .texture = textures.falling_platfom,
+        .sprite = Sprite{
+            .name = "Falling Platform",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 256, .height = 16 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 32,
+        .frame_height = 16,
+        .horizontal_shift = true,
+        .num_frames = 8,
+        .frame_duration = 0.1,
+    };
+
     jumper_sprite = AnimatedSprite{
         .texture = textures.pad,
         .sprite = Sprite{
             .name = "Pad",
             .src = rl.Rectangle{ .x = 0, .y = 0, .width = 24, .height = 16 },
         },
-        .start_x = 0,
+        .start_x = 24,
         .start_y = 0,
         .frame_width = 24,
         .frame_height = 16,
         .horizontal_shift = true,
-        .num_frames = 8, //8
+        .num_frames = 7, //8
         .frame_duration = 0.1,
     };
 

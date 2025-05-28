@@ -9,7 +9,7 @@ const PlayerEventStatus = event.PlayerEventStatus;
 const Elf = player.Elf;
 const AutoMovements = @import("../game/terrain_object.zig").AutoMovements;
 const wizard_anims = @import("../game/animations/wizard_anims.zig");
-const effect_anims = @import("../game/animations/effects_spawning.zig");
+const effect_anims = @import("../game/animations/vfx_anims.zig");
 const textures = @import("../render/textures.zig");
 
 pub var wizard: Wizard = undefined;

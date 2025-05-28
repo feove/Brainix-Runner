@@ -16,7 +16,7 @@ const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
 const anim = @import("animations/animations_manager.zig");
 const elf_anims = @import("../game/animations/elf_anims.zig");
-const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
+const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
 
 const print = std.debug.print;
 
@@ -218,7 +218,6 @@ pub const Object = struct {
                         self.*[j + i].count = count;
                         self.*[j + i].key = key;
                     }
-
                     return;
                 }
             }

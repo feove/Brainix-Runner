@@ -70,10 +70,10 @@ pub const CursorManager = struct {
                 Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, !hud.CanPlaced);
             },
             .PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, false);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, !hud.CanPlaced);
             },
             .UP_PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, false);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, !hud.CanPlaced);
             },
             .BOOST => {
                 anim.boost_sprite.draw(.{ .x = hud.mouseX + 20, .y = hud.mouseY - 20 }, 3.1, 90, 200, 0, 0);

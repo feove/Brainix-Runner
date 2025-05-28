@@ -48,7 +48,6 @@ pub const Selector = struct {
         const selector = Interface.getSelector();
         for (0..selector.max_range) |i| {
             if (rl.isKeyPressed(selector.controls_keys[i])) {
-                // Interface.SelfReturn().selector.last_taken = i;
                 return i;
             }
         }

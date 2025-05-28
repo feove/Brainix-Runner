@@ -9,7 +9,7 @@ const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimatio
 const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
 const Wizard = @import("../../entity/wizard.zig").Wizard;
 const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
-const EffectManager = @import("../animations/effects_spawning.zig").EffectManager;
+const EffectManager = @import("../animations/vfx_anims.zig").EffectManager;
 const CutScene = @import("cutscene_manager.zig").CutSceneManager;
 const anim = @import("../animations/animations_manager.zig");
 
@@ -305,21 +305,31 @@ pub const Level = struct {
                 in_ending_level();
             },
             .COMPLETED => {
-                print("LEVEL COMPLETED \n", .{});
-                CURRENT_LEVEL += 1;
+                if (CutScene.lastDone() == .LEVEL_ENDING) {
+                    print("LEVEL COMPLETED \n", .{});
+                    Wizard.reset();
+                    ElfManager.reset();
+                    CutScene.reset();
 
-                Wizard.reset();
-                ElfManager.reset();
-                CutScene.reset();
+                    CURRENT_LEVEL += 1;
 
-                if (CURRENT_LEVEL == LEVEL_NB) {
-                    CURRENT_LEVEL = 0;
-                    print("GAME ENDED \n", .{});
-                    return;
+                    if (CURRENT_LEVEL == LEVEL_NB) {
+                        CURRENT_LEVEL = 0;
+                        print("GAME ENDED \n", .{});
+                        return;
+                    }
+
+                    try init(alloc);
                 }
-
-                try init(alloc);
             },
+        }
+    }
+
+    fn in_ending_level() void {
+        EffectManager.setCurrent(.FALLING_PLATFORM);
+        if (Elf.playerInDoor()) {
+            CutScene.setCurrent(.LEVEL_ENDING);
+            levelStatement = .COMPLETED;
         }
     }
 
@@ -474,7 +484,6 @@ pub const Level = struct {
     fn slow_motion(elf: *Elf) !void {
         var event: Event = level.events[level.i_event];
 
-        //Flex
         const animationState: bool = WizardManager.onceTime(.ATTACKING_1) or EffectManager.onceTime(.SPAWNING);
         if (level.i_event == 0) CutScene.setQuiet(true);
 
@@ -520,17 +529,6 @@ pub const Level = struct {
 
     pub fn getLevelStatement() LevelStatement {
         return levelStatement;
-    }
-
-    fn in_ending_level() void {
-        if (Level.openTheDoor()) {
-            levelStatement = .COMPLETED;
-        }
-    }
-
-    fn openTheDoor() bool {
-        //Anims
-        return Elf.playerInDoor();
     }
 
     fn drawIntermediateArea(event_num: usize) void {

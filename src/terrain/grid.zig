@@ -14,7 +14,7 @@ const AroundConfig = terrain.AroundConfig;
 const Object = @import("../game/terrain_object.zig").Object;
 
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
-const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
+const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
 
 pub var grid: Grid = undefined;
 
@@ -30,6 +30,7 @@ var CELL_WIDTH: f32 = undefined;
 var CELL_HEIGHT: f32 = undefined;
 
 var GROUND_POS: rl.Vector2 = undefined;
+var EXIT_DOOR: rl.Vector4 = undefined;
 
 pub const CellType = enum {
     AIR,
@@ -84,6 +85,10 @@ pub const Grid = struct {
 
     pub fn getFrontEndPostion(i: usize, j: usize) rl.Vector2 {
         return .init(grid.cells[j][i].x, grid.cells[j][i].y);
+    }
+
+    pub fn getExitDoor() rl.Vector4 {
+        return .init(EXIT_DOOR.x, EXIT_DOOR.y, EXIT_DOOR.z, EXIT_DOOR.w);
     }
 
     pub fn init(allocator: std.mem.Allocator) !void {
@@ -142,13 +147,15 @@ pub const Grid = struct {
 
         grid.groundDefine(0, grid.nb_rows - 2, grid.nb_cols, 1);
 
-        grid.setExitDoor(grid.nb_cols - 1, 6);
+        grid.setExitDoor(grid.nb_cols - 2, 6);
     }
 
     fn removeCell(i: usize, j: usize) void {
-        const tmpCell: CellType = grid.cells[j][i].object.type;
-        grid.cells[j][i].object.type = .AIR;
-        grid.cacheCell = tmpCell;
+        if (grid.cells[j][i].object.canPlayerTake) {
+            const tmpCell: CellType = grid.cells[j][i].object.type;
+            grid.cells[j][i].object.type = .AIR;
+            Inventory.add(tmpCell);
+        }
     }
 
     fn canGetCell(cell: CellType) bool {
@@ -239,10 +246,10 @@ pub const Grid = struct {
                         }
 
                         left_click = rl.isMouseButtonPressed(rl.MouseButton.left);
-
+                        const cur_type = grid.cells[j][i].object.type;
                         //Place Item over terrain from Inventory
                         if (inv.cell.type != .EMPTY) {
-                            if (grid.cells[j][i].object.type == .AIR) {
+                            if (cur_type == .AIR or cur_type == .DOOR) {
                                 if (AroundConfig.cellAroundchecking(i, j, inv.cell.type) or PlayerOnCell) {
                                     canBePlaced = false;
                                     continue;
@@ -294,11 +301,13 @@ pub const Grid = struct {
     }
 
     fn setExitDoor(self: *Grid, x: usize, y: usize) void {
+        const cell = self.cells[y][x];
         if (x > self.nb_cols or y + 1 > self.nb_rows) {
             return;
         }
         self.cells[y][x].object.type = .DOOR;
         self.cells[y + 1][x].object.type = .DOOR;
+        EXIT_DOOR = .init(cell.x, cell.y, cell.width, cell.height);
     }
 
     pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {

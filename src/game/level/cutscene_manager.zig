@@ -4,7 +4,7 @@ const std = @import("std");
 const Elf = @import("../../entity/elf.zig").Elf;
 const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../animations/wizard_anims.zig").WizardManager;
-const EffectManager = @import("../animations/effects_spawning.zig").EffectManager;
+const EffectManager = @import("../animations/vfx_anims.zig").EffectManager;
 
 pub var cut_scene_manager = CutSceneManager{};
 pub var wait_active: bool = false;
@@ -62,12 +62,32 @@ pub const CutSceneManager = struct {
         time_to_wait = 2.0;
     }
 
+    pub fn setCurrent(scene: Scene) void {
+        cut_scene_manager.current_scene = scene;
+    }
+
+    pub fn setLast(scene: Scene) void {
+        cut_scene_manager.last_done = scene;
+    }
+
     pub fn run() void {
         switch (cut_scene_manager.current_scene) {
             .LEVEL_STARTING => level_starting(),
-            .LEVEL_ENDING => {},
+            .LEVEL_ENDING => level_ending(),
             else => {},
         }
+    }
+
+    fn level_ending() void {
+        EffectManager.setCurrent(.FALLING_PLATFORM);
+        ElfManager.setAnim(.IDLE);
+        if (wait()) {
+            //std.debug.print("LEVEL ENDING \n", .{});
+            return;
+        }
+
+        cut_scene_manager.last_done = .LEVEL_ENDING;
+        cut_scene_manager.current_scene = .NONE;
     }
 
     fn level_starting() void {
@@ -85,6 +105,7 @@ pub const CutSceneManager = struct {
         Elf.setDrawing(true);
 
         if (ElfManager.getPrevAnim() == .IDLE) {
+            time_to_wait = 3.0;
             cut_scene_manager.last_done = .LEVEL_STARTING;
             cut_scene_manager.current_scene = .NONE;
         }

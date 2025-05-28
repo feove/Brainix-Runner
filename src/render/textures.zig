@@ -44,6 +44,7 @@ pub var dungeons_tile: rl.Texture2D = undefined;
 
 pub var pad: rl.Texture2D = undefined;
 pub var moving_platform: rl.Texture2D = undefined;
+pub var falling_platfom: rl.Texture2D = undefined;
 pub var all_weapons: rl.Texture2D = undefined;
 
 pub var green_effects: rl.Texture2D = undefined;
@@ -111,6 +112,7 @@ pub fn init() !void {
 
     pad = try rl.loadTexture("assets/textures/pack/trap_and_weapon/Jumper.png");
     moving_platform = try rl.loadTexture("assets/textures/pack/trap_and_weapon/moving_platform.png");
+    falling_platfom = try rl.loadTexture("assets/textures/pack/trap_and_weapon/falling_platform.png");
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
 

@@ -116,6 +116,8 @@ fn pad_drawing(c: usize, r: usize, cell: Cell) void {
             false,
         );
     } else {
+        //anim.jumper_sprite.x = 0;
+        //anim.jumper_sprite.y = 0;
         anim.jumper_sprite.isRunning = true;
         anim.jumper_sprite.update(rl.getFrameTime(), 1);
         anim.jumper_sprite.draw(.{ .x = cell.x, .y = cell.y + cell.height / 4 + 5 }, 2.7, 0, 255, c, r);

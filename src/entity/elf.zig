@@ -18,7 +18,7 @@ const LevelStatement = event.LevelStatement;
 const anim = @import("../game/animations/animations_manager.zig");
 const elf_anims = @import("../game/animations/elf_anims.zig");
 const ElfManager = elf_anims.ElfManager;
-const EffectManager = @import("../game/animations/effects_spawning.zig").EffectManager;
+const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
 const Object = @import("../game/terrain_object.zig").Object;
 
 const print = @import("std").debug.print;
@@ -95,6 +95,11 @@ pub const Elf = struct {
         return elf;
     }
 
+    pub fn setPos(pos: rl.Vector2) void {
+        elf.x = pos.x;
+        elf.y = pos.y;
+    }
+
     pub fn setDrawing(canDraw: bool) void {
         elf.canDraw = canDraw;
     }
@@ -138,6 +143,10 @@ pub const Elf = struct {
     pub fn controller(self: *Elf) void {
         const dt: f32 = rl.getFrameTime() / time_divisor;
         var grid: Grid = Grid.selfReturn();
+
+        if (ElfManager.getCurrentAnim() == .IDLE and Level.getLevelStatement() == .COMPLETED) {
+            return;
+        }
 
         // if (elf.x != 80 or elf.y != 443) {
         //     return;
