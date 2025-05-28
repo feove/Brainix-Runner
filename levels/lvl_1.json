@@ -3,7 +3,7 @@
 
   "event_0": {
     "object_nb": 2,
-    "slow_motion_time": 2.0,
+    "slow_motion_time": 200.0,
     "time_divisor": 3.0,
     "already_triggered": false,
     "grid_objects": [

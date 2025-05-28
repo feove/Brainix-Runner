@@ -226,7 +226,7 @@ pub const Inventory = struct {
             }
         }
 
-        std.debug.print("Last Taken {d}\n", .{Selector.SelfReturn().last_taken});
+        // std.debug.print("Last Taken {d}\n", .{Selector.SelfReturn().last_taken});
 
         if (Selector.keyIsPressed()) {
             const i = Selector.getIndexKey();
@@ -237,24 +237,15 @@ pub const Inventory = struct {
     }
 
     fn swap(i: usize) void {
-        const last_taken: usize = Selector.SelfReturn().last_taken;
-        const dest_type = inv.slots[last_taken].object.type;
-        const src_type = inv.cell.type;
-
-        if (dest_type != .EMPTY and dest_type != inv.cell.type) {
+        if (inv.cell.type == inv.slots[i].object.type) {
             return;
         }
 
         //Give Item Back
-        if (dest_type == .EMPTY) {
-            inv.slots[last_taken].object.type = src_type;
-            inv.slots[last_taken].object.count = 1;
-        } else {
-            inv.slots[last_taken].object.count += 1;
-        }
+        add(inv.cell.type);
+        inv.cell.type = .EMPTY;
 
-        inv.cell.type = inv.slots[i].object.type;
-        decreaseSlotCount(i);
+        _ = tookItem(i);
     }
 
     fn tookItem(i: usize) bool {
@@ -263,7 +254,6 @@ pub const Inventory = struct {
             //Take Item fom Inventory
             inv.cell.type = inv.slots[i].object.type;
             remove(i, inv.slots[i].object.type);
-            Interface.SelfReturn().selector.last_taken = i;
             return true;
         }
         return false;

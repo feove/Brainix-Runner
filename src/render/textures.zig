@@ -206,7 +206,7 @@ pub const KeyboardSprites = struct {
             .d = .{ .name = "d key", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .f = .{ .name = "f key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .e = .{ .name = "e key", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
-            .r = .{ .name = "r key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .r = .{ .name = "r key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
         };
     }
 };

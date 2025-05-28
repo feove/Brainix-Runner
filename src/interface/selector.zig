@@ -7,7 +7,6 @@ const Sprite = textures.Sprite;
 pub const Selector = struct {
     cur_slot: usize = 0,
     prev_slot: usize = 0,
-    last_taken: usize = 0,
     max_range: usize,
     min_range: usize = 0,
     controls_sprites: []Sprite,

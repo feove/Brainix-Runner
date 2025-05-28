@@ -299,12 +299,13 @@ fn drawInventory() void {
 
         if (slot.object.count != 0) {
             const count: f32 = @as(f32, @floatFromInt(slot.object.count));
+            const x_offset: f32 = ((count - 1) * (textures.sprites.one_key.src.width - 1));
             Sprite.drawCustom(
                 textures.keys_sheet,
                 SpriteDefaultConfig{
                     .sprite = textures.sprites.one_key,
                     .position = .init(slot.pos.x + slot.width / 2, slot.pos.y + slot.padding),
-                    .x_offset = (count - 1) * (textures.sprites.one_key.src.width - 1),
+                    .x_offset = x_offset,
                     .scale = 2.5,
                 },
             );
