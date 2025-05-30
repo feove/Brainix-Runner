@@ -46,7 +46,7 @@
         "height": 0
       },
       "completed": {
-        "x": 9,
+        "x": 11,
         "y": 7,
         "width": 1,
         "height": 1
@@ -250,7 +250,7 @@
       },
       "intermediate_areas": [
         {
-          "x": 5,
+          "x": 4,
           "y": 7,
           "width": 1,
           "height": 1,
