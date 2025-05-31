@@ -151,10 +151,7 @@ pub const Wizard = struct {
     fn goTo(self: *Wizard, inc: *f32) void {
         var current_distance: f32 = self.x - self.hitbox.rec.x + 100;
         current_distance = if (@abs(1 - current_distance) < 1) 0 else current_distance;
-        //print("dist : {d} and inc : {d}\n", .{ distance, inc });
-        //print("BEFORE elf.x {d}\n", .{self.x});
 
-        // print("distance {d} and current {d}\n", .{ self.distance, current_distance });
         update_inc(inc, @abs(current_distance));
 
         if (current_distance < 0) {
@@ -167,19 +164,12 @@ pub const Wizard = struct {
     fn update_inc(inc: *f32, dst: f32) void {
         if (dst < wizard.distance * 0.05 or dst > wizard.distance * 0.85) {
             inc.* /= 2;
-            //print("50%\n", .{});
             return;
         }
-
         inc.* *= 2.5;
-
-        // inc.* = if (wizard.x + dst < wizard.distance / 2) inc.* / 2 else inc.* * 2;
     }
 
     fn setDestination(self: *Wizard, x: f32, y: f32) void {
-        //goTo(&self.x, self.hitbox.rec.x, 10);
-        //self.x = x;
-        //self.y = y;
         self.hitbox.rec.x = x + 100;
         self.hitbox.rec.y = y + 100;
     }

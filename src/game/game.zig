@@ -1,6 +1,7 @@
 const scene = @import("../render/scene.zig");
 const player = @import("../entity/elf.zig");
 const wizard = @import("../entity/wizard.zig");
+const flying = @import("../entity/flying_platform.zig");
 const terrain = @import("../terrain/grid.zig");
 const inventory = @import("../game/inventory.zig");
 const utils = @import("../game/utils.zig");
@@ -19,6 +20,7 @@ pub fn run() !void {
     inventory.inv.interactions();
     player.elf.controller();
     wizard.wizard.controller();
+    flying.flying_platform.controller();
 
     //Update Cursor's position
     utils.hud.refresh();

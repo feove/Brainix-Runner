@@ -49,7 +49,7 @@ const LEVEL_NB: usize = 2;
 var CURRENT_LEVEL: usize = 0;
 
 const level_paths: []const []const u8 = &.{
-    "levels/lvl_1.json",
+    "levels/tmp.json",
     "levels/lvl_2.json",
 };
 

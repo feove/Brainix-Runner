@@ -5,6 +5,8 @@ const Elf = @import("../../entity/elf.zig").Elf;
 const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../animations/wizard_anims.zig").WizardManager;
 const EffectManager = @import("../animations/vfx_anims.zig").EffectManager;
+const FlyingPlatform = @import("../../entity/flying_platform.zig").FlyingPlatform;
+const Grid = @import("../../terrain/grid.zig").Grid;
 
 pub var cut_scene_manager = CutSceneManager{};
 pub var wait_active: bool = false;
@@ -37,6 +39,7 @@ pub fn wait() bool {
         if (elapsed_time >= time_to_wait) {
             time_to_wait = 0;
             wait_active = false;
+            current_elapsed_time = 0.0;
         }
     }
     return wait_active;
@@ -81,6 +84,30 @@ pub const CutSceneManager = struct {
     fn level_ending() void {
         EffectManager.setCurrent(.FALLING_PLATFORM);
         ElfManager.setAnim(.IDLE);
+
+        if (current_elapsed_time == 0) {
+            FlyingPlatform.setDestination(Grid.getExitDoor());
+        }
+
+        if (current_elapsed_time >= time_to_wait / 2) {
+
+            //Falling platform coordinates
+            FlyingPlatform.setSpeed(FlyingPlatform.SelfReturn().speed * 1.001);
+            const elf = Elf.selfReturn();
+            const platform_pos_x = FlyingPlatform.getPosition().x + elf.width * 0.2;
+            const platform_pos_y = FlyingPlatform.getPosition().y - elf.height * 0.95;
+            Elf.setPos(.init(platform_pos_x, platform_pos_y));
+        } else {
+            if (current_elapsed_time > time_to_wait * 0.25) {
+                FlyingPlatform.setSpeed(FlyingPlatform.SelfReturn().speed * 0.999);
+            }
+        }
+
+        if (current_elapsed_time >= time_to_wait * 0.70) {
+            //Falling platform coordinates
+            FlyingPlatform.setDestination(FlyingPlatform.getInitialPosition());
+        }
+
         if (wait()) {
             //std.debug.print("LEVEL ENDING \n", .{});
             return;
@@ -105,7 +132,7 @@ pub const CutSceneManager = struct {
         Elf.setDrawing(true);
 
         if (ElfManager.getPrevAnim() == .IDLE) {
-            time_to_wait = 3.0;
+            time_to_wait = 5.0;
             cut_scene_manager.last_done = .LEVEL_STARTING;
             cut_scene_manager.current_scene = .NONE;
         }

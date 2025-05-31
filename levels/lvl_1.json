@@ -25,11 +25,6 @@
         "type": "PAD",
         "count": 5,
         "key": 0
-      },
-      {
-        "type": "GROUND",
-        "count": 1,
-        "key": 0
       }
     ],
     "areas": {
@@ -254,7 +249,7 @@
           "y": 7,
           "width": 1,
           "height": 1,
-          "quick_motion": 1.0
+          "quick_motion": 1.5
         },
         {
           "x": 3,

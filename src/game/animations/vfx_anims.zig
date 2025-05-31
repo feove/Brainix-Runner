@@ -8,6 +8,7 @@ const Wizard = @import("../../entity/wizard.zig").Wizard;
 const object = @import("../terrain_object.zig");
 const Object = object.Object;
 const Grid = @import("../../terrain/grid.zig").Grid;
+const FlyingPlatform = @import("../../entity/flying_platform.zig").FlyingPlatform;
 const inventory = @import("../inventory.zig");
 const InvCell = inventory.InvCell;
 const Inventory = inventory.Inventory;
@@ -86,10 +87,10 @@ pub const EffectManager = struct {
 
     pub fn falling_platform() void {
         //const elf: Elf = Elf.selfReturn();
-        const endPos: rl.Vector4 = Grid.getExitDoor();
+        const endPos: rl.Vector2 = FlyingPlatform.getPosition();
         anim.falling_platform.isRunning = true;
         anim.falling_platform.update(Elf.getInitialTime(), 1);
-        anim.falling_platform.draw(.init(endPos.x + endPos.z * 0.2, endPos.y + endPos.w * 1.1), 3.00, 0.0, 1.0, 0, 0);
+        anim.falling_platform.draw(.init(endPos.x, endPos.y), 3.00, 0.0, 1.0, 0, 0);
 
         if (anim.falling_platform.isRunning == false) {
             effect_anim.prev = .FALLING_PLATFORM;

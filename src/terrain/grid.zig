@@ -87,8 +87,8 @@ pub const Grid = struct {
         return .init(grid.cells[j][i].x, grid.cells[j][i].y);
     }
 
-    pub fn getExitDoor() rl.Vector4 {
-        return .init(EXIT_DOOR.x, EXIT_DOOR.y, EXIT_DOOR.z, EXIT_DOOR.w);
+    pub fn getExitDoor() rl.Vector2 {
+        return .init(EXIT_DOOR.x + EXIT_DOOR.z * 0.2, EXIT_DOOR.y + EXIT_DOOR.w * 1.1);
     }
 
     pub fn init(allocator: std.mem.Allocator) !void {
