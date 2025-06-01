@@ -5,6 +5,7 @@ const Grid = @import("../terrain/grid.zig").Grid;
 pub var flying_platform: FlyingPlatform = undefined;
 
 var INITIAL_POSITION: rl.Vector2 = undefined;
+pub const DEFAULT_SPEED = 320.0;
 
 pub fn init() void {
     INITIAL_POSITION = .{ .x = Grid.getExitDoor().x, .y = -50 };
@@ -17,7 +18,7 @@ pub fn init() void {
             .x = INITIAL_POSITION.x,
             .y = INITIAL_POSITION.y,
         },
-        .speed = 320,
+        .speed = DEFAULT_SPEED,
     };
 }
 

@@ -270,6 +270,8 @@ pub const Level = struct {
 
         Inventory.clear();
 
+        CutScene.reset();
+
         levelStatement = .STARTING;
     }
 

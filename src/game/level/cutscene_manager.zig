@@ -5,7 +5,8 @@ const Elf = @import("../../entity/elf.zig").Elf;
 const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../animations/wizard_anims.zig").WizardManager;
 const EffectManager = @import("../animations/vfx_anims.zig").EffectManager;
-const FlyingPlatform = @import("../../entity/flying_platform.zig").FlyingPlatform;
+const flying_platform = @import("../../entity/flying_platform.zig");
+const FlyingPlatform = flying_platform.FlyingPlatform;
 const Grid = @import("../../terrain/grid.zig").Grid;
 
 pub var cut_scene_manager = CutSceneManager{};
@@ -63,6 +64,7 @@ pub const CutSceneManager = struct {
         door_opened = false;
         quiet_closed_door = false;
         time_to_wait = 2.0;
+        FlyingPlatform.setSpeed(flying_platform.DEFAULT_SPEED);
     }
 
     pub fn setCurrent(scene: Scene) void {
