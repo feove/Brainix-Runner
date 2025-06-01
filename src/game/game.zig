@@ -11,9 +11,7 @@ const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
-pub fn run() !void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
+pub fn manage() !void {
 
     //Interactions
     terrain.grid.interactions();
@@ -23,16 +21,18 @@ pub fn run() !void {
     flying.flying_platform.controller();
 
     //Update Cursor's position
-    utils.hud.refresh();
+    utils.cursor_manager.refresh();
 
     try Level.stateLevelManager();
-
-    CutScene.run();
-    try render();
 }
 
 pub fn render() !void {
+    rl.beginDrawing();
+    defer rl.endDrawing();
+
     // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
+    CutScene.run();
+
     try scene.drawScene();
 
     Entity.draw();

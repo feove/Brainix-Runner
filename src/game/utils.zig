@@ -10,7 +10,7 @@ const InvCell = @import("inventory.zig").InvCell;
 const textures = @import("../render/textures.zig");
 const anim = @import("animations/animations_manager.zig");
 const Sprite = textures.Sprite;
-pub var hud = CursorManager{};
+pub var cursor_manager = CursorManager{};
 
 pub const CursorManager = struct {
     mouseX: f32 = undefined,
@@ -18,11 +18,11 @@ pub const CursorManager = struct {
     CanPlaced: bool = false,
 
     pub fn selfReturn() CursorManager {
-        return hud;
+        return cursor_manager;
     }
 
     pub fn setPlaceAllowing(canPlaced: bool) void {
-        hud.CanPlaced = canPlaced;
+        cursor_manager.CanPlaced = canPlaced;
     }
 
     pub fn refresh(self: *CursorManager) void {
@@ -33,15 +33,15 @@ pub const CursorManager = struct {
     pub fn cursorInGrid() bool {
         const grid: Grid = Grid.selfReturn();
 
-        const inAxeX: bool = hud.mouseX > grid.x and hud.mouseX < grid.x + grid.cells[0][0].width * grid.width;
-        const inAxeY: bool = hud.mouseY > grid.y and hud.mouseY < grid.y + grid.height;
+        const inAxeX: bool = cursor_manager.mouseX > grid.x and cursor_manager.mouseX < grid.x + grid.cells[0][0].width * grid.width;
+        const inAxeY: bool = cursor_manager.mouseY > grid.y and cursor_manager.mouseY < grid.y + grid.height;
 
         return inAxeX and inAxeY;
     }
 
     pub fn cursorInCell(cell: Cell) bool {
-        const inAxeX: bool = hud.mouseX > cell.x and hud.mouseX < cell.x + cell.width;
-        const inAxeY: bool = hud.mouseY > cell.y and hud.mouseY < cell.y + cell.height;
+        const inAxeX: bool = cursor_manager.mouseX > cell.x and cursor_manager.mouseX < cell.x + cell.width;
+        const inAxeY: bool = cursor_manager.mouseY > cell.y and cursor_manager.mouseY < cell.y + cell.height;
 
         return inAxeX and inAxeY;
     }
@@ -49,15 +49,15 @@ pub const CursorManager = struct {
     pub fn cursorInInventory() bool {
         const inv: Inventory = Inventory.selfReturn();
 
-        const inAxeX: bool = hud.mouseX > inv.pos.x and hud.mouseX < inv.pos.x + inv.width;
-        const inAxeY: bool = hud.mouseY > inv.pos.y and hud.mouseY < inv.pos.y + inv.height;
+        const inAxeX: bool = cursor_manager.mouseX > inv.pos.x and cursor_manager.mouseX < inv.pos.x + inv.width;
+        const inAxeY: bool = cursor_manager.mouseY > inv.pos.y and cursor_manager.mouseY < inv.pos.y + inv.height;
 
         return inAxeX and inAxeY;
     }
 
     pub fn cursorInSlot(slot: InvCell) bool {
-        const inAxeX: bool = hud.mouseX > slot.pos.x and hud.mouseX < slot.pos.x + slot.width;
-        const inAxeY: bool = hud.mouseY > slot.pos.y and hud.mouseY < slot.pos.y + slot.height;
+        const inAxeX: bool = cursor_manager.mouseX > slot.pos.x and cursor_manager.mouseX < slot.pos.x + slot.width;
+        const inAxeY: bool = cursor_manager.mouseY > slot.pos.y and cursor_manager.mouseY < slot.pos.y + slot.height;
 
         return inAxeX and inAxeY;
     }
@@ -67,16 +67,16 @@ pub const CursorManager = struct {
 
         switch (inv.cell.type) {
             .GROUND => {
-                Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, !hud.CanPlaced);
+                Sprite.drawWithRotation(textures.spriteSheet, textures.sprites.granite_pure_l4, rl.Vector2{ .x = cursor_manager.mouseX - 20, .y = cursor_manager.mouseY - 20 }, 3.0, 0, 150, !cursor_manager.CanPlaced);
             },
             .PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, !hud.CanPlaced);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = cursor_manager.mouseX - 20, .y = cursor_manager.mouseY - 20 }, 3.0, 0, 150, !cursor_manager.CanPlaced);
             },
             .UP_PAD => {
-                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = hud.mouseX - 20, .y = hud.mouseY - 20 }, 3.0, 0, 150, !hud.CanPlaced);
+                Sprite.drawWithRotation(anim.jumper_sprite.texture, anim.jumper_sprite.sprite, rl.Vector2{ .x = cursor_manager.mouseX - 20, .y = cursor_manager.mouseY - 20 }, 3.0, 0, 150, !cursor_manager.CanPlaced);
             },
             .BOOST => {
-                anim.boost_sprite.draw(.{ .x = hud.mouseX + 20, .y = hud.mouseY - 20 }, 3.1, 90, 200, 0, 0);
+                anim.boost_sprite.draw(.{ .x = cursor_manager.mouseX + 20, .y = cursor_manager.mouseY - 20 }, 3.1, 90, 200, 0, 0);
             },
             else => {},
         }

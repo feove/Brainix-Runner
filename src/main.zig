@@ -37,7 +37,7 @@ pub fn main() anyerror!void {
             rl.toggleFullscreen();
         }
 
-        try game.run();
+        try window.GameViewManager();
     }
 
     rl.closeWindow();

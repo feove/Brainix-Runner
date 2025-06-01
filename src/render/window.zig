@@ -1,10 +1,45 @@
 const rl = @import("raylib");
 const std = @import("std");
 const stdout = std.io.getStdOut().writer();
-pub const Window = struct {};
+const game = @import("../game/game.zig");
+
+const GameView = enum {
+    Menu,
+    Play,
+    Pause,
+    Settings,
+    Credits,
+    Help,
+    Quit,
+};
+
+pub var currentView = GameView.Menu;
 
 pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
     rl.initWindow(screenWidth, screenHeight, "Brainix Runner");
+}
+
+pub fn GameViewManager() !void {
+    switch (currentView) {
+        GameView.Menu => {
+            rl.beginDrawing();
+            defer rl.endDrawing();
+
+            rl.clearBackground(.white);
+            if (rl.isKeyPressed(rl.KeyboardKey.one)) {
+                currentView = GameView.Play;
+            }
+        },
+        GameView.Play => {
+            try game.manage();
+            try game.render();
+        },
+        GameView.Pause => {},
+        GameView.Settings => {},
+        GameView.Credits => {},
+        GameView.Help => {},
+        GameView.Quit => {},
+    }
 }
 
 pub fn clear() void {
