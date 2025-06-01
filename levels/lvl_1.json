@@ -182,19 +182,13 @@
   },
 
   "event_3": {
-    "object_nb": 4,
+    "object_nb": 3,
     "slow_motion_time": 0.0,
     "time_divisor": 4.0,
     "already_triggered": false,
     "grid_objects": [
       {
         "x": 7,
-        "y": 7,
-        "type": "SPIKE",
-        "key": 0
-      },
-      {
-        "x": 8,
         "y": 7,
         "type": "SPIKE",
         "key": 0

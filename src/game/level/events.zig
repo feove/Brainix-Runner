@@ -49,7 +49,7 @@ const LEVEL_NB: usize = 2;
 var CURRENT_LEVEL: usize = 0;
 
 const level_paths: []const []const u8 = &.{
-    "levels/tmp.json",
+    "levels/lvl_1.json",
     "levels/lvl_2.json",
 };
 
@@ -178,6 +178,8 @@ pub const Event = struct {
         for (0..event.object_nb) |i| {
             Object.remove(&objects[i], &grid);
         }
+        //exception
+        anim.jumper_sprite.resetPos();
     }
 
     pub fn quick_slow_motion() void {
@@ -269,8 +271,6 @@ pub const Level = struct {
         Grid.reset();
 
         Inventory.clear();
-
-        CutScene.reset();
 
         levelStatement = .STARTING;
     }
