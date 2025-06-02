@@ -15,7 +15,7 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 
 const player = @import("../entity/elf.zig");
 const Inventory = @import("../game/inventory.zig").Inventory;
-const CursorManager = @import("../game/utils.zig").CursorManager;
+const CursorManager = @import("../game/cursor.zig").CursorManager;
 const hud = @import("../interface/hud.zig");
 const Interface = hud.Interface;
 const Selector = @import("../interface/selector.zig").Selector;
@@ -340,7 +340,7 @@ fn drawItemNumber() !void {
             }
             var buf: [16:0]u8 = undefined;
             const numAsString = try std.fmt.bufPrintZ(&buf, "{}", .{slot.count});
-            rl.drawText(numAsString, x, y, 30, .black);
+            rl.Text(numAsString, x, y, 30, .black);
         }
     }
 }

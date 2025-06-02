@@ -5,7 +5,7 @@ const Grid = terrain.Grid;
 const CellType = terrain.CellType;
 
 const std = @import("std");
-const CursorManager = @import("utils.zig").CursorManager;
+const CursorManager = @import("cursor.zig").CursorManager;
 const Object = @import("terrain_object.zig").Object;
 const Areas = @import("../game/level/events.zig").Areas;
 const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;

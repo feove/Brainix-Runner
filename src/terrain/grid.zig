@@ -6,7 +6,7 @@ const player = @import("../entity/elf.zig");
 const Elf = player.Elf;
 const HitBox = player.HitBox;
 
-const CursorManager = @import("../game/utils.zig").CursorManager;
+const CursorManager = @import("../game/cursor.zig").CursorManager;
 const Inventory = @import("../game/inventory.zig").Inventory;
 
 const terrain = @import("../game/terrain_object.zig");

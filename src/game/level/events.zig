@@ -22,7 +22,7 @@ const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
 const EventConfig = @import("level_reader.zig").EventConfig;
 
-const CursorManager = @import("../utils.zig").CursorManager;
+const CursorManager = @import("../cursor.zig").CursorManager;
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const alloc = gpa.allocator();

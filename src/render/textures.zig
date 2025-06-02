@@ -8,7 +8,7 @@ const CellType = terrain.CellType;
 
 const Elf = @import("../entity/elf.zig").Elf;
 const anim = @import("../game/animations/animations_manager.zig");
-const CursorManager = @import("../game/utils.zig").CursorManager;
+const CursorManager = @import("../game/cursor.zig").CursorManager;
 const Inventory = @import("../game/inventory.zig").Inventory;
 
 pub var elf: rl.Texture2D = undefined;
@@ -121,7 +121,7 @@ pub fn init() !void {
 }
 
 pub const SpriteDefaultConfig = struct {
-    sprite: Sprite,
+    sprite: Sprite = undefined,
     x_offset: f32 = 0, //good Idea
     y_offset: f32 = 0,
     position: rl.Vector2,

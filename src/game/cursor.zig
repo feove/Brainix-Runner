@@ -21,13 +21,21 @@ pub const CursorManager = struct {
         return cursor_manager;
     }
 
-    pub fn setPlaceAllowing(canPlaced: bool) void {
-        cursor_manager.CanPlaced = canPlaced;
+    pub fn refresh() void {
+        cursor_manager.mouseX = @as(f32, @floatFromInt(rl.getMouseX()));
+        cursor_manager.mouseY = @as(f32, @floatFromInt(rl.getMouseY()));
     }
 
-    pub fn refresh(self: *CursorManager) void {
-        self.mouseX = @as(f32, @floatFromInt(rl.getMouseX()));
-        self.mouseY = @as(f32, @floatFromInt(rl.getMouseY()));
+    pub fn getMouseX() f32 {
+        return cursor_manager.mouseX;
+    }
+
+    pub fn getMouseY() f32 {
+        return cursor_manager.mouseY;
+    }
+
+    pub fn setPlaceAllowing(canPlaced: bool) void {
+        cursor_manager.CanPlaced = canPlaced;
     }
 
     pub fn cursorInGrid() bool {

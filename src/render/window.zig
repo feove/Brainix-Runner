@@ -2,8 +2,9 @@ const rl = @import("raylib");
 const std = @import("std");
 const stdout = std.io.getStdOut().writer();
 const game = @import("../game/game.zig");
+const menu = @import("../view/menu.zig");
 
-const GameView = enum {
+pub const GameView = enum {
     Menu,
     Play,
     Pause,
@@ -22,13 +23,8 @@ pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
 pub fn GameViewManager() !void {
     switch (currentView) {
         GameView.Menu => {
-            rl.beginDrawing();
-            defer rl.endDrawing();
-
-            rl.clearBackground(.white);
-            if (rl.isKeyPressed(rl.KeyboardKey.one)) {
-                currentView = GameView.Play;
-            }
+            menu.update();
+            try menu.render();
         },
         GameView.Play => {
             try game.manage();
