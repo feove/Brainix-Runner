@@ -213,6 +213,22 @@ pub const KeyboardSprites = struct {
     }
 };
 
+pub const GameMenuSprites = struct {
+    start: Sprite,
+    options: Sprite,
+    credits: Sprite,
+    exit: Sprite,
+
+    fn init() GameMenuSprites {
+        return GameMenuSprites{
+            .start = .{ .name = "start", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .options = .{ .name = "options", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .credits = .{ .name = "credits", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+            .exit = .{ .name = "exit", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+        };
+    }
+};
+
 pub const Sprites = struct {
     granite_pure_l4: Sprite,
     granite_pure_l3: Sprite,
