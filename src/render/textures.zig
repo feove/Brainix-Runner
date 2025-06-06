@@ -58,6 +58,9 @@ pub var effects_sheet_526: rl.Texture2D = undefined;
 pub var keys_sheet: rl.Texture2D = undefined;
 pub var keyboard_btns: rl.Texture2D = undefined;
 
+//Gui
+pub var play_button: rl.Texture2D = undefined;
+
 pub const BLOCK_SIZE: f32 = 16;
 const KEY_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
@@ -116,12 +119,14 @@ pub fn init() !void {
 
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
 
+    play_button = try rl.loadTexture("assets/textures/gui/StartButton.png");
+
     keyboard_sprites = KeyboardSprites.init();
     sprites = Sprites.init();
 }
 
 pub const SpriteDefaultConfig = struct {
-    sprite: Sprite = undefined,
+    sprite: Sprite,
     x_offset: f32 = 0, //good Idea
     y_offset: f32 = 0,
     position: rl.Vector2,

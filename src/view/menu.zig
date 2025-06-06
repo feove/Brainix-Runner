@@ -9,7 +9,7 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
 
 pub fn update() void {
-    if (rl.isKeyPressed(rl.KeyboardKey.one)) {
+    if (btns.btns_panel.play.isClicked()) {
         window.currentView = GameView.Play;
     }
 }

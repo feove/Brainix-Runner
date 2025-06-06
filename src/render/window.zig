@@ -3,6 +3,10 @@ const std = @import("std");
 const stdout = std.io.getStdOut().writer();
 const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
+const CursorManager = @import("../game/cursor.zig").CursorManager;
+
+pub const WINDOW_WIDTH = 1000;
+pub const WINDOW_HEIGHT = 800;
 
 pub const GameView = enum {
     Menu,
@@ -21,6 +25,8 @@ pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
 }
 
 pub fn GameViewManager() !void {
+    CursorManager.refresh();
+
     switch (currentView) {
         GameView.Menu => {
             menu.update();

@@ -12,6 +12,7 @@ const Entity = @import("entity/entity_manager.zig").Entity;
 const Interface = @import("interface/hud.zig").Interface;
 const ButtonsPanel = @import("ui/buttons_panel.zig").ButtonsPanel;
 const CursorManager = @import("game/cursor.zig").CursorManager;
+const FontManager = @import("render/fonts.zig").FontManager;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 
@@ -19,7 +20,7 @@ pub fn main() anyerror!void {
 
     //---Inits------------
 
-    window.windowInit(1000, 800);
+    window.windowInit(window.WINDOW_WIDTH, window.WINDOW_HEIGHT);
 
     try textures.init();
     try anim.init();
@@ -28,21 +29,16 @@ pub fn main() anyerror!void {
     try Level.init(allocator);
     try Entity.init();
     try Interface.init(allocator);
+    try FontManager.init(allocator);
     ButtonsPanel.init();
 
     window.clear();
 
     while (!rl.windowShouldClose()) {
-
-        //Test FullScreen feature
-        if (rl.isKeyPressed(rl.KeyboardKey.f11)) {
-            rl.toggleFullscreen();
-        }
-
-        CursorManager.refresh();
-
         try window.GameViewManager();
     }
+
+    FontManager.deinit();
 
     rl.closeWindow();
 }
