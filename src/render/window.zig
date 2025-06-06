@@ -8,6 +8,8 @@ const CursorManager = @import("../game/cursor.zig").CursorManager;
 pub const WINDOW_WIDTH = 1000;
 pub const WINDOW_HEIGHT = 800;
 
+pub var isOpen: bool = true;
+
 pub const GameView = enum {
     Menu,
     Play,

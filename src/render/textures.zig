@@ -60,6 +60,7 @@ pub var keyboard_btns: rl.Texture2D = undefined;
 
 //Gui
 pub var play_button: rl.Texture2D = undefined;
+pub var exit_button: rl.Texture2D = undefined;
 
 pub const BLOCK_SIZE: f32 = 16;
 const KEY_SIZE: f32 = 16;
@@ -120,6 +121,7 @@ pub fn init() !void {
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
 
     play_button = try rl.loadTexture("assets/textures/gui/StartButton.png");
+    exit_button = try rl.loadTexture("assets/textures/gui/ExitMenuButton.png");
 
     keyboard_sprites = KeyboardSprites.init();
     sprites = Sprites.init();

@@ -34,7 +34,7 @@ pub fn main() anyerror!void {
 
     window.clear();
 
-    while (!rl.windowShouldClose()) {
+    while (window.isOpen) {
         try window.GameViewManager();
     }
 

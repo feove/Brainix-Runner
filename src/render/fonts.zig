@@ -36,7 +36,6 @@ pub const FontManager = struct {
             std.debug.print("Cannot Get Font\n", .{});
         }
     }
-    //CHANGE
 
     pub fn deinit() void {
         var it = fontManager.fonts.iterator();

@@ -20,6 +20,7 @@ pub const HoverConfig = struct {
 
 pub const ButtonsPanel = struct {
     play: Button,
+    exit: Button,
 
     pub fn init() void {
         btns_panel = ButtonsPanel{
@@ -30,7 +31,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.1,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.30 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.45 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Play",
@@ -38,6 +39,24 @@ pub const ButtonsPanel = struct {
                     },
                 },
                 .fontText = "Play",
+                .size = 32,
+                .fontOffset = .{ .x = 90, .y = 12 },
+            },
+            .exit = Button{
+                .texture = textures.exit_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.1,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.60 },
+                    .scale = 5.0,
+                    .sprite = Sprite{
+                        .name = "Exit",
+                        .src = .{ .x = 0, .y = 0, .width = 48, .height = 12 },
+                    },
+                },
+                .fontText = "Exit",
                 .size = 32,
                 .fontOffset = .{ .x = 90, .y = 12 },
             },

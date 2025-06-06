@@ -5,6 +5,6 @@ zig-out/
 /build/
 /build-*/
 /docgen_tmp/
-/.vscode/
-/.zed/
+.vscode/
+.zed/
 result
