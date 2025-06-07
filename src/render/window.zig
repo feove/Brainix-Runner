@@ -3,6 +3,7 @@ const std = @import("std");
 const stdout = std.io.getStdOut().writer();
 const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
+const levels = @import("../view/levels.zig");
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 
 pub const WINDOW_WIDTH = 1000;
@@ -15,6 +16,7 @@ pub const GameView = enum {
     Play,
     Pause,
     Settings,
+    Levels,
     Credits,
     Help,
     Quit,
@@ -30,19 +32,23 @@ pub fn GameViewManager() !void {
     CursorManager.refresh();
 
     switch (currentView) {
-        GameView.Menu => {
-            menu.update();
+        .Menu => {
+            try menu.update();
             try menu.render();
         },
-        GameView.Play => {
-            try game.manage();
+        .Play => {
+            try game.update();
             try game.render();
         },
-        GameView.Pause => {},
-        GameView.Settings => {},
-        GameView.Credits => {},
-        GameView.Help => {},
-        GameView.Quit => {},
+        .Levels => {
+            try levels.update();
+            try levels.render();
+        },
+        .Pause => {},
+        .Settings => {},
+        .Credits => {},
+        .Help => {},
+        .Quit => {},
     }
 }
 

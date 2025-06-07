@@ -31,9 +31,6 @@ pub const FontManager = struct {
     pub fn drawText(text: [:0]const u8, x: f32, y: f32, size: u32, spacing: f32, color: rl.Color) void {
         if (fontManager.get(size)) |font| {
             rl.drawTextEx(font, text, .init(x, y), @as(f32, @floatFromInt(size)), spacing, color);
-            //   rl.DrawTextEx(font, text, rl.Vector2{ .x = x, .y = y }, @floatFromInt(size), spacing, color);
-        } else {
-            std.debug.print("Cannot Get Font\n", .{});
         }
     }
 

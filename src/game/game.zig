@@ -4,13 +4,14 @@ const wizard = @import("../entity/wizard.zig");
 const flying = @import("../entity/flying_platform.zig");
 const terrain = @import("../terrain/grid.zig");
 const inventory = @import("../game/inventory.zig");
+const btns = @import("../ui/buttons_panel.zig");
 const Level = @import("../game/level/events.zig").Level;
 const Entity = @import("../entity/entity_manager.zig").Entity;
 const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
-pub fn manage() !void {
+pub fn update() !void {
 
     //Interactions
     terrain.grid.interactions();
@@ -32,6 +33,8 @@ pub fn render() !void {
     try scene.drawScene();
 
     Entity.draw();
+
+    btns.btns_panel.settings.draw();
 
     return;
 }

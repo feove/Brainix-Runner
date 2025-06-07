@@ -21,6 +21,7 @@ pub const HoverConfig = struct {
 pub const ButtonsPanel = struct {
     play: Button,
     exit: Button,
+    settings: Button,
 
     pub fn init() void {
         btns_panel = ButtonsPanel{
@@ -28,10 +29,10 @@ pub const ButtonsPanel = struct {
                 .texture = textures.play_button,
                 .hoverConf = HoverConfig{
                     .default_scale = 5.0,
-                    .hover_scale = 5.1,
+                    .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.45 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.50 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Play",
@@ -46,10 +47,10 @@ pub const ButtonsPanel = struct {
                 .texture = textures.exit_button,
                 .hoverConf = HoverConfig{
                     .default_scale = 5.0,
-                    .hover_scale = 5.1,
+                    .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.60 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.65 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Exit",
@@ -59,6 +60,24 @@ pub const ButtonsPanel = struct {
                 .fontText = "Exit",
                 .size = 32,
                 .fontOffset = .{ .x = 90, .y = 12 },
+            },
+            .settings = Button{
+                .texture = textures.settings_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.2,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.9, .y = window.WINDOW_HEIGHT * 0.90 },
+                    .scale = 5.0,
+                    .sprite = Sprite{
+                        .name = "Settings",
+                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
+                    },
+                },
+                .fontText = "",
+                .size = 0,
+                .fontOffset = .{ .x = 0, .y = 0 },
             },
         };
     }
