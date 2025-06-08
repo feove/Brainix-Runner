@@ -23,6 +23,8 @@ pub const ButtonsPanel = struct {
     exit: Button,
     settings: Button,
     back: Button,
+    next: Button,
+    prev: Button,
 
     pub fn init() void {
         btns_panel = ButtonsPanel{
@@ -98,6 +100,44 @@ pub const ButtonsPanel = struct {
                 .size = 32,
                 .fontOffset = .{ .x = 60, .y = 10 },
             },
+            .next = Button{
+                .texture = textures.next_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.3,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.90, .y = window.WINDOW_HEIGHT * 0.87 },
+                    .scale = 5.5,
+                    .sprite = Sprite{
+                        .name = "Next",
+                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
+                    },
+                },
+                .fontText = "",
+                .size = 0,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
+            .prev = Button{
+                .texture = textures.next_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.5,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.79, .y = window.WINDOW_HEIGHT * 0.862 },
+                    .scale = 5.5,
+                    .sprite = Sprite{
+                        .name = "Prev",
+                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
+                    },
+                    .rotation = 180.0,
+                    .origin = .{ .x = 12 * 5.5, .y = 12 * 5.5 },
+                },
+                .fontText = "",
+                .size = 0,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
         };
     }
 };
@@ -113,6 +153,10 @@ pub const Button = struct {
     pub fn setPosition(self: *Button, x: f32, y: f32) void {
         self.spriteConf.position.x = x;
         self.spriteConf.position.y = y;
+    }
+
+    pub fn setConfig(self: *Button, config: SpriteDefaultConfig) void {
+        self.spriteConf = config;
     }
 
     fn applyHover(self: *Button) void {

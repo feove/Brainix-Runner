@@ -42,4 +42,11 @@ fn drawBackground() void {
 
 fn drawButtons() void {
     btns.btns_panel.back.draw();
+    drawPrevAndNextButtons();
+}
+
+fn drawPrevAndNextButtons() void {
+    // btns.btns_panel.prev.draw();
+    btns.btns_panel.next.draw();
+    btns.btns_panel.prev.draw();
 }
