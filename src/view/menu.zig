@@ -14,7 +14,7 @@ var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {
     if (btns.btns_panel.play.isClicked()) {
-        window.currentView = GameView.Play;
+        window.currentView = GameView.Levels;
     }
 
     if (btns.btns_panel.exit.isClicked()) {
@@ -58,8 +58,8 @@ fn drawBackground() void {
 
     drawClouds(sprite_forest_config);
 
-    Sprite.drawCustom(textures.forest_bg_7, sprite_forest_config);
-    Sprite.drawCustom(textures.forest_bg_6, sprite_forest_config);
+    drawTreesParallax(sprite_forest_config);
+
     Sprite.drawCustom(textures.forest_bg_5, sprite_forest_config);
     Sprite.drawCustom(textures.forest_bg_4, sprite_forest_config);
 
@@ -70,6 +70,14 @@ fn drawBackground() void {
     Sprite.drawCustom(textures.forest_bg_1, sprite_forest_config);
 
     drawTopBlackBackground();
+}
+
+fn drawTreesParallax(trees_config: SpriteDefaultConfig) void {
+    var config = trees_config;
+    config.position.x += rl.getMousePosition().x * 0.002;
+    Sprite.drawCustom(textures.forest_bg_7, config);
+    config.position.x += rl.getMousePosition().x * 0.001;
+    Sprite.drawCustom(textures.forest_bg_6, config);
 }
 
 fn drawClouds(config: SpriteDefaultConfig) void {

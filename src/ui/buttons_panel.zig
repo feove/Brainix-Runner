@@ -22,6 +22,7 @@ pub const ButtonsPanel = struct {
     play: Button,
     exit: Button,
     settings: Button,
+    back: Button,
 
     pub fn init() void {
         btns_panel = ButtonsPanel{
@@ -32,8 +33,8 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.33 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.35 },
-                    .scale = 5.0,
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.10, .y = window.WINDOW_HEIGHT * 0.32 },
+                    .scale = 5.1,
                     .sprite = Sprite{
                         .name = "Play",
                         .src = .{ .x = 0, .y = 0, .width = 48, .height = 12 },
@@ -46,11 +47,11 @@ pub const ButtonsPanel = struct {
             .exit = Button{
                 .texture = textures.exit_button,
                 .hoverConf = HoverConfig{
-                    .default_scale = 5.0,
+                    .default_scale = 5.1,
                     .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.33 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.50 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.10, .y = window.WINDOW_HEIGHT * 0.47 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Exit",
@@ -79,6 +80,24 @@ pub const ButtonsPanel = struct {
                 .size = 0,
                 .fontOffset = .{ .x = 0, .y = 0 },
             },
+            .back = Button{
+                .texture = textures.back_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.1,
+                    .hover_scale = 5.3,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.05, .y = window.WINDOW_HEIGHT * 0.87 },
+                    .scale = 5.2,
+                    .sprite = Sprite{
+                        .name = "Back",
+                        .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
+                    },
+                },
+                .fontText = "Back",
+                .size = 32,
+                .fontOffset = .{ .x = 60, .y = 10 },
+            },
         };
     }
 };
@@ -90,6 +109,11 @@ pub const Button = struct {
     fontText: [:0]const u8,
     size: u32,
     fontOffset: rl.Vector2,
+
+    pub fn setPosition(self: *Button, x: f32, y: f32) void {
+        self.spriteConf.position.x = x;
+        self.spriteConf.position.y = y;
+    }
 
     fn applyHover(self: *Button) void {
         const hover = isHover(self);

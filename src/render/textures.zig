@@ -62,6 +62,7 @@ pub var keyboard_btns: rl.Texture2D = undefined;
 pub var play_button: rl.Texture2D = undefined;
 pub var exit_button: rl.Texture2D = undefined;
 pub var settings_button: rl.Texture2D = undefined;
+pub var back_button: rl.Texture2D = undefined;
 pub var logo: rl.Texture2D = undefined;
 pub var level_selector_bg: rl.Texture2D = undefined;
 
@@ -132,11 +133,12 @@ pub fn init() !void {
     spriteSheet = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/Assets.png");
 
     //Gui
+    logo = try rl.loadTexture("assets/logo/logo.png");
+    level_selector_bg = try rl.loadTexture("assets/textures/gui/LevelSelecterWorldOne.png");
     play_button = try rl.loadTexture("assets/textures/gui/StartButton.png");
     exit_button = try rl.loadTexture("assets/textures/gui/ExitMenuButton.png");
     settings_button = try rl.loadTexture("assets/textures/gui/SettingsButton.png");
-    logo = try rl.loadTexture("assets/logo/logo.png");
-    level_selector_bg = try rl.loadTexture("assets/textures/gui/LevelSelecterWorldOne.png");
+    back_button = try rl.loadTexture("assets/textures/gui/SettingPlat.png");
 
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
     forest_bg_1 = try rl.loadTexture("assets/textures/bg/forest_layer_1.png");
