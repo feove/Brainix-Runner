@@ -7,6 +7,8 @@ const btns = @import("../ui/buttons_panel.zig");
 const textures = @import("../render/textures.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
+const Wizard = @import("../entity/wizard.zig").Wizard;
+const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
 
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
@@ -35,10 +37,14 @@ pub fn render() !void {
     drawLogo();
 }
 
+fn drawButtons() void {
+    btns.btns_panel.play.draw();
+    btns.btns_panel.exit.draw();
+    btns.btns_panel.settings.draw();
+}
+
 fn drawBackground() void {
-    // rl.clearBackground(.white);
-    //  rl.drawTexture(textures.forest_background, 0, 0, .white);
-    //
+    rl.clearBackground(.black);
 
     const sprite_forest_config = SpriteDefaultConfig{
         .position = .{ .x = -40, .y = 0 },
@@ -56,9 +62,14 @@ fn drawBackground() void {
     Sprite.drawCustom(textures.forest_bg_6, sprite_forest_config);
     Sprite.drawCustom(textures.forest_bg_5, sprite_forest_config);
     Sprite.drawCustom(textures.forest_bg_4, sprite_forest_config);
+
+    drawNPC();
+
     Sprite.drawCustom(textures.forest_bg_3, sprite_forest_config);
     Sprite.drawCustom(textures.forest_bg_2, sprite_forest_config);
     Sprite.drawCustom(textures.forest_bg_1, sprite_forest_config);
+
+    drawTopBlackBackground();
 }
 
 fn drawClouds(config: SpriteDefaultConfig) void {
@@ -71,10 +82,28 @@ fn drawClouds(config: SpriteDefaultConfig) void {
     Sprite.drawCustom(textures.forest_bg_8, cloud_config);
 }
 
-fn drawButtons() void {
-    btns.btns_panel.play.draw();
-    btns.btns_panel.exit.draw();
-    btns.btns_panel.settings.draw();
+fn drawTopBlackBackground() void {
+    Sprite.drawCustom(textures.top_far_bgrnd, SpriteDefaultConfig{
+        .sprite = Sprite{
+            .name = "Black Background",
+            .src = .{ .x = 0, .y = 700, .width = 640, .height = 100 },
+        },
+        .position = .{
+            .x = window.WINDOW_WIDTH * 0.92,
+            .y = window.WINDOW_HEIGHT * 1.02,
+        },
+        .scale = 2.5,
+        .rotation = 180,
+        .origin = .{ .x = 320, .y = 50 },
+    });
+}
+
+fn drawNPC() void {
+    Wizard.setPos(320, 310);
+    WizardManager.setCurrent(.IDLE);
+    Wizard.setScale(2.6);
+    Wizard.draw();
+    Wizard.reset();
 }
 
 fn drawLogo() void {

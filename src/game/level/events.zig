@@ -7,7 +7,8 @@ const Elf = player.Elf;
 const wizard_anim = @import("../animations/wizard_anims.zig").wizard_anim;
 const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimation;
 const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
-const Wizard = @import("../../entity/wizard.zig").Wizard;
+const wizard = @import("../../entity/wizard.zig");
+const Wizard = wizard.Wizard;
 const ElfManager = @import("../animations/elf_anims.zig").ElfManager;
 const EffectManager = @import("../animations/vfx_anims.zig").EffectManager;
 const CutScene = @import("cutscene_manager.zig").CutSceneManager;
@@ -295,6 +296,7 @@ pub const Level = struct {
     pub fn stateLevelManager() !void {
         switch (levelStatement) {
             .STARTING => {
+                Wizard.setPos(wizard.DEFAULT_POSITION.x, wizard.DEFAULT_POSITION.y);
                 if (CutScene.lastDone() == .LEVEL_STARTING) {
                     Elf.setState(player.PlayerState.ALIVE);
                     levelStatement = .ONGOING;
@@ -320,7 +322,6 @@ pub const Level = struct {
                         print("GAME ENDED \n", .{});
                         return;
                     }
-
                     try init(alloc);
                 }
             },

@@ -14,7 +14,7 @@ const textures = @import("../render/textures.zig");
 
 pub var wizard: Wizard = undefined;
 
-const DEFAULT_POSITION: rl.Vector2 = .init(250, -50);
+pub const DEFAULT_POSITION: rl.Vector2 = .init(250, -50);
 const TEXTURE_SIZE: rl.Vector2 = .init(231, 190);
 const SCALE: f32 = 2.0;
 const WIZARD_SPEED: f32 = 500.0;
@@ -23,6 +23,7 @@ pub const WizardPosition = enum {
     LEFT,
     MIDDLE,
     RIGHT,
+    NONE,
 };
 
 pub fn init() void {
@@ -65,12 +66,22 @@ pub const Wizard = struct {
         wizard.canDraw = canDraw;
     }
 
+    pub fn setPos(x: f32, y: f32) void {
+        wizard.x = x;
+        wizard.y = y;
+    }
+
+    pub fn setScale(scale: f32) void {
+        wizard.scale = scale;
+    }
+
     pub fn reset() void {
         // wizard.x = DEFAULT_POSITION.x;
         // wizard.y = DEFAULT_POSITION.y;
         wizard.hitbox.rec.x = DEFAULT_POSITION.x + 100;
         wizard.hitbox.rec.y = DEFAULT_POSITION.y + 100;
         wizard.current_pos = .MIDDLE;
+        wizard.scale = 2.0;
     }
 
     pub fn controller(self: *Wizard) void {
@@ -133,10 +144,11 @@ pub const Wizard = struct {
                 self.setCurrentPos(direction);
             },
             .RIGHT => self.setCurrentPos(.MIDDLE),
+            else => {},
         }
     }
 
-    fn setCurrentPos(self: *Wizard, direction: WizardPosition) void {
+    pub fn setCurrentPos(self: *Wizard, direction: WizardPosition) void {
         self.current_pos = direction;
     }
 
@@ -145,6 +157,7 @@ pub const Wizard = struct {
             .LEFT => self.setDestination(50, DEFAULT_POSITION.y),
             .MIDDLE => self.setDestination(DEFAULT_POSITION.x, DEFAULT_POSITION.y),
             .RIGHT => self.setDestination(450, DEFAULT_POSITION.y),
+            else => {},
         }
     }
 
