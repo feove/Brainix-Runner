@@ -65,6 +65,16 @@ pub var settings_button: rl.Texture2D = undefined;
 pub var logo: rl.Texture2D = undefined;
 pub var level_selector_bg: rl.Texture2D = undefined;
 
+pub var forest_bg_1: rl.Texture2D = undefined;
+pub var forest_bg_2: rl.Texture2D = undefined;
+pub var forest_bg_3: rl.Texture2D = undefined;
+pub var forest_bg_4: rl.Texture2D = undefined;
+pub var forest_bg_5: rl.Texture2D = undefined;
+pub var forest_bg_6: rl.Texture2D = undefined;
+pub var forest_bg_7: rl.Texture2D = undefined;
+pub var forest_bg_8: rl.Texture2D = undefined;
+pub var forest_bg_9: rl.Texture2D = undefined;
+
 pub const BLOCK_SIZE: f32 = 16;
 const KEY_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
@@ -98,8 +108,6 @@ pub fn init() !void {
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");
 
-    forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
-
     oak_bg_lyr_1 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_1.png");
     oak_bg_lyr_2 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_2.png");
     oak_bg_lyr_3 = try rl.loadTexture("assets/textures/pack/oak_woods/background/background_layer_3.png");
@@ -129,6 +137,17 @@ pub fn init() !void {
     settings_button = try rl.loadTexture("assets/textures/gui/SettingsButton.png");
     logo = try rl.loadTexture("assets/logo/logo.png");
     level_selector_bg = try rl.loadTexture("assets/textures/gui/LevelSelecterWorldOne.png");
+
+    forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
+    forest_bg_1 = try rl.loadTexture("assets/textures/bg/forest_layer_1.png");
+    forest_bg_2 = try rl.loadTexture("assets/textures/bg/forest_layer_2.png");
+    forest_bg_3 = try rl.loadTexture("assets/textures/bg/forest_layer_3.png");
+    forest_bg_4 = try rl.loadTexture("assets/textures/bg/forest_layer_4.png");
+    forest_bg_5 = try rl.loadTexture("assets/textures/bg/forest_layer_5.png");
+    forest_bg_6 = try rl.loadTexture("assets/textures/bg/forest_layer_6.png");
+    forest_bg_7 = try rl.loadTexture("assets/textures/bg/forest_layer_7.png");
+    forest_bg_8 = try rl.loadTexture("assets/textures/bg/forest_layer_8.png");
+    forest_bg_9 = try rl.loadTexture("assets/textures/bg/forest_layer_9.png");
 
     keyboard_sprites = KeyboardSprites.init();
     sprites = Sprites.init();

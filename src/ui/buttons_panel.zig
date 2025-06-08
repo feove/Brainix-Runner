@@ -32,7 +32,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.50 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.33 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.35 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Play",
@@ -50,7 +50,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.25 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.65 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.33 - 48 * 3, .y = window.WINDOW_HEIGHT * 0.50 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Exit",
@@ -113,6 +113,10 @@ pub const Button = struct {
     }
 
     pub fn isHover(self: *Button) bool {
+        if (rl.isCursorOnScreen() == false) {
+            return false;
+        }
+
         const mouse_pos: rl.Rectangle = .init(CursorManager.getMouseX(), CursorManager.getMouseY(), 20, 20);
         const button: rl.Rectangle = .init(
             self.spriteConf.position.x,
