@@ -47,7 +47,7 @@ pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement: LevelStatement = .STARTING;
 
 const LEVEL_NB: usize = 2;
-var CURRENT_LEVEL: usize = 0;
+pub var CURRENT_LEVEL: usize = 0;
 
 const level_paths: []const []const u8 = &.{
     "levels/lvl_1.json",

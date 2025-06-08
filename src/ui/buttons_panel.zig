@@ -35,7 +35,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.10, .y = window.WINDOW_HEIGHT * 0.32 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.05, .y = window.WINDOW_HEIGHT * 0.88 }, //0.32
                     .scale = 5.1,
                     .sprite = Sprite{
                         .name = "Play",
@@ -53,7 +53,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.3,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.10, .y = window.WINDOW_HEIGHT * 0.47 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.35, .y = window.WINDOW_HEIGHT * 0.88 }, // 0.47
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Exit",
@@ -71,7 +71,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.2,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.9, .y = window.WINDOW_HEIGHT * 0.90 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.9, .y = window.WINDOW_HEIGHT * 0.88 },
                     .scale = 5.0,
                     .sprite = Sprite{
                         .name = "Settings",

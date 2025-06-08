@@ -7,6 +7,8 @@ const btns = @import("../ui/buttons_panel.zig");
 const textures = @import("../render/textures.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
+const Elf = @import("../entity/elf.zig").Elf;
+const ElfManager = @import("../game/animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../entity/wizard.zig").Wizard;
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
 
@@ -15,6 +17,11 @@ var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 pub fn update() !void {
     if (btns.btns_panel.play.isClicked()) {
         window.currentView = GameView.Levels;
+    }
+
+    //tmp
+    if (rl.isKeyPressed(rl.KeyboardKey.h)) {
+        window.currentView = GameView.Play;
     }
 
     if (btns.btns_panel.exit.isClicked()) {
@@ -76,7 +83,7 @@ fn drawTreesParallax(trees_config: SpriteDefaultConfig) void {
     var config = trees_config;
     config.position.x += rl.getMousePosition().x * 0.002;
     Sprite.drawCustom(textures.forest_bg_7, config);
-    config.position.x += rl.getMousePosition().x * 0.001;
+    config.position.x += rl.getMousePosition().x * 0.005;
     Sprite.drawCustom(textures.forest_bg_6, config);
 }
 
@@ -112,6 +119,10 @@ fn drawNPC() void {
     Wizard.setScale(2.6);
     Wizard.draw();
     Wizard.reset();
+
+    Elf.setPos(.init(200, 405));
+    ElfManager.setAnim(.IDLE);
+    Elf.drawElf();
 }
 
 fn drawLogo() void {
