@@ -21,10 +21,12 @@ pub fn update() !void {
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
         PageSpecific.increasePage();
+        LevelManager.debug();
     }
 
     if (btns.btns_panel.prev.isClicked() and btns.btns_panel.prev.canClick) {
         PageSpecific.decreasePage();
+        LevelManager.debug();
     }
 
     //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)

@@ -44,6 +44,11 @@ pub const LevelManager = struct {
     current_level: usize = 0,
     page: PageSpecific,
 
+    pub fn debug() void {
+        std.debug.print("LevelManager: current_level = {}, page = {}\n", .{ level_manager.current_level, level_manager.page.current_page });
+        std.debug.print("Page = {}\n\n", .{level_manager.page});
+    }
+
     pub fn update() void {
         level_manager.page.update();
     }
