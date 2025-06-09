@@ -1,9 +1,13 @@
 const std = @import("std");
 const rl = @import("raylib");
 
+const textures = @import("../../render/textures.zig");
+const SpriteDefaultConfig = textures.SpriteDefaultConfig;
+const Sprite = textures.Sprite;
+const btns = @import("../../ui/buttons_panel.zig");
 pub var level_manager: LevelManager = undefined;
 
-const LEVEL_NB = 2;
+const LEVEL_NB = 10;
 const LEVEL_PATH = "levels/level_XX.json";
 
 pub const PageSpecific = struct {
@@ -12,6 +16,11 @@ pub const PageSpecific = struct {
     max_level_by_page: usize,
     first_level_index: usize,
     last_level_index: usize,
+    column: usize,
+    row: usize,
+    offset: usize,
+    padding: f32,
+    spacing: f32,
 
     pub fn selfReturn() PageSpecific {
         return level_manager.page;
@@ -36,6 +45,14 @@ pub const LevelMeta = struct {
     is_locked: bool,
     stars_collected: u8,
     path: []const u8,
+
+    pub fn draw(self: *LevelMeta, x: f32, y: f32) void {
+        btns.Button.setPosition(&btns.btns_panel.level, x, y);
+
+        btns.btns_panel.level.draw();
+
+        _ = self;
+    }
 };
 
 pub const LevelManager = struct {
@@ -82,6 +99,11 @@ pub const LevelManager = struct {
                 .max_pages = 3,
                 .first_level_index = 0,
                 .last_level_index = 9,
+                .column = 5,
+                .row = 2,
+                .offset = 0,
+                .padding = 0,
+                .spacing = 0,
             },
         };
     }

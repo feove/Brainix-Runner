@@ -25,6 +25,7 @@ pub const ButtonsPanel = struct {
     back: Button,
     next: Button,
     prev: Button,
+    level: Button,
 
     pub fn init() void {
         btns_panel = ButtonsPanel{
@@ -133,6 +134,24 @@ pub const ButtonsPanel = struct {
                     },
                     .rotation = 180.0,
                     .origin = .{ .x = 12 * 5.5, .y = 12 * 5.5 },
+                },
+                .fontText = "",
+                .size = 0,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
+            .level = Button{
+                .texture = textures.level_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.5,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.3, .y = window.WINDOW_HEIGHT * 0.3 },
+                    .scale = 5.5,
+                    .sprite = Sprite{
+                        .name = "Level",
+                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
+                    },
                 },
                 .fontText = "",
                 .size = 0,

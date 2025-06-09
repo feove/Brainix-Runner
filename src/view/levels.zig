@@ -21,14 +21,13 @@ pub fn update() !void {
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
         PageSpecific.increasePage();
-        LevelManager.debug();
     }
 
     if (btns.btns_panel.prev.isClicked() and btns.btns_panel.prev.canClick) {
         PageSpecific.decreasePage();
-        LevelManager.debug();
     }
 
+    LevelManager.debug();
     //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
 }
 
@@ -39,6 +38,22 @@ pub fn render() !void {
     drawBackground();
 
     drawButtons();
+
+    drawLevels();
+}
+
+fn drawLevels() void {
+    const level_manager = LevelManager.SelfReturn();
+    const pad = level_manager.page.padding;
+
+    for (0..level_manager.page.row) |i| {
+        for (0..level_manager.page.column) |j| {
+            level_manager.levels[j + i * level_manager.page.column].draw(
+                @as(f32, @floatFromInt(i)) * pad,
+                @as(f32, @floatFromInt(j)) * pad,
+            );
+        }
+    }
 }
 
 fn drawBackground() void {
