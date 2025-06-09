@@ -149,6 +149,7 @@ pub const Button = struct {
     fontText: [:0]const u8,
     size: u32,
     fontOffset: rl.Vector2,
+    canClick: bool = true,
 
     pub fn setPosition(self: *Button, x: f32, y: f32) void {
         self.spriteConf.position.x = x;
@@ -157,6 +158,10 @@ pub const Button = struct {
 
     pub fn setConfig(self: *Button, config: SpriteDefaultConfig) void {
         self.spriteConf = config;
+    }
+
+    pub fn setCanClick(self: *Button, canClick: bool) void {
+        self.canClick = canClick;
     }
 
     fn applyHover(self: *Button) void {

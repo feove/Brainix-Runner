@@ -13,6 +13,7 @@ const Interface = @import("interface/hud.zig").Interface;
 const ButtonsPanel = @import("ui/buttons_panel.zig").ButtonsPanel;
 const CursorManager = @import("game/cursor.zig").CursorManager;
 const FontManager = @import("render/fonts.zig").FontManager;
+const LevelsManager = @import("game/level/levels_manager.zig").LevelManager;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 
@@ -26,13 +27,14 @@ pub fn main() anyerror!void {
     try anim.init();
     try Grid.init(allocator);
     try Inventory.init(allocator);
+    try LevelsManager.init(allocator);
     try Level.init(allocator);
     try Entity.init();
     try Interface.init(allocator);
     try FontManager.init(allocator);
     ButtonsPanel.init();
 
-    window.clear();
+    //window.clear();
 
     while (window.isOpen) {
         try window.GameViewManager();

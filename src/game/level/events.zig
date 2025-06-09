@@ -4,6 +4,9 @@ const rl = @import("raylib");
 const player = @import("../../entity/elf.zig");
 const Elf = player.Elf;
 
+const LevelMeta = @import("levels_manager.zig").LevelMeta;
+const LevelManager = @import("levels_manager.zig").LevelManager;
+
 const wizard_anim = @import("../animations/wizard_anims.zig").wizard_anim;
 const WizardAnimation = @import("../animations/wizard_anims.zig").WizardAnimation;
 const WizardManager = @import("../animations/wizard_anims.zig").WizardManager;
@@ -251,8 +254,9 @@ pub const Level = struct {
 
         //Events Init
         level.i_event = CURRENT_EVENT;
-
-        const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level_paths[CURRENT_LEVEL]);
+        const level_meta = LevelManager.CurrentLevel();
+        const level_path = level_meta.path;
+        const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level_path);
 
         level.events = eventConfig.*.events.*;
         // print("INIT : {d} \n", .{level.events[3].areas.intermediate_areas[0].x});
@@ -311,18 +315,14 @@ pub const Level = struct {
             .COMPLETED => {
                 if (CutScene.lastDone() == .LEVEL_ENDING) {
                     print("LEVEL COMPLETED \n", .{});
-                    Wizard.reset();
-                    ElfManager.reset();
-                    CutScene.reset();
 
-                    CURRENT_LEVEL += 1;
-
-                    if (CURRENT_LEVEL == LEVEL_NB) {
-                        CURRENT_LEVEL = 0;
-                        print("GAME ENDED \n", .{});
-                        return;
+                    if (false) { //Level Complete Button Pressed
+                        Wizard.reset();
+                        ElfManager.reset();
+                        CutScene.reset();
                     }
-                    try init(alloc);
+
+                    //try init(alloc);
                 }
             },
         }

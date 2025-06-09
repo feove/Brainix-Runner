@@ -3,15 +3,31 @@ const rl = @import("raylib");
 const print = std.debug.print;
 const window = @import("../render/window.zig");
 const GameView = window.GameView;
+const levelmanager = @import("../game/level/levels_manager.zig");
+const LevelManager = levelmanager.LevelManager;
+const LevelMeta = levelmanager.LevelMeta;
+const PageSpecific = levelmanager.PageSpecific;
 const textures = @import("../render/textures.zig");
 const btns = @import("../ui/buttons_panel.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
 
 pub fn update() !void {
+    LevelManager.update();
+
     if (btns.btns_panel.back.isClicked()) {
         window.currentView = GameView.Menu;
     }
+
+    if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
+        PageSpecific.increasePage();
+    }
+
+    if (btns.btns_panel.prev.isClicked() and btns.btns_panel.prev.canClick) {
+        PageSpecific.decreasePage();
+    }
+
+    //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
 }
 
 pub fn render() !void {
@@ -47,6 +63,19 @@ fn drawButtons() void {
 
 fn drawPrevAndNextButtons() void {
     // btns.btns_panel.prev.draw();
-    btns.btns_panel.next.draw();
-    btns.btns_panel.prev.draw();
+    const page = PageSpecific.selfReturn();
+
+    const showNext = page.current_page < page.max_pages - 1;
+    const showPrev = page.current_page > 0;
+
+    btns.btns_panel.prev.setCanClick(showPrev);
+    btns.btns_panel.next.setCanClick(showNext);
+
+    if (showNext) {
+        btns.btns_panel.next.draw();
+    }
+
+    if (showPrev) {
+        btns.btns_panel.prev.draw();
+    }
 }
