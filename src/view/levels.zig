@@ -6,6 +6,7 @@ const GameView = window.GameView;
 const levelmanager = @import("../game/level/levels_manager.zig");
 const LevelManager = levelmanager.LevelManager;
 const LevelMeta = levelmanager.LevelMeta;
+
 const PageSpecific = levelmanager.PageSpecific;
 const textures = @import("../render/textures.zig");
 const btns = @import("../ui/buttons_panel.zig");
@@ -27,7 +28,7 @@ pub fn update() !void {
         PageSpecific.decreasePage();
     }
 
-    LevelManager.debug();
+    //LevelManager.debug();
     //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
 }
 
@@ -49,15 +50,26 @@ fn drawLevels() void {
     const padding = level_manager.page.padding;
     const spacing = level_manager.page.spacing;
 
+    //Need Locked logic
+
     for (0..level_manager.page.row) |i| {
         for (0..level_manager.page.column) |j| {
-            if (level_manager.page.first_level_index + i + j == level_manager.level_nb) {
+            const index = level_manager.page.first_level_index + i + j * level_manager.page.row;
+
+            if (index > level_manager.level_nb) {
                 return;
             }
-            level_manager.levels[level_manager.page.first_level_index + i + j].draw(
-                offset_x + @as(f32, @floatFromInt(j)) * padding * 0.6,
-                offset_y + @as(f32, @floatFromInt(i)) * padding / 2 + spacing * @as(f32, @floatFromInt(i)),
-            );
+            const i_f32 = @as(f32, @floatFromInt(i));
+            const j_f32 = @as(f32, @floatFromInt(j));
+
+            const x = offset_x + j_f32 * padding * 0.65;
+            const y = offset_y + i_f32 * padding * 0.45 + spacing * i_f32;
+
+            if (level_manager.levels[index].is_locked == false) {
+                level_manager.levels[index].draw_unlocked_level(x, y);
+                continue;
+            }
+            level_manager.levels[index].draw_locked_level(x, y);
         }
     }
 }

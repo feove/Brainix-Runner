@@ -4,6 +4,7 @@ const rl = @import("raylib");
 const textures = @import("../../render/textures.zig");
 const window = @import("../../render/window.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
+const FontManager = @import("../../render/fonts.zig").FontManager;
 const Sprite = textures.Sprite;
 const btns = @import("../../ui/buttons_panel.zig");
 pub var level_manager: LevelManager = undefined;
@@ -48,10 +49,21 @@ pub const LevelMeta = struct {
     stars_collected: u8,
     path: []const u8,
 
-    pub fn draw(self: *LevelMeta, x: f32, y: f32) void {
+    pub fn draw_unlocked_level(self: *LevelMeta, x: f32, y: f32) void {
         btns.Button.setPosition(&btns.btns_panel.level, x, y);
-
         btns.btns_panel.level.draw();
+        const id = self.id;
+        var static_buf: [16:0]u8 = undefined;
+        const id_text: [:0]const u8 = std.fmt.bufPrintZ(&static_buf, "{}", .{id + 1}) catch "??";
+
+        //  std.debug.print("ID_TEXT {s}\n", .{id_text});
+        FontManager.drawText(id_text, x + 15, y + 20, 32, 0.0, .black);
+    }
+
+    pub fn draw_locked_level(self: *LevelMeta, x: f32, y: f32) void {
+        btns.Button.setPosition(&btns.btns_panel.locked_level, x, y);
+
+        btns.btns_panel.locked_level.draw();
 
         _ = self;
     }
@@ -86,7 +98,7 @@ pub const LevelManager = struct {
             const path = try makePath(allocator, id);
             levels[id] = LevelMeta{
                 .id = id,
-                .is_locked = id > 0,
+                .is_locked = false,
                 .stars_collected = 0,
                 .path = path,
             };
@@ -104,9 +116,9 @@ pub const LevelManager = struct {
                 .column = 5,
                 .row = 2,
                 .offset_x = window.WINDOW_WIDTH * 0.22,
-                .offset_y = window.WINDOW_HEIGHT * 0.30,
+                .offset_y = window.WINDOW_HEIGHT * 0.25,
                 .padding = 6 * 32,
-                .spacing = 32,
+                .spacing = 56,
             },
         };
     }

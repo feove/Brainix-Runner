@@ -65,6 +65,7 @@ pub var settings_button: rl.Texture2D = undefined;
 pub var back_button: rl.Texture2D = undefined;
 pub var next_button: rl.Texture2D = undefined;
 pub var level_button: rl.Texture2D = undefined;
+pub var locked_level_button: rl.Texture2D = undefined;
 
 pub var logo: rl.Texture2D = undefined;
 pub var level_selector_bg: rl.Texture2D = undefined;
@@ -144,6 +145,7 @@ pub fn init() !void {
     back_button = try rl.loadTexture("assets/textures/gui/SettingPlat.png");
     next_button = try rl.loadTexture("assets/textures/gui/NextButton.png");
     level_button = try rl.loadTexture("assets/textures/gui/LevelIcon.png");
+    locked_level_button = try rl.loadTexture("assets/textures/gui/LevelIconDisabled.png");
 
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
     forest_bg_1 = try rl.loadTexture("assets/textures/bg/forest_layer_1.png");

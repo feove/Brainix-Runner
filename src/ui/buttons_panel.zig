@@ -26,6 +26,7 @@ pub const ButtonsPanel = struct {
     next: Button,
     prev: Button,
     level: Button,
+    locked_level: Button,
 
     pub fn init() void {
         btns_panel = ButtonsPanel{
@@ -150,6 +151,24 @@ pub const ButtonsPanel = struct {
                     .scale = 6,
                     .sprite = Sprite{
                         .name = "Level",
+                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
+                    },
+                },
+                .fontText = "",
+                .size = 0,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
+            .locked_level = Button{
+                .texture = textures.locked_level_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 6.0,
+                    .hover_scale = 6.2,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.3, .y = window.WINDOW_HEIGHT * 0.3 },
+                    .scale = 6,
+                    .sprite = Sprite{
+                        .name = "Locked Level",
                         .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
                     },
                 },
