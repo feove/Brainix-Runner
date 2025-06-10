@@ -142,12 +142,12 @@ pub const ButtonsPanel = struct {
             .level = Button{
                 .texture = textures.level_button,
                 .hoverConf = HoverConfig{
-                    .default_scale = 5.0,
-                    .hover_scale = 5.5,
+                    .default_scale = 6.0,
+                    .hover_scale = 6.2,
                 },
                 .spriteConf = SpriteDefaultConfig{
                     .position = .{ .x = window.WINDOW_WIDTH * 0.3, .y = window.WINDOW_HEIGHT * 0.3 },
-                    .scale = 5.5,
+                    .scale = 6,
                     .sprite = Sprite{
                         .name = "Level",
                         .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },

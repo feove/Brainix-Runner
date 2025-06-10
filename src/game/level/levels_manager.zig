@@ -2,12 +2,13 @@ const std = @import("std");
 const rl = @import("raylib");
 
 const textures = @import("../../render/textures.zig");
+const window = @import("../../render/window.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
 const btns = @import("../../ui/buttons_panel.zig");
 pub var level_manager: LevelManager = undefined;
 
-const LEVEL_NB = 10;
+const LEVEL_NB = 23;
 const LEVEL_PATH = "levels/level_XX.json";
 
 pub const PageSpecific = struct {
@@ -18,7 +19,8 @@ pub const PageSpecific = struct {
     last_level_index: usize,
     column: usize,
     row: usize,
-    offset: usize,
+    offset_x: f32,
+    offset_y: f32,
     padding: f32,
     spacing: f32,
 
@@ -101,9 +103,10 @@ pub const LevelManager = struct {
                 .last_level_index = 9,
                 .column = 5,
                 .row = 2,
-                .offset = 0,
-                .padding = 0,
-                .spacing = 0,
+                .offset_x = window.WINDOW_WIDTH * 0.22,
+                .offset_y = window.WINDOW_HEIGHT * 0.30,
+                .padding = 6 * 32,
+                .spacing = 32,
             },
         };
     }

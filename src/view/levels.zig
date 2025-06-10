@@ -44,13 +44,19 @@ pub fn render() !void {
 
 fn drawLevels() void {
     const level_manager = LevelManager.SelfReturn();
-    const pad = level_manager.page.padding;
+    const offset_x = level_manager.page.offset_x;
+    const offset_y = level_manager.page.offset_y;
+    const padding = level_manager.page.padding;
+    const spacing = level_manager.page.spacing;
 
     for (0..level_manager.page.row) |i| {
         for (0..level_manager.page.column) |j| {
-            level_manager.levels[j + i * level_manager.page.column].draw(
-                @as(f32, @floatFromInt(i)) * pad,
-                @as(f32, @floatFromInt(j)) * pad,
+            if (level_manager.page.first_level_index + i + j == level_manager.level_nb) {
+                return;
+            }
+            level_manager.levels[level_manager.page.first_level_index + i + j].draw(
+                offset_x + @as(f32, @floatFromInt(j)) * padding * 0.6,
+                offset_y + @as(f32, @floatFromInt(i)) * padding / 2 + spacing * @as(f32, @floatFromInt(i)),
             );
         }
     }
