@@ -49,7 +49,7 @@ pub var auto_death_time_max: f64 = 10.0; //10
 pub var playerEventstatus: PlayerEventStatus = PlayerEventStatus.IDLE_AREA;
 pub var levelStatement: LevelStatement = .STARTING;
 
-const LEVEL_NB: usize = 2;
+const LEVEL_NB: usize = 26;
 pub var CURRENT_LEVEL: usize = 0;
 
 const level_paths: []const []const u8 = &.{

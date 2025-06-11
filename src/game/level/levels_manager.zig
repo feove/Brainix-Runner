@@ -9,7 +9,7 @@ const Sprite = textures.Sprite;
 const btns = @import("../../ui/buttons_panel.zig");
 pub var level_manager: LevelManager = undefined;
 
-const LEVEL_NB = 23;
+const LEVEL_NB = 26;
 const LEVEL_PATH = "levels/level_XX.json";
 
 pub const PageSpecific = struct {
@@ -52,11 +52,11 @@ pub const LevelMeta = struct {
     pub fn draw_unlocked_level(self: *LevelMeta, x: f32, y: f32) void {
         btns.Button.setPosition(&btns.btns_panel.level, x, y);
         btns.btns_panel.level.draw();
+
         const id = self.id;
         var static_buf: [16:0]u8 = undefined;
         const id_text: [:0]const u8 = std.fmt.bufPrintZ(&static_buf, "{}", .{id + 1}) catch "??";
 
-        //  std.debug.print("ID_TEXT {s}\n", .{id_text});
         FontManager.drawText(id_text, x + 15, y + 20, 32, 0.0, .black);
     }
 
@@ -98,7 +98,7 @@ pub const LevelManager = struct {
             const path = try makePath(allocator, id);
             levels[id] = LevelMeta{
                 .id = id,
-                .is_locked = false,
+                .is_locked = id > 18,
                 .stars_collected = 0,
                 .path = path,
             };

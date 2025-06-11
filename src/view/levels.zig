@@ -28,6 +28,10 @@ pub fn update() !void {
         PageSpecific.decreasePage();
     }
 
+    if (btns.btns_panel.level.isClicked()) {
+        print("Level Button has been CLicked\n", .{});
+    }
+
     //LevelManager.debug();
     //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
 }
@@ -54,11 +58,12 @@ fn drawLevels() void {
 
     for (0..level_manager.page.row) |i| {
         for (0..level_manager.page.column) |j| {
-            const index = level_manager.page.first_level_index + i + j * level_manager.page.row;
+            const index = level_manager.page.first_level_index + j + i * level_manager.page.column;
 
-            if (index > level_manager.level_nb) {
+            if (index >= level_manager.level_nb) {
                 return;
             }
+
             const i_f32 = @as(f32, @floatFromInt(i));
             const j_f32 = @as(f32, @floatFromInt(j));
 
