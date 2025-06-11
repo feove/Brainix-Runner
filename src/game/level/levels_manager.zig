@@ -58,10 +58,11 @@ pub const LevelMeta = struct {
         FontManager.drawText(id_text, if (id < 9) pos.x + 25 else pos.x + 15, pos.y + 20, 32, 0.0, .black);
     }
 
-    pub fn draw_locked_level(self: *LevelMeta) void {
-        btns.btns_panel.locked_level.draw();
+    pub fn draw_locked_level(id: usize) void {
+        const pos = btns.btns_panel.levels[id].spriteConf.position;
 
-        _ = self;
+        btns.btns_panel.locked_level.setPosition(pos.x, pos.y);
+        btns.btns_panel.locked_level.draw();
     }
 };
 
@@ -86,6 +87,10 @@ pub const LevelManager = struct {
 
     pub fn CurrentLevel() LevelMeta {
         return level_manager.levels[level_manager.current_level];
+    }
+
+    pub fn setCurrentLevel(id: usize) void {
+        level_manager.current_level = id;
     }
 
     pub fn init(allocator: std.mem.Allocator) !void {

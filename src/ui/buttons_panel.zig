@@ -63,6 +63,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "",
                 .size = 32,
                 .fontOffset = .{ .x = 15, .y = 20 },
+                .canClick = false,
             };
         }
 

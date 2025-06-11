@@ -28,7 +28,7 @@ pub fn main() anyerror!void {
     try Grid.init(allocator);
     try Inventory.init(allocator);
     try LevelsManager.init(allocator);
-    try Level.init(allocator);
+    //try Level.init(allocator);
     try Entity.init();
     try Interface.init(allocator);
     try FontManager.init(allocator);

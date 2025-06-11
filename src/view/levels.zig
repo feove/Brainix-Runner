@@ -6,27 +6,32 @@ const GameView = window.GameView;
 const levelmanager = @import("../game/level/levels_manager.zig");
 const LevelManager = levelmanager.LevelManager;
 const LevelMeta = levelmanager.LevelMeta;
-
+const Level = @import("../game/level/events.zig").Level;
 const PageSpecific = levelmanager.PageSpecific;
 const textures = @import("../render/textures.zig");
 const btns = @import("../ui/buttons_panel.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
+var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+const allocator = gpa.allocator();
 
 pub fn update() !void {
-    LevelManager.update();
-
     if (btns.btns_panel.back.isClicked()) {
         window.currentView = GameView.Menu;
     }
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
         PageSpecific.increasePage();
+        reset_click_permission();
     }
 
     if (btns.btns_panel.prev.isClicked() and btns.btns_panel.prev.canClick) {
         PageSpecific.decreasePage();
+        reset_click_permission();
     }
+
+    LevelManager.update();
+    try level_is_clicked();
 
     //LevelManager.debug();
     //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
@@ -53,10 +58,44 @@ fn drawLevels() void {
             return;
         }
 
+        btns.btns_panel.levels[id].canClick = true;
         if (level_manager.levels[id].is_locked) {
+            LevelMeta.draw_locked_level(id);
             continue;
         }
         LevelMeta.draw_unlocked_level(id);
+    }
+}
+
+fn reset_click_permission() void {
+    const level_manager = LevelManager.SelfReturn();
+    const first_id = level_manager.page.first_level_index;
+    const last_id = first_id + level_manager.page.max_level_by_page;
+    for (first_id..last_id) |id| {
+        if (id == level_manager.level_nb) {
+            return;
+        }
+
+        btns.btns_panel.levels[id].canClick = false;
+    }
+}
+
+fn level_is_clicked() !void {
+    const level_manager = LevelManager.SelfReturn();
+    const first_id = level_manager.page.first_level_index;
+    const last_id = first_id + level_manager.page.max_level_by_page;
+    //Need Locked logic
+    for (first_id..last_id) |id| {
+        if (id == level_manager.level_nb) {
+            return;
+        }
+
+        if (btns.btns_panel.levels[id].isClicked() and level_manager.levels[id].is_locked == false) {
+            print("Level clicked : {d} PATH LEVEL : {s}\n", .{ id + 1, level_manager.levels[id].path });
+            LevelManager.setCurrentLevel(id);
+            try Level.init(allocator);
+            window.currentView = GameView.Play;
+        }
     }
 }
 

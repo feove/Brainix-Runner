@@ -28,6 +28,8 @@ const EventConfig = @import("level_reader.zig").EventConfig;
 
 const CursorManager = @import("../cursor.zig").CursorManager;
 
+const window = @import("../../render/window.zig");
+
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const alloc = gpa.allocator();
 const print = std.debug.print;
@@ -322,6 +324,7 @@ pub const Level = struct {
                         CutScene.reset();
                     }
 
+                    window.currentView = .Menu;
                     //try init(alloc);
                 }
             },
