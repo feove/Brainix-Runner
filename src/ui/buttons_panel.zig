@@ -40,8 +40,6 @@ pub const ButtonsPanel = struct {
         const row = lvls.level_manager.page.row;
 
         for (0..lvls.level_manager.level_nb) |i| {
-            const id_text: [:0]const u8 = try std.fmt.allocPrintZ(allocator, "{}", .{i + 1});
-
             const i_mod: f32 = @as(f32, @floatFromInt(i % column));
             const i_div: f32 = @as(f32, @floatFromInt((i / column) % row));
             const x = offset_x + i_mod * padding * 0.65;
@@ -63,7 +61,6 @@ pub const ButtonsPanel = struct {
                     },
                 },
                 .fontText = "",
-                .levelText = @constCast(&id_text),
                 .size = 32,
                 .fontOffset = .{ .x = 15, .y = 20 },
             };
@@ -86,7 +83,7 @@ pub const ButtonsPanel = struct {
                 },
                 .fontText = "Play",
                 .size = 32,
-                .fontOffset = .{ .x = 60, .y = 10 },
+                .fontOffset = .{ .x = 90, .y = 10 },
             },
             .exit = Button{
                 .texture = textures.exit_button,
@@ -104,7 +101,7 @@ pub const ButtonsPanel = struct {
                 },
                 .fontText = "Exit",
                 .size = 32,
-                .fontOffset = .{ .x = 60, .y = 10 },
+                .fontOffset = .{ .x = 90, .y = 10 },
             },
             .settings = Button{
                 .texture = textures.settings_button,
@@ -120,9 +117,9 @@ pub const ButtonsPanel = struct {
                         .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
                     },
                 },
-                .fontText = "Settings",
-                .size = 32,
-                .fontOffset = .{ .x = 60, .y = 10 },
+                .fontText = "",
+                .size = 0,
+                .fontOffset = .{ .x = 0, .y = 0 },
             },
             .back = Button{
                 .texture = textures.back_button,
@@ -217,7 +214,6 @@ pub const Button = struct {
     hoverConf: HoverConfig,
     spriteConf: SpriteDefaultConfig,
     fontText: [:0]const u8,
-    levelText: *[:0]const u8 = undefined,
     size: u32,
     fontOffset: rl.Vector2,
     canClick: bool = true,

@@ -49,20 +49,16 @@ pub const LevelMeta = struct {
     stars_collected: u8,
     path: []const u8,
 
-    pub fn draw_unlocked_level(self: *LevelMeta, x: f32, y: f32) void {
-        btns.Button.setPosition(&btns.btns_panel.level, x, y);
-        btns.btns_panel.level.draw();
+    pub fn draw_unlocked_level(id: usize) void {
+        const pos = btns.btns_panel.levels[id].spriteConf.position;
 
-        const id = self.id;
         var static_buf: [16:0]u8 = undefined;
         const id_text: [:0]const u8 = std.fmt.bufPrintZ(&static_buf, "{}", .{id + 1}) catch "??";
-
-        FontManager.drawText(id_text, x + 15, y + 20, 32, 0.0, .black);
+        btns.btns_panel.levels[id].draw();
+        FontManager.drawText(id_text, if (id < 9) pos.x + 25 else pos.x + 15, pos.y + 20, 32, 0.0, .black);
     }
 
-    pub fn draw_locked_level(self: *LevelMeta, x: f32, y: f32) void {
-        btns.Button.setPosition(&btns.btns_panel.locked_level, x, y);
-
+    pub fn draw_locked_level(self: *LevelMeta) void {
         btns.btns_panel.locked_level.draw();
 
         _ = self;

@@ -53,7 +53,10 @@ fn drawLevels() void {
             return;
         }
 
-        btns.btns_panel.levels[id].draw();
+        if (level_manager.levels[id].is_locked) {
+            continue;
+        }
+        LevelMeta.draw_unlocked_level(id);
     }
 }
 
