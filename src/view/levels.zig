@@ -28,10 +28,6 @@ pub fn update() !void {
         PageSpecific.decreasePage();
     }
 
-    if (btns.btns_panel.level.isClicked()) {
-        print("Level Button has been CLicked\n", .{});
-    }
-
     //LevelManager.debug();
     //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
 }
@@ -49,33 +45,15 @@ pub fn render() !void {
 
 fn drawLevels() void {
     const level_manager = LevelManager.SelfReturn();
-    const offset_x = level_manager.page.offset_x;
-    const offset_y = level_manager.page.offset_y;
-    const padding = level_manager.page.padding;
-    const spacing = level_manager.page.spacing;
-
+    const first_id = level_manager.page.first_level_index;
+    const last_id = first_id + level_manager.page.max_level_by_page;
     //Need Locked logic
-
-    for (0..level_manager.page.row) |i| {
-        for (0..level_manager.page.column) |j| {
-            const index = level_manager.page.first_level_index + j + i * level_manager.page.column;
-
-            if (index >= level_manager.level_nb) {
-                return;
-            }
-
-            const i_f32 = @as(f32, @floatFromInt(i));
-            const j_f32 = @as(f32, @floatFromInt(j));
-
-            const x = offset_x + j_f32 * padding * 0.65;
-            const y = offset_y + i_f32 * padding * 0.45 + spacing * i_f32;
-
-            if (level_manager.levels[index].is_locked == false) {
-                level_manager.levels[index].draw_unlocked_level(x, y);
-                continue;
-            }
-            level_manager.levels[index].draw_locked_level(x, y);
+    for (first_id..last_id) |id| {
+        if (id == level_manager.level_nb) {
+            return;
         }
+
+        btns.btns_panel.levels[id].draw();
     }
 }
 

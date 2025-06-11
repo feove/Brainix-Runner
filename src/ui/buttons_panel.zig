@@ -3,6 +3,7 @@ const std = @import("std");
 const print = std.debug.print;
 const textures = @import("../render/textures.zig");
 const window = @import("../render/window.zig");
+const lvls = @import("../game/level/levels_manager.zig");
 const FontManager = @import("../render/fonts.zig").FontManager;
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
@@ -25,10 +26,49 @@ pub const ButtonsPanel = struct {
     back: Button,
     next: Button,
     prev: Button,
-    level: Button,
+    levels: []Button,
     locked_level: Button,
 
-    pub fn init() void {
+    pub fn init(allocator: std.mem.Allocator) !void {
+        var levels = try allocator.alloc(Button, lvls.level_manager.level_nb);
+
+        const padding = lvls.level_manager.page.padding;
+        const spacing = lvls.level_manager.page.spacing;
+        const offset_y = lvls.level_manager.page.offset_y;
+        const offset_x = lvls.level_manager.page.offset_x;
+        const column = lvls.level_manager.page.column;
+        const row = lvls.level_manager.page.row;
+
+        for (0..lvls.level_manager.level_nb) |i| {
+            const id_text: [:0]const u8 = try std.fmt.allocPrintZ(allocator, "{}", .{i + 1});
+
+            const i_mod: f32 = @as(f32, @floatFromInt(i % column));
+            const i_div: f32 = @as(f32, @floatFromInt((i / column) % row));
+            const x = offset_x + i_mod * padding * 0.65;
+            const y = offset_y + i_div * padding * 0.45 + spacing * i_div;
+
+            levels[i] = Button{
+                .texture = textures.level_button,
+
+                .hoverConf = HoverConfig{
+                    .default_scale = 6.0,
+                    .hover_scale = 6.2,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = x, .y = y },
+                    .scale = 6,
+                    .sprite = Sprite{
+                        .name = "Level Button",
+                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
+                    },
+                },
+                .fontText = "",
+                .levelText = @constCast(&id_text),
+                .size = 32,
+                .fontOffset = .{ .x = 15, .y = 20 },
+            };
+        }
+
         btns_panel = ButtonsPanel{
             .play = Button{
                 .texture = textures.play_button,
@@ -46,7 +86,7 @@ pub const ButtonsPanel = struct {
                 },
                 .fontText = "Play",
                 .size = 32,
-                .fontOffset = .{ .x = 90, .y = 12 },
+                .fontOffset = .{ .x = 60, .y = 10 },
             },
             .exit = Button{
                 .texture = textures.exit_button,
@@ -64,7 +104,7 @@ pub const ButtonsPanel = struct {
                 },
                 .fontText = "Exit",
                 .size = 32,
-                .fontOffset = .{ .x = 90, .y = 12 },
+                .fontOffset = .{ .x = 60, .y = 10 },
             },
             .settings = Button{
                 .texture = textures.settings_button,
@@ -80,9 +120,9 @@ pub const ButtonsPanel = struct {
                         .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
                     },
                 },
-                .fontText = "",
-                .size = 0,
-                .fontOffset = .{ .x = 0, .y = 0 },
+                .fontText = "Settings",
+                .size = 32,
+                .fontOffset = .{ .x = 60, .y = 10 },
             },
             .back = Button{
                 .texture = textures.back_button,
@@ -116,9 +156,9 @@ pub const ButtonsPanel = struct {
                         .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
                     },
                 },
-                .fontText = "",
-                .size = 0,
-                .fontOffset = .{ .x = 0, .y = 0 },
+                .fontText = "Next",
+                .size = 32,
+                .fontOffset = .{ .x = 60, .y = 10 },
             },
             .prev = Button{
                 .texture = textures.next_button,
@@ -136,25 +176,7 @@ pub const ButtonsPanel = struct {
                     .rotation = 180.0,
                     .origin = .{ .x = 12 * 5.5, .y = 12 * 5.5 },
                 },
-                .fontText = "",
-                .size = 0,
-                .fontOffset = .{ .x = 0, .y = 0 },
-            },
-            .level = Button{
-                .texture = textures.level_button,
-                .hoverConf = HoverConfig{
-                    .default_scale = 6.0,
-                    .hover_scale = 6.2,
-                },
-                .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.3, .y = window.WINDOW_HEIGHT * 0.3 },
-                    .scale = 6,
-                    .sprite = Sprite{
-                        .name = "Level",
-                        .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
-                    },
-                },
-                .fontText = "",
+                .fontText = "Play",
                 .size = 0,
                 .fontOffset = .{ .x = 0, .y = 0 },
             },
@@ -176,7 +198,17 @@ pub const ButtonsPanel = struct {
                 .size = 0,
                 .fontOffset = .{ .x = 0, .y = 0 },
             },
+            .levels = levels,
         };
+
+        print("TEXT : {s} \n", .{btns_panel.levels[0].fontText});
+    }
+
+    pub fn deinit(self: *ButtonsPanel, allocator: std.mem.Allocator) void {
+        for (self.levels) |*btn| {
+            allocator.free(btn.fontText);
+        }
+        allocator.free(self.levels);
     }
 };
 
@@ -185,6 +217,7 @@ pub const Button = struct {
     hoverConf: HoverConfig,
     spriteConf: SpriteDefaultConfig,
     fontText: [:0]const u8,
+    levelText: *[:0]const u8 = undefined,
     size: u32,
     fontOffset: rl.Vector2,
     canClick: bool = true,

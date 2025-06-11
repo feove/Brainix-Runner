@@ -32,7 +32,7 @@ pub fn main() anyerror!void {
     try Entity.init();
     try Interface.init(allocator);
     try FontManager.init(allocator);
-    ButtonsPanel.init();
+    try ButtonsPanel.init(allocator);
 
     //window.clear();
 
@@ -41,6 +41,7 @@ pub fn main() anyerror!void {
     }
 
     FontManager.deinit();
+    // try ButtonsPanel.deinit(allocator);
 
     rl.closeWindow();
 }
