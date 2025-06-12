@@ -66,6 +66,7 @@ pub var back_button: rl.Texture2D = undefined;
 pub var next_button: rl.Texture2D = undefined;
 pub var level_button: rl.Texture2D = undefined;
 pub var locked_level_button: rl.Texture2D = undefined;
+pub var things_sheet: rl.Texture2D = undefined;
 
 pub var logo: rl.Texture2D = undefined;
 pub var level_selector_bg: rl.Texture2D = undefined;
@@ -146,6 +147,7 @@ pub fn init() !void {
     next_button = try rl.loadTexture("assets/textures/gui/NextButton.png");
     level_button = try rl.loadTexture("assets/textures/gui/LevelIcon.png");
     locked_level_button = try rl.loadTexture("assets/textures/gui/LevelIconDisabled.png");
+    things_sheet = try rl.loadTexture("assets/textures/gui/Things.png");
 
     forest_background = try rl.loadTexture("assets/textures/pack/legacy_adventure/Assets/forest_background.png");
     forest_bg_1 = try rl.loadTexture("assets/textures/bg/forest_layer_1.png");
@@ -164,7 +166,7 @@ pub fn init() !void {
 
 pub const SpriteDefaultConfig = struct {
     sprite: Sprite,
-    x_offset: f32 = 0, //good Idea
+    x_offset: f32 = 0,
     y_offset: f32 = 0,
     position: rl.Vector2,
     scale: f32 = 1.0,
@@ -173,6 +175,8 @@ pub const SpriteDefaultConfig = struct {
     canPlace: bool = true,
     alpha: f32 = 1.0,
     color: rl.Color = .white,
+    height: f32 = 0.0,
+    width: f32 = 0.0,
 };
 
 pub const Sprite = struct {
@@ -314,8 +318,10 @@ pub const Sprites = struct {
     dungeon_closed_door: Sprite,
     dungeon_opened_door: Sprite,
 
-    // zero_key: Sprite,
-    one_key: Sprite,
+    number_key: Sprite,
+
+    star: Sprite,
+    empty_star: Sprite,
     // two_key: Sprite,
     // three_key: Sprite,
     // four_key: Sprite,
@@ -366,7 +372,9 @@ pub const Sprites = struct {
             .dungeon_long_wall_1 = .{ .name = "Dungeon Long Wall 1", .src = rl.Rectangle{ .x = 126, .y = 16, .width = 32, .height = 16 } },
             .dungeon_closed_door = .{ .name = "Dungeon Closed Door", .src = rl.Rectangle{ .x = 206, .y = 160, .width = 20, .height = 32 } },
             .dungeon_opened_door = .{ .name = "Dungeon Opened Door", .src = rl.Rectangle{ .x = 1866, .y = 160, .width = 16, .height = 32 } },
-            .one_key = .{ .name = "One Button", .src = rl.Rectangle{ .x = 58, .y = 490, .width = 14, .height = 22 } },
+            .number_key = .{ .name = "Number Button", .src = rl.Rectangle{ .x = 58, .y = 490, .width = 14, .height = 22 } },
+            .empty_star = .{ .name = "Empty Star", .src = rl.Rectangle{ .x = 8, .y = 0, .width = 8, .height = 8 } },
+            .star = .{ .name = "Star", .src = rl.Rectangle{ .x = 0, .y = 0, .width = 8, .height = 8 } },
         };
     }
 };

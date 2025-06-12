@@ -57,6 +57,21 @@ fn drawLevels() void {
         if (id == level_manager.level_nb) {
             return;
         }
+        const lvl = btns.btns_panel.levels[id].spriteConf;
+
+        for (0..3) |i| {
+            const isEmptyStar = level_manager.levels[id].stars_collected > i;
+            const star_sprite = if (isEmptyStar) textures.sprites.star else textures.sprites.empty_star;
+            textures.Sprite.drawCustom(textures.things_sheet, SpriteDefaultConfig{
+                .position = .{
+                    .x = lvl.position.x - 15 + @as(f32, @floatFromInt(i * 30)),
+                    .y = lvl.position.y + lvl.height,
+                },
+                .sprite = star_sprite,
+                .scale = 5.0,
+                .color = if (isEmptyStar) .gray else .white,
+            });
+        }
 
         btns.btns_panel.levels[id].canClick = true;
         if (level_manager.levels[id].is_locked) {

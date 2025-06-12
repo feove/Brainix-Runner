@@ -34,7 +34,7 @@ pub fn main() anyerror!void {
     try FontManager.init(allocator);
     try ButtonsPanel.init(allocator);
 
-    //window.clear();
+    window.clear();
 
     while (window.isOpen) {
         try window.GameViewManager();

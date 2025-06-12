@@ -59,6 +59,7 @@ pub const ButtonsPanel = struct {
                         .name = "Level Button",
                         .src = .{ .x = 0, .y = 0, .width = 12, .height = 12 },
                     },
+                    .height = 12 * 6,
                 },
                 .fontText = "",
                 .size = 32,

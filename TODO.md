@@ -4,7 +4,8 @@
 ### Tasks Remaining
 - [ ] Add Fronted End
 - [ ] Rename All "Object" words by "Item"
-- [ ] Create 3 elaborated levels
+- [ ] Add more levels
+- [ ] Add Debugger Panel in Console
 
 ### Tasks Completed  ✓
 - [X] Add Door Front end
