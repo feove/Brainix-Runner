@@ -60,6 +60,8 @@ fn drawLevels() void {
         const lvl = btns.btns_panel.levels[id].spriteConf;
 
         for (0..3) |i| {
+            //Test
+
             const isEmptyStar = level_manager.levels[id].stars_collected > i;
             const star_sprite = if (isEmptyStar) textures.sprites.star else textures.sprites.empty_star;
             textures.Sprite.drawCustom(textures.things_sheet, SpriteDefaultConfig{
@@ -69,7 +71,7 @@ fn drawLevels() void {
                 },
                 .sprite = star_sprite,
                 .scale = 5.0,
-                .color = if (isEmptyStar) .gray else .white,
+                .color = .white,
             });
         }
 
