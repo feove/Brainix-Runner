@@ -318,14 +318,13 @@ pub const Level = struct {
                 if (CutScene.lastDone() == .LEVEL_ENDING) {
                     print("LEVEL COMPLETED \n", .{});
 
-                    if (false) { //Level Complete Button Pressed
+                    if (true) { //Level Complete Button Pressed
                         Wizard.reset();
                         ElfManager.reset();
                         CutScene.reset();
                     }
 
-                    window.currentView = .Menu;
-                    //try init(alloc);
+                    window.currentView = .Levels;
                 }
             },
         }
