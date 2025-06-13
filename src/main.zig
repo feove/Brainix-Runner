@@ -14,6 +14,7 @@ const ButtonsPanel = @import("ui/buttons_panel.zig").ButtonsPanel;
 const CursorManager = @import("game/cursor.zig").CursorManager;
 const FontManager = @import("render/fonts.zig").FontManager;
 const LevelsManager = @import("game/level/levels_manager.zig").LevelManager;
+const TransitionController = @import("view/transition/transition_controller.zig").TransitionController;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 
@@ -33,6 +34,7 @@ pub fn main() anyerror!void {
     try Interface.init(allocator);
     try FontManager.init(allocator);
     try ButtonsPanel.init(allocator);
+    try TransitionController.init(allocator);
 
     window.clear();
 
