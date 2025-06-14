@@ -3,6 +3,11 @@ const std = @import("std");
 const print = std.debug.print;
 
 pub var transition_controller: TransitionController = undefined;
+const textures = @import("../../render/textures.zig");
+const Sprite = textures.Sprite;
+const SpriteDefaultConfig = textures.SpriteDefaultConfig;
+
+pub var start_transiton: f32 = 0.0;
 
 const root = "assets/transitions";
 
@@ -16,26 +21,31 @@ pub const TransitionController = struct {
     current: TransitionType,
 
     pub fn is_showing_transition() bool {
+        //print("{}\n", .{transition_controller.current});
         return transition_controller.current != .NONE;
     }
 
-    fn setCurrent(transition: TransitionType) void {
+    pub fn setCurrent(transition: TransitionType) void {
         transition_controller.current = transition;
     }
 
     pub fn update() !void {
         switch (transition_controller.current) {
-            .NONE => {},
+            .NONE => {
+                //  start_transiton = rl.getFrameTime();
+                // print("Transition started at {d}\n", .{start_transiton});
+            },
             .CIRCLE_IN => {
-                transition_controller.cercleIn.render();
+                render(&transition_controller.cercleIn);
             },
         }
     }
 
     pub fn render(transition: *Transition) void {
-        if (transition.draw()) {
+        if (transition.update(rl.getFrameTime())) {
             setCurrent(.NONE);
         }
+        transition.draw();
     }
 
     pub fn init(allocator: std.mem.Allocator) !void {
@@ -46,6 +56,7 @@ pub const TransitionController = struct {
                 .frame_current = 0,
                 .transition_type = .NONE,
                 .frames = try allocator.alloc(rl.Texture2D, 18),
+                .frame_duration = 2.0,
             },
             .current = .NONE,
         };
@@ -59,25 +70,35 @@ pub const Transition = struct {
     frame_current: u32,
     transition_type: TransitionType,
     frames: []rl.Texture2D,
+    frame_duration: f32, // seconds
+    time_acc: f32 = 0.0,
 
-    pub fn update(self: *Transition) void {
-        self.frame_current += 1;
+    pub fn update(self: *Transition, delta_time: f32) bool {
+        self.time_acc += delta_time;
+        if (self.time_acc >= self.frame_duration) {
+            self.time_acc -= self.frame_duration;
+            self.frame_current += 1;
+        }
+
         if (self.frame_current > self.frame_end) {
             self.frame_current = self.frame_end;
+            self.frame_current = self.frame_start;
+            return true;
         }
+
+        return false;
     }
 
-    pub fn draw(self: *Transition) bool {
-        if (self.frame_current > self.frame_end) {
-            self.frame_current = self.frame_start;
-            return false;
-        }
-
+    pub fn draw(self: *Transition) void {
         const frame = self.frames[self.frame_current];
-
-        rl.drawTexture(frame, 0, 0, .white);
-
-        return true;
+        Sprite.drawCustom(frame, SpriteDefaultConfig{
+            .sprite = Sprite{
+                .name = "Circle01-128x128.png",
+                .src = .init(0, 0, 128, 128),
+            },
+            .position = .init(0, 0),
+            .scale = 4.0,
+        });
     }
 
     fn fillFrames(

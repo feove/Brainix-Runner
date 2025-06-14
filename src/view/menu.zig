@@ -11,17 +11,14 @@ const Elf = @import("../entity/elf.zig").Elf;
 const ElfManager = @import("../game/animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../entity/wizard.zig").Wizard;
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
+const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
 
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {
     if (btns.btns_panel.play.isClicked()) {
         window.currentView = GameView.Levels;
-    }
-
-    //tmp
-    if (rl.isKeyPressed(rl.KeyboardKey.h)) {
-        window.currentView = GameView.Play;
+        TransitionController.setCurrent(.CIRCLE_IN);
     }
 
     if (btns.btns_panel.exit.isClicked()) {

@@ -30,9 +30,8 @@ pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
 }
 
 pub fn GameViewManager() !void {
+    try TransitionController.update();
     if (TransitionController.is_showing_transition()) {
-        try TransitionController.update();
-        try TransitionController.render();
         return;
     }
 
