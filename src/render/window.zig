@@ -5,6 +5,7 @@ const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
 const levels = @import("../view/levels.zig");
 const CursorManager = @import("../game/cursor.zig").CursorManager;
+const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
 
 pub const WINDOW_WIDTH = 1000;
 pub const WINDOW_HEIGHT = 800;
@@ -29,6 +30,12 @@ pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
 }
 
 pub fn GameViewManager() !void {
+    if (TransitionController.is_showing_transition()) {
+        try TransitionController.update();
+        try TransitionController.render();
+        return;
+    }
+
     CursorManager.refresh();
 
     switch (currentView) {

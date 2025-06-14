@@ -8,15 +8,33 @@ const root = "assets/transitions";
 
 pub const TransitionType = enum {
     NONE,
+    CIRCLE_IN,
 };
 
 pub const TransitionController = struct {
     cercleIn: Transition,
     current: TransitionType,
 
-    pub fn update() void {
+    pub fn is_showing_transition() bool {
+        return transition_controller.current != .NONE;
+    }
+
+    fn setCurrent(transition: TransitionType) void {
+        transition_controller.current = transition;
+    }
+
+    pub fn update() !void {
         switch (transition_controller.current) {
             .NONE => {},
+            .CIRCLE_IN => {
+                transition_controller.cercleIn.render();
+            },
+        }
+    }
+
+    pub fn render(transition: *Transition) void {
+        if (transition.draw()) {
+            setCurrent(.NONE);
         }
     }
 
@@ -49,6 +67,19 @@ pub const Transition = struct {
         }
     }
 
+    pub fn draw(self: *Transition) bool {
+        if (self.frame_current > self.frame_end) {
+            self.frame_current = self.frame_start;
+            return false;
+        }
+
+        const frame = self.frames[self.frame_current];
+
+        rl.drawTexture(frame, 0, 0, .white);
+
+        return true;
+    }
+
     fn fillFrames(
         self: *Transition,
         allocator: std.mem.Allocator,
@@ -58,10 +89,10 @@ pub const Transition = struct {
         end: u32,
     ) !void {
         for (start..end) |i| {
-            const unit = if (i < 10) "0" else "";
-            const number = try std.fmt.allocPrint(allocator, "{s}{d}", .{ unit, i });
-            const path = try std.fs.path.join(allocator, &[_][]const u8{ root, name_pt1, number, name_pt2 });
-
+            const unit = if (i < 9) "0" else "";
+            const number = try std.fmt.allocPrint(allocator, "{s}{d}", .{ unit, i + 1 });
+            const path = try std.fmt.allocPrintZ(allocator, "{s}/{s}{s}{s}", .{ root, name_pt1, number, name_pt2 });
+            print("{s}\n", .{path});
             self.frames[i] = try rl.loadTexture(path);
         }
     }
