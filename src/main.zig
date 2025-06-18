@@ -36,7 +36,7 @@ pub fn main() anyerror!void {
     try ButtonsPanel.init(allocator);
     try TransitionController.init(allocator);
 
-    window.clear();
+    //window.clear();
 
     while (window.isOpen) {
         try window.GameViewManager();

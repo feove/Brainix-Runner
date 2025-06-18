@@ -11,7 +11,11 @@ const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 
+var can_switch_view: bool = false;
+var in_transition: bool = true;
+
 pub fn update() !void {
+    if (in_transition) {}
 
     //Interactions
     terrain.grid.interactions();

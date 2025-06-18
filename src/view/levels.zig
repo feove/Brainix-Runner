@@ -14,10 +14,20 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
+const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
+
+var in_transition: bool = true;
 
 pub fn update() !void {
     if (btns.btns_panel.back.isClicked()) {
         window.currentView = GameView.Menu;
+        in_transition = true;
+    }
+    if (in_transition) {
+        try render();
+        TransitionController.setCurrent(.CIRCLE_OUT);
+        in_transition = false;
+        return;
     }
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
@@ -38,6 +48,10 @@ pub fn update() !void {
 }
 
 pub fn render() !void {
+    if (TransitionController.isFinished() == false) {
+        return;
+    }
+
     rl.beginDrawing();
     defer rl.endDrawing();
 
@@ -117,7 +131,7 @@ fn level_is_clicked() !void {
 fn drawBackground() void {
     textures.Sprite.draw(textures.forest_background, textures.sprites.forest_background, .{
         .x = -window.WINDOW_WIDTH * 0.1,
-        .y = -window.WINDOW_HEIGHT * 0.05,
+        .y = -window.WINDOW_HEIGHT * 0.04,
     }, 0.85, .white);
 
     textures.Sprite.drawCustom(textures.level_selector_bg, SpriteDefaultConfig{

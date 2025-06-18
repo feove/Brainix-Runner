@@ -11,13 +11,19 @@ const Elf = @import("../entity/elf.zig").Elf;
 const ElfManager = @import("../game/animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../entity/wizard.zig").Wizard;
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
-const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
+const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
 
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
+var can_switch_view: bool = false;
 
 pub fn update() !void {
-    if (btns.btns_panel.play.isClicked()) {
+    if (can_switch_view and TransitionController.isFinished()) {
         window.currentView = GameView.Levels;
+        can_switch_view = false;
+    }
+
+    if (btns.btns_panel.play.isClicked()) {
+        can_switch_view = true;
         TransitionController.setCurrent(.CIRCLE_IN);
     }
 
@@ -31,6 +37,9 @@ pub fn update() !void {
 }
 
 pub fn render() !void {
+    if (can_switch_view) {
+        return;
+    }
     rl.beginDrawing();
     defer rl.endDrawing();
 

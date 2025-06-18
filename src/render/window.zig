@@ -1,5 +1,6 @@
 const rl = @import("raylib");
 const std = @import("std");
+const print = std.debug.print;
 const stdout = std.io.getStdOut().writer();
 const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
@@ -30,12 +31,8 @@ pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
 }
 
 pub fn GameViewManager() !void {
-    try TransitionController.update();
-    if (TransitionController.is_showing_transition()) {
-        return;
-    }
-
     CursorManager.refresh();
+    try TransitionController.update();
 
     switch (currentView) {
         .Menu => {
