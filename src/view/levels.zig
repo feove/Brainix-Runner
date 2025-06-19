@@ -16,18 +16,15 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
 
-var in_transition: bool = true;
+var update_starter: bool = true;
 
 pub fn update() !void {
+    start();
+
     if (btns.btns_panel.back.isClicked()) {
         window.currentView = GameView.Menu;
-        in_transition = true;
-    }
-    if (in_transition) {
-        try render();
-        TransitionController.setCurrent(.CIRCLE_OUT);
-        in_transition = false;
-        return;
+
+        update_starter = true;
     }
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
@@ -44,17 +41,28 @@ pub fn update() !void {
     try level_is_clicked();
 
     //LevelManager.debug();
-    //if () Level_XX Pressed and Level_XX unlocked and shown, try level.init(alloc)
 }
 
-pub fn render() !void {
-    if (TransitionController.isFinished() == false) {
+fn start() void {
+    if (update_starter == false) {
         return;
     }
 
+    TransitionController.setCurrent(.CIRCLE_OUT);
+
+    update_starter = false;
+}
+
+pub fn render() !void {
     rl.beginDrawing();
     defer rl.endDrawing();
+    if (!TransitionController.isTransitionDone(.CIRCLE_OUT)) {
+        return;
+    }
+    drawElements();
+}
 
+pub fn drawElements() void {
     drawBackground();
 
     drawButtons();

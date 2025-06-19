@@ -6,7 +6,7 @@ pub var transition_controller: TransitionController = undefined;
 const textures = @import("../../render/textures.zig");
 const Sprite = textures.Sprite;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
-
+const levelsView = @import("./../levels.zig");
 pub var start_transiton: f32 = 0.0;
 
 const root = "assets/transitions/";
@@ -32,6 +32,10 @@ pub const TransitionController = struct {
         return transition_controller.current == .NONE;
     }
 
+    pub fn isTransitionDone(transition: TransitionType) bool {
+        return transition_controller.previous == transition;
+    }
+
     pub fn setCurrent(transition: TransitionType) void {
         transition_controller.current = transition;
     }
@@ -50,19 +54,23 @@ pub const TransitionController = struct {
                 // print("Transition started at {d}\n", .{start_transiton});
             },
             .CIRCLE_IN => {
+                rl.beginDrawing();
+                defer rl.endDrawing();
                 render(&transition_controller.cercleIn);
 
                 //rl.clearBackground(rl.Color.black);
             },
             .CIRCLE_OUT => {
+                rl.beginDrawing();
+                defer rl.endDrawing();
+                levelsView.drawElements();
                 render(&transition_controller.cercleOut);
             },
         }
     }
 
     pub fn render(transition: *Transition) void {
-        rl.beginDrawing();
-        defer rl.endDrawing();
+
         // print("Drawing {}\n", .{transition.transition_type});
 
         if (transition.update(rl.getFrameTime())) {
