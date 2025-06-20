@@ -25,12 +25,18 @@ pub const Switcher = struct {
     has_started: bool = false,
     can_switch: bool = false,
     view: GameView = .None,
-    //  can_default_render: bool,
+
+    pub fn default_render() void {
+        return switch (switcher.view) {
+            .Levels => levelsView.drawElements(),
+            .Menu => menuView.drawElements(),
+            else => return,
+        };
+    }
 
     pub fn authorize_switch(view: GameView) void {
         switcher.can_switch = true;
         switcher.view = view;
-        //Set render func
     }
 
     pub fn can_default_render() bool {
@@ -100,8 +106,7 @@ pub const TransitionController = struct {
                 render(&transition_controller.cercleIn);
             },
             .CIRCLE_OUT => {
-                //menuView.drawElements();
-                levelsView.drawElements();
+                Switcher.default_render();
                 render(&transition_controller.cercleOut);
             },
             else => {},

@@ -18,12 +18,12 @@ var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {
 
-    //Plays once time
-    if (Switcher.start(.CIRCLE_OUT)) return; //Other arg with render func
+    //affect once time
+    if (Switcher.start(.CIRCLE_OUT)) return;
 
     if (btns.btns_panel.play.isClicked()) {
-        TransitionController.setCurrent(.CIRCLE_IN);
         Switcher.authorize_switch(.Levels);
+        TransitionController.setCurrent(.CIRCLE_IN);
     }
 
     if (btns.btns_panel.settings.isClicked()) {

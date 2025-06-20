@@ -21,8 +21,8 @@ pub fn update() !void {
     if (Switcher.start(.CIRCLE_OUT)) return;
 
     if (btns.btns_panel.back.isClicked()) {
-        TransitionController.setCurrent(.CIRCLE_IN);
         Switcher.authorize_switch(.Menu);
+        TransitionController.setCurrent(.CIRCLE_IN);
     }
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
