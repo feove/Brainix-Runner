@@ -6,6 +6,8 @@ const Sprite = textures.Sprite;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const levelsView = @import("./../levels.zig");
 const menuView = @import("./../menu.zig");
+const window = @import("../../render/window.zig");
+const GameView = window.GameView;
 
 pub var transition_controller: TransitionController = undefined;
 pub var switcher: Switcher = undefined;
@@ -20,32 +22,42 @@ pub const TransitionType = enum {
 };
 
 pub const Switcher = struct {
-    can_switch: bool,
-    can_start: bool,
+    has_started: bool = false,
+    can_switch: bool = false,
+    view: GameView = .None,
+    //  can_default_render: bool,
 
-    pub fn set_end_start() void {
-        switcher.can_start = false;
-    }
-
-    pub fn authorize_switch() void {
+    pub fn authorize_switch(view: GameView) void {
         switcher.can_switch = true;
+        switcher.view = view;
+        //Set render func
     }
 
-    pub fn switch_status() bool {
-        return switcher.can_switch;
+    pub fn can_default_render() bool {
+        return switcher.can_switch == false and TransitionController.isFinished();
     }
 
-    pub fn start_status() bool {
-        return switcher.can_start;
+    pub fn start(tr: TransitionType) bool {
+        if (switcher.has_started) return false;
+
+        TransitionController.setCurrent(tr);
+        switcher.has_started = true;
+        //set Background render func
+        return true;
     }
 
-    pub fn selfReturn() Switcher {
-        return switcher;
+    pub fn update() void {
+        if (switcher.can_switch) {
+            if (TransitionController.isFinished()) {
+                window.currentView = switcher.view;
+                reset();
+            }
+        }
     }
 
     pub fn reset() void {
+        switcher.has_started = false;
         switcher.can_switch = false;
-        switcher.can_start = true;
     }
 };
 
@@ -81,11 +93,9 @@ pub const TransitionController = struct {
         defer rl.endDrawing();
 
         // drawBackground Scene
+        Switcher.update();
 
         switch (transition_controller.current) {
-            .NONE => {
-                return;
-            },
             .CIRCLE_IN => {
                 render(&transition_controller.cercleIn);
             },
@@ -94,6 +104,7 @@ pub const TransitionController = struct {
                 levelsView.drawElements();
                 render(&transition_controller.cercleOut);
             },
+            else => {},
         }
     }
 
@@ -135,10 +146,6 @@ pub const TransitionController = struct {
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
 
-        switcher = Switcher{
-            .can_switch = false,
-            .can_start = true,
-        };
     }
 };
 

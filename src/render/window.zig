@@ -16,12 +16,12 @@ pub var isOpen: bool = true;
 pub const GameView = enum {
     Menu,
     Play,
-    Pause,
     Settings,
     Levels,
     Credits,
     Help,
     Quit,
+    None,
 };
 
 pub var currentView = GameView.Menu;
@@ -47,11 +47,11 @@ pub fn GameViewManager() !void {
             try levels.update();
             try levels.render();
         },
-        .Pause => {},
         .Settings => {},
         .Credits => {},
         .Help => {},
         .Quit => {},
+        else => return,
     }
 }
 

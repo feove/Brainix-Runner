@@ -17,18 +17,13 @@ const Switcher = @import("./transition/transition_controller.zig").Switcher;
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {
-    if (Switcher.start_status()) {
-        start();
-    }
 
-    if (Switcher.switch_status() and TransitionController.isFinished()) {
-        window.currentView = GameView.Levels;
-        Switcher.reset();
-    }
+    //Plays once time
+    if (Switcher.start(.CIRCLE_OUT)) return; //Other arg with render func
 
     if (btns.btns_panel.play.isClicked()) {
         TransitionController.setCurrent(.CIRCLE_IN);
-        Switcher.authorize_switch();
+        Switcher.authorize_switch(.Levels);
     }
 
     if (btns.btns_panel.settings.isClicked()) {
@@ -40,24 +35,16 @@ pub fn update() !void {
     }
 }
 
-fn start() void {
-    TransitionController.setCurrent(.CIRCLE_OUT);
-
-    Switcher.set_end_start();
-}
-
 pub fn render() !void {
-    if (Switcher.switch_status() or !TransitionController.isTransitionDone(.CIRCLE_OUT)) {
-        return;
-    }
+    if (Switcher.can_default_render()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
 
-    drawElements();
+        drawElements();
+    }
 }
 
 pub fn drawElements() void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
-
     drawBackground();
 
     drawButtons();
