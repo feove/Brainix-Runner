@@ -1,12 +1,14 @@
 const rl = @import("raylib");
 const std = @import("std");
 const print = std.debug.print;
-
-pub var transition_controller: TransitionController = undefined;
 const textures = @import("../../render/textures.zig");
 const Sprite = textures.Sprite;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const levelsView = @import("./../levels.zig");
+const menuView = @import("./../menu.zig");
+
+pub var transition_controller: TransitionController = undefined;
+pub var switcher: Switcher = undefined;
 pub var start_transiton: f32 = 0.0;
 
 const root = "assets/transitions/";
@@ -15,6 +17,36 @@ pub const TransitionType = enum {
     NONE,
     CIRCLE_IN,
     CIRCLE_OUT,
+};
+
+pub const Switcher = struct {
+    can_switch: bool,
+    can_start: bool,
+
+    pub fn set_end_start() void {
+        switcher.can_start = false;
+    }
+
+    pub fn authorize_switch() void {
+        switcher.can_switch = true;
+    }
+
+    pub fn switch_status() bool {
+        return switcher.can_switch;
+    }
+
+    pub fn start_status() bool {
+        return switcher.can_start;
+    }
+
+    pub fn selfReturn() Switcher {
+        return switcher;
+    }
+
+    pub fn reset() void {
+        switcher.can_switch = false;
+        switcher.can_start = true;
+    }
 };
 
 pub const TransitionController = struct {
@@ -45,24 +77,20 @@ pub const TransitionController = struct {
     }
 
     pub fn update() !void {
+        rl.beginDrawing();
+        defer rl.endDrawing();
 
-        //print(" {}\n", .{transition_controller.current});
+        // drawBackground Scene
+
         switch (transition_controller.current) {
             .NONE => {
                 return;
-                //  start_transiton = rl.getFrameTime();
-                // print("Transition started at {d}\n", .{start_transiton});
             },
             .CIRCLE_IN => {
-                rl.beginDrawing();
-                defer rl.endDrawing();
                 render(&transition_controller.cercleIn);
-
-                //rl.clearBackground(rl.Color.black);
             },
             .CIRCLE_OUT => {
-                rl.beginDrawing();
-                defer rl.endDrawing();
+                //menuView.drawElements();
                 levelsView.drawElements();
                 render(&transition_controller.cercleOut);
             },
@@ -107,6 +135,10 @@ pub const TransitionController = struct {
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
 
+        switcher = Switcher{
+            .can_switch = false,
+            .can_start = true,
+        };
     }
 };
 

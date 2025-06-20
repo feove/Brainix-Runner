@@ -12,47 +12,42 @@ const ElfManager = @import("../game/animations/elf_anims.zig").ElfManager;
 const Wizard = @import("../entity/wizard.zig").Wizard;
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
+const Switcher = @import("./transition/transition_controller.zig").Switcher;
 
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
-var can_switch_view: bool = false;
-
-var starter: bool = true;
 
 pub fn update() !void {
-    start();
+    if (Switcher.start_status()) {
+        start();
+    }
 
-    if (can_switch_view and TransitionController.isFinished()) {
+    if (Switcher.switch_status() and TransitionController.isFinished()) {
         window.currentView = GameView.Levels;
-        can_switch_view = false;
-        starter = true;
+        Switcher.reset();
     }
 
     if (btns.btns_panel.play.isClicked()) {
-        can_switch_view = true;
         TransitionController.setCurrent(.CIRCLE_IN);
-    }
-
-    if (btns.btns_panel.exit.isClicked()) {
-        window.isOpen = false;
+        Switcher.authorize_switch();
     }
 
     if (btns.btns_panel.settings.isClicked()) {
         window.currentView = GameView.Settings;
     }
+
+    if (btns.btns_panel.exit.isClicked()) {
+        window.isOpen = false;
+    }
 }
 
 fn start() void {
-    if (starter == false) {
-        return;
-    }
-
     TransitionController.setCurrent(.CIRCLE_OUT);
 
-    starter = false;
+    Switcher.set_end_start();
 }
 
 pub fn render() !void {
-    if (can_switch_view or !TransitionController.isTransitionDone(.CIRCLE_OUT)) {
+    if (Switcher.switch_status() or !TransitionController.isTransitionDone(.CIRCLE_OUT)) {
         return;
     }
 

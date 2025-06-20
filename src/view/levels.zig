@@ -15,16 +15,16 @@ const Sprite = textures.Sprite;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
-
-var update_starter: bool = true;
+const Switcher = @import("./transition/transition_controller.zig").Switcher;
 
 pub fn update() !void {
-    start();
+    if (Switcher.start_status()) {
+        start();
+    }
 
     if (btns.btns_panel.back.isClicked()) {
         window.currentView = GameView.Menu;
-
-        update_starter = true;
+        Switcher.authorize_switch();
     }
 
     if (btns.btns_panel.next.isClicked() and btns.btns_panel.next.canClick) {
@@ -44,21 +44,17 @@ pub fn update() !void {
 }
 
 fn start() void {
-    if (update_starter == false) {
-        return;
-    }
-
     TransitionController.setCurrent(.CIRCLE_OUT);
 
-    update_starter = false;
+    Switcher.set_end_start();
 }
 
 pub fn render() !void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
     if (!TransitionController.isTransitionDone(.CIRCLE_OUT)) {
         return;
     }
+    rl.beginDrawing();
+    defer rl.endDrawing();
     drawElements();
 }
 
