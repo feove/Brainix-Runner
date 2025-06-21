@@ -364,6 +364,34 @@ pub fn init() !void {
     };
 }
 
+pub fn deinit() void {
+    rl.unloadTexture(jumper_sprite.texture);
+    rl.unloadTexture(moving_platform.texture);
+    rl.unloadTexture(boost_sprite.texture);
+    rl.unloadTexture(falling_platform.texture);
+
+    rl.unloadTexture(battlemage_running.texture);
+    rl.unloadTexture(battlemage_jumping_full.texture);
+    rl.unloadTexture(battlemage_jumping_going_down.texture);
+    rl.unloadTexture(battlemage_dying.texture);
+    rl.unloadTexture(battlemage_idle.texture);
+
+    rl.unloadTexture(spawning_item.texture);
+    rl.unloadTexture(square_despawning_item.texture);
+    rl.unloadTexture(spike_despawning_item.texture);
+    rl.unloadTexture(small_lighting_0.texture);
+    rl.unloadTexture(scratch.texture);
+    rl.unloadTexture(entity_spawn.texture);
+    rl.unloadTexture(woosh.texture);
+    rl.unloadTexture(slot_cleanning.texture);
+
+    rl.unloadTexture(demon_idle2.texture);
+    rl.unloadTexture(wizard_jumping.texture);
+    rl.unloadTexture(wizard_falling.texture);
+    rl.unloadTexture(wizard_attacking_1.texture);
+    rl.unloadTexture(wizard_attacking_2.texture);
+}
+
 pub const AnimatedSprite = struct {
     texture: rl.Texture2D,
     sprite: Sprite,

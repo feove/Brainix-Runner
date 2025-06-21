@@ -6,6 +6,7 @@ const Sprite = textures.Sprite;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const levelsView = @import("./../levels.zig");
 const menuView = @import("./../menu.zig");
+const gameView = @import("../../game/game.zig");
 const window = @import("../../render/window.zig");
 const GameView = window.GameView;
 
@@ -26,10 +27,11 @@ pub const Switcher = struct {
     can_switch: bool = false,
     view: GameView = .None,
 
-    pub fn default_render() void {
+    pub fn default_render() !void {
         return switch (switcher.view) {
             .Levels => levelsView.drawElements(),
             .Menu => menuView.drawElements(),
+            .Play => try gameView.drawElements(),
             else => return,
         };
     }
@@ -43,13 +45,13 @@ pub const Switcher = struct {
         return switcher.can_switch == false and TransitionController.isFinished();
     }
 
-    pub fn start(tr: TransitionType) bool {
-        if (switcher.has_started) return false;
+    pub fn start(tr: TransitionType) void {
+        if (switcher.has_started) return;
 
         TransitionController.setCurrent(tr);
         switcher.has_started = true;
         //set Background render func
-        return true;
+        return;
     }
 
     pub fn update() void {
@@ -106,7 +108,7 @@ pub const TransitionController = struct {
                 render(&transition_controller.cercleIn);
             },
             .CIRCLE_OUT => {
-                Switcher.default_render();
+                try Switcher.default_render();
                 render(&transition_controller.cercleOut);
             },
             else => {},
@@ -135,7 +137,7 @@ pub const TransitionController = struct {
                 .frame_current = 0,
                 .transition_type = .CIRCLE_OUT,
                 .frames = try allocator.alloc(rl.Texture2D, 14),
-                .frame_duration = 0.04,
+                .frame_duration = 0.03,
             },
             .cercleIn = Transition{
                 .frame_start = 0,
@@ -143,7 +145,7 @@ pub const TransitionController = struct {
                 .frame_current = 0,
                 .transition_type = .CIRCLE_IN,
                 .frames = try allocator.alloc(rl.Texture2D, 14),
-                .frame_duration = 0.04,
+                .frame_duration = 0.03,
             },
             .current = .NONE,
             .previous = .NONE,
@@ -151,6 +153,11 @@ pub const TransitionController = struct {
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
 
+    }
+
+    pub fn deinit(self: *TransitionController) !void {
+        try self.cercleOut.deinit();
+        try self.cercleIn.deinit();
     }
 };
 

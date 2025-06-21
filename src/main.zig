@@ -29,20 +29,23 @@ pub fn main() anyerror!void {
     try Grid.init(allocator);
     try Inventory.init(allocator);
     try LevelsManager.init(allocator);
-    //try Level.init(allocator);
     try Entity.init();
     try Interface.init(allocator);
     try FontManager.init(allocator);
     try ButtonsPanel.init(allocator);
     try TransitionController.init(allocator);
 
-    //window.clear();
+    window.clear();
 
     while (window.isOpen) {
         try window.GameViewManager();
     }
 
+    textures.deinit();
+    anim.deinit();
     FontManager.deinit();
+    Grid.deinit(allocator);
+
     // try ButtonsPanel.deinit(allocator);
 
     rl.closeWindow();

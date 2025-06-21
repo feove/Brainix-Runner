@@ -18,9 +18,10 @@ const TransitionController = @import("./transition/transition_controller.zig").T
 const Switcher = @import("./transition/transition_controller.zig").Switcher;
 
 pub fn update() !void {
-    if (Switcher.start(.CIRCLE_OUT)) return;
+    Switcher.start(.CIRCLE_OUT);
 
     if (btns.btns_panel.back.isClicked()) {
+        // print("Clicked\n", .{});
         Switcher.authorize_switch(.Menu);
         TransitionController.setCurrent(.CIRCLE_IN);
     }
@@ -47,9 +48,7 @@ pub fn render() !void {
         defer rl.endDrawing();
 
         drawElements();
-        return;
     }
-    print("NO RENDER\n", .{});
 }
 
 pub fn drawElements() void {
@@ -121,7 +120,9 @@ fn level_is_clicked() !void {
             print("Level clicked : {d} PATH LEVEL : {s}\n", .{ id + 1, level_manager.levels[id].path });
             LevelManager.setCurrentLevel(id);
             try Level.init(allocator);
-            window.currentView = GameView.Play;
+            Switcher.authorize_switch(.Play);
+            TransitionController.setCurrent(.CIRCLE_IN);
+            //  window.currentView = GameView.Play;
         }
     }
 }

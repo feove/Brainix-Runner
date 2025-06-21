@@ -378,3 +378,70 @@ pub const Sprites = struct {
         };
     }
 };
+
+pub fn deinit() void {
+    rl.unloadTexture(elf);
+    rl.unloadTexture(battlemage_text);
+
+    rl.unloadTexture(battlemage_running);
+    rl.unloadTexture(battlemage_jump_neutral);
+    rl.unloadTexture(battlemage_jump_neutral_going_down);
+    rl.unloadTexture(battlemage_dying);
+    rl.unloadTexture(battlemage_idle);
+
+    rl.unloadTexture(demon_idle2);
+    rl.unloadTexture(wizard_jumping);
+    rl.unloadTexture(wizard_falling);
+    rl.unloadTexture(wizard_attacking_1);
+    rl.unloadTexture(wizard_attacking_2);
+
+    rl.unloadTexture(spriteSheet);
+    rl.unloadTexture(forest_background);
+    rl.unloadTexture(inventory_hud);
+    rl.unloadTexture(simple_inventory_hud);
+
+    rl.unloadTexture(oak_bg_lyr_1);
+    rl.unloadTexture(oak_bg_lyr_2);
+    rl.unloadTexture(oak_bg_lyr_3);
+    rl.unloadTexture(oak_woods_tileset);
+    rl.unloadTexture(top_far_bgrnd);
+    rl.unloadTexture(env_ground);
+
+    rl.unloadTexture(dungeons_tile);
+    rl.unloadTexture(pad);
+    rl.unloadTexture(moving_platform);
+    rl.unloadTexture(falling_platfom);
+    rl.unloadTexture(all_weapons);
+
+    rl.unloadTexture(green_effects);
+    rl.unloadTexture(yellow_effects);
+    rl.unloadTexture(effects_sheet_506);
+    rl.unloadTexture(effects_sheet_516);
+    rl.unloadTexture(effects_sheet_517);
+    rl.unloadTexture(effects_sheet_519);
+    rl.unloadTexture(effects_sheet_526);
+
+    rl.unloadTexture(keys_sheet);
+    rl.unloadTexture(keyboard_btns);
+
+    rl.unloadTexture(play_button);
+    rl.unloadTexture(exit_button);
+    rl.unloadTexture(settings_button);
+    rl.unloadTexture(back_button);
+    rl.unloadTexture(next_button);
+    rl.unloadTexture(level_button);
+    rl.unloadTexture(locked_level_button);
+    rl.unloadTexture(things_sheet);
+    rl.unloadTexture(logo);
+    rl.unloadTexture(level_selector_bg);
+
+    rl.unloadTexture(forest_bg_1);
+    rl.unloadTexture(forest_bg_2);
+    rl.unloadTexture(forest_bg_3);
+    rl.unloadTexture(forest_bg_4);
+    rl.unloadTexture(forest_bg_5);
+    rl.unloadTexture(forest_bg_6);
+    rl.unloadTexture(forest_bg_7);
+    rl.unloadTexture(forest_bg_8);
+    rl.unloadTexture(forest_bg_9);
+}

@@ -10,12 +10,10 @@ const Entity = @import("../entity/entity_manager.zig").Entity;
 const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
-
-var can_switch_view: bool = false;
-var in_transition: bool = true;
+const Switcher = @import("../view/transition/transition_controller.zig").Switcher;
 
 pub fn update() !void {
-    if (in_transition) {}
+    Switcher.start(.CIRCLE_OUT);
 
     //Interactions
     terrain.grid.interactions();
@@ -28,10 +26,18 @@ pub fn update() !void {
 }
 
 pub fn render() !void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
+    if (Switcher.can_default_render()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
 
-    // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
+        // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
+        try drawElements();
+
+        return;
+    }
+}
+
+pub fn drawElements() !void {
     CutScene.run();
 
     try scene.drawScene();
@@ -39,6 +45,4 @@ pub fn render() !void {
     Entity.draw();
 
     btns.btns_panel.settings.draw();
-
-    return;
 }

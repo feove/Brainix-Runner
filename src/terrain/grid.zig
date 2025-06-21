@@ -310,10 +310,12 @@ pub const Grid = struct {
         EXIT_DOOR = .init(cell.x, cell.y, cell.width, cell.height);
     }
 
-    pub fn deinit(self: *Grid, allocator: std.mem.Allocator) void {
-        for (self.cells) |row| {
+    pub fn deinit(allocator: std.mem.Allocator) void {
+        for (grid.cells) |row| {
             allocator.free(row);
         }
-        allocator.free(self.cells);
+        allocator.free(grid.cells);
+
+        allocator.free(replaceable);
     }
 };
