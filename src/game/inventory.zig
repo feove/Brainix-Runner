@@ -91,6 +91,11 @@ pub const Inventory = struct {
         Inventory.clearinv_cell();
     }
 
+    pub fn deinit(allocator: std.mem.Allocator) void {
+        allocator.free(inv.slots);
+        allocator.free(save_inv);
+    }
+
     pub fn slotSetting(objects: []Object) void {
         if (invEmpty()) {
             for (0..SLOT_NB) |i| {

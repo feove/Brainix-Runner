@@ -43,10 +43,14 @@ pub fn main() anyerror!void {
 
     textures.deinit();
     anim.deinit();
-    FontManager.deinit();
     Grid.deinit(allocator);
+    Inventory.deinit(allocator);
+    LevelsManager.deinit(allocator);
 
-    // try ButtonsPanel.deinit(allocator);
+    Interface.deinit(allocator);
 
+    FontManager.deinit();
+    ButtonsPanel.deinit(allocator);
+    TransitionController.deinit(allocator);
     rl.closeWindow();
 }

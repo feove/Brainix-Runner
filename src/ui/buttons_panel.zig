@@ -203,11 +203,8 @@ pub const ButtonsPanel = struct {
         print("TEXT : {s} \n", .{btns_panel.levels[0].fontText});
     }
 
-    pub fn deinit(self: *ButtonsPanel, allocator: std.mem.Allocator) void {
-        for (self.levels) |*btn| {
-            allocator.free(btn.fontText);
-        }
-        allocator.free(self.levels);
+    pub fn deinit(allocator: std.mem.Allocator) void {
+        allocator.free(btns_panel.levels);
     }
 };
 

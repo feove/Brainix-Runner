@@ -46,4 +46,9 @@ pub const Interface = struct {
     pub fn getSelector() Selector {
         return interface.selector;
     }
+
+    pub fn deinit(allocator: std.mem.Allocator) void {
+        allocator.free(controlHintSprites);
+        allocator.free(controlKeys);
+    }
 };

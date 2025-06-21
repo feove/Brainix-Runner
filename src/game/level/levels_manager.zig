@@ -124,6 +124,14 @@ pub const LevelManager = struct {
         };
     }
 
+    pub fn deinit(allocator: std.mem.Allocator) void {
+        for (level_manager.levels) |level| {
+            allocator.free(level.path);
+        }
+
+        allocator.free(level_manager.levels);
+    }
+
     fn makePath(allocator: std.mem.Allocator, id: usize) ![]const u8 {
         return std.fmt.allocPrint(allocator, "levels/lvl_{}.json", .{id + 1});
     }

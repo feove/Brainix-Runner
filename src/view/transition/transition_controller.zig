@@ -155,9 +155,9 @@ pub const TransitionController = struct {
 
     }
 
-    pub fn deinit(self: *TransitionController) !void {
-        try self.cercleOut.deinit();
-        try self.cercleIn.deinit();
+    pub fn deinit(allocator: std.mem.Allocator) void {
+        transition_controller.cercleOut.deinit(allocator);
+        transition_controller.cercleIn.deinit(allocator);
     }
 };
 
@@ -208,5 +208,12 @@ pub const Transition = struct {
             print("{s}\n", .{path});
             self.frames[i] = try rl.loadTexture(path);
         }
+    }
+
+    pub fn deinit(self: *Transition, allocator: std.mem.Allocator) void {
+        for (self.frames) |*frame| {
+            rl.unloadTexture(frame.*);
+        }
+        allocator.free(self.frames);
     }
 };

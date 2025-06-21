@@ -1,3 +1,4 @@
+const std = @import("std");
 const elf = @import("elf.zig");
 const Elf = elf.Elf;
 const elf_anims = @import("../game/animations/elf_anims.zig");
@@ -10,7 +11,7 @@ const flying = @import("flying_platform.zig");
 
 pub const Entity = struct {
     pub fn init() !void {
-        elf.initElf();
+        elf.init();
         wizard.init();
         flying.init();
     }

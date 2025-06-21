@@ -43,7 +43,7 @@ pub const DeathPurpose = enum {
     TIME_OUT,
 };
 
-pub fn initElf() void {
+pub fn init() void {
     const tex = textures.elf;
     const scale_factor: f32 = 0.1;
     initGrid = Grid.selfReturn();
