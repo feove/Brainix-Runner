@@ -26,7 +26,7 @@ pub const ButtonsPanel = struct {
     back: Button,
     res: Button,
     option: Button,
-    //  menu: Button,
+    menu: Button,
     next: Button,
     prev: Button,
     levels: []Button,
@@ -179,6 +179,24 @@ pub const ButtonsPanel = struct {
                 .fontText = "option",
                 .size = 32,
                 .fontOffset = .{ .x = 35, .y = 10 },
+            },
+            .menu = Button{
+                .texture = textures.back_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.5,
+                    .hover_scale = 5.6,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.49 },
+                    .scale = 5.5,
+                    .sprite = Sprite{
+                        .name = "Menu",
+                        .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
+                    },
+                },
+                .fontText = "menu",
+                .size = 32,
+                .fontOffset = .{ .x = 60, .y = 10 },
             },
             .next = Button{
                 .texture = textures.next_button,

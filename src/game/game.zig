@@ -11,9 +11,16 @@ const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 const Switcher = @import("../view/transition/transition_controller.zig").Switcher;
+const window = @import("../render/window.zig");
+const GameView = window.GameView;
 
 pub fn update() !void {
     Switcher.start(.CIRCLE_OUT);
+
+    if (btns.btns_panel.settings.isClicked()) {
+        window.previousView = .Play;
+        window.currentView = GameView.Settings;
+    }
 
     //Interactions
     terrain.grid.interactions();

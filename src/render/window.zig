@@ -22,10 +22,12 @@ pub const GameView = enum {
     Credits,
     Help,
     Quit,
+    Options,
     None,
 };
 
 pub var currentView = GameView.Menu;
+pub var previousView = GameView.None;
 
 pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
     rl.initWindow(screenWidth, screenHeight, "Brainix Runner");

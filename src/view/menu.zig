@@ -28,6 +28,7 @@ pub fn update() !void {
     }
 
     if (btns.btns_panel.settings.isClicked()) {
+        window.previousView = window.currentView;
         window.currentView = GameView.Settings;
     }
 

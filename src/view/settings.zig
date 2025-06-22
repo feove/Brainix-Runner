@@ -8,7 +8,17 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const btns = @import("../ui/buttons_panel.zig");
 
 pub fn update() !void {
+    if (btns.btns_panel.res.isClicked()) {
+        window.currentView = window.previousView;
+    }
 
+    if (btns.btns_panel.menu.isClicked()) {
+        window.currentView = .Menu;
+    }
+
+    if (btns.btns_panel.option.isClicked()) {
+        window.currentView = .Options;
+    }
     //btns
 }
 
@@ -19,23 +29,25 @@ pub fn render() !void {
 }
 
 fn drawBG() void {
-    const color = rl.colorAlpha(.black, 0.008);
+    const alpha: f32 = if (window.previousView == .Menu) 0.015 else 0.005;
+
+    const color = rl.colorAlpha(.black, alpha);
 
     rl.drawRectangle(0, 0, window.WINDOW_WIDTH, window.WINDOW_HEIGHT, color);
 
-    textures.Sprite.drawCustom(textures.level_selector_bg, SpriteDefaultConfig{
-        .position = .{ .x = window.WINDOW_WIDTH * 0.16, .y = window.WINDOW_HEIGHT * 0.24 },
+    textures.Sprite.drawCustom(textures.settings_bg, SpriteDefaultConfig{
+        .position = .{ .x = window.WINDOW_WIDTH * 0.287, .y = window.WINDOW_HEIGHT * 0.19 },
         .sprite = Sprite{
             .name = "Settings Background",
-            .src = .{ .x = 0, .y = 0, .width = 96, .height = 52 },
+            .src = .{ .x = 0, .y = 0, .width = 46, .height = 46 },
         },
         .color = .white,
-        .scale = 7,
+        .scale = 9,
     });
 }
 
 fn drawButtons() void {
     btns.btns_panel.res.draw();
     btns.btns_panel.option.draw();
-    //   btns.btns_panel.menu.draw();
+    btns.btns_panel.menu.draw();
 }
