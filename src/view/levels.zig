@@ -44,9 +44,6 @@ pub fn update() !void {
 
 pub fn render() !void {
     if (Switcher.can_default_render()) {
-        rl.beginDrawing();
-        defer rl.endDrawing();
-
         drawElements();
     }
 }
@@ -122,7 +119,7 @@ fn level_is_clicked() !void {
             try Level.init(allocator);
             Switcher.authorize_switch(.Play);
             TransitionController.setCurrent(.CIRCLE_IN);
-            //  window.currentView = GameView.Play;
+            window.currentView = GameView.Play;
         }
     }
 }

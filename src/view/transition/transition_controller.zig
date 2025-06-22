@@ -29,8 +29,8 @@ pub const Switcher = struct {
 
     pub fn default_render() !void {
         return switch (switcher.view) {
-            .Levels => levelsView.drawElements(),
             .Menu => menuView.drawElements(),
+            .Levels => levelsView.drawElements(),
             .Play => try gameView.drawElements(),
             else => return,
         };
@@ -97,8 +97,6 @@ pub const TransitionController = struct {
     }
 
     pub fn update() !void {
-        rl.beginDrawing();
-        defer rl.endDrawing();
 
         // drawBackground Scene
         Switcher.update();

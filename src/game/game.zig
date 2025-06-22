@@ -27,8 +27,6 @@ pub fn update() !void {
 
 pub fn render() !void {
     if (Switcher.can_default_render()) {
-        rl.beginDrawing();
-        defer rl.endDrawing();
 
         // print("{any} {any}\n", .{ objects.Level.getLevelStatement(), player.elf.state });
         try drawElements();

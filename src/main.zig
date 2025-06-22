@@ -38,6 +38,10 @@ pub fn main() anyerror!void {
     window.clear();
 
     while (window.isOpen) {
+        if (rl.isKeyPressed(rl.KeyboardKey.escape)) {
+            break;
+        }
+
         try window.GameViewManager();
     }
 
@@ -46,9 +50,7 @@ pub fn main() anyerror!void {
     Grid.deinit(allocator);
     Inventory.deinit(allocator);
     LevelsManager.deinit(allocator);
-
     Interface.deinit(allocator);
-
     FontManager.deinit();
     ButtonsPanel.deinit(allocator);
     TransitionController.deinit(allocator);

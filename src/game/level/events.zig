@@ -322,9 +322,8 @@ pub const Level = struct {
                         Wizard.reset();
                         ElfManager.reset();
                         CutScene.reset();
+                        window.currentView = .Levels;
                     }
-
-                    window.currentView = .Levels;
                 }
             },
         }
