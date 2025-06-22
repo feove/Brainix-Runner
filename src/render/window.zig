@@ -5,6 +5,7 @@ const stdout = std.io.getStdOut().writer();
 const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
 const levels = @import("../view/levels.zig");
+const settings = @import("../view/settings.zig");
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
 
@@ -50,7 +51,10 @@ pub fn GameViewManager() !void {
             try levels.update();
             try levels.render();
         },
-        .Settings => {},
+        .Settings => {
+            try settings.update();
+            try settings.render();
+        },
         .Credits => {},
         .Help => {},
         .Quit => {},

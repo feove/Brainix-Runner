@@ -340,28 +340,11 @@ pub const Level = struct {
     pub fn refresh() !void {
         var elf: Elf = Elf.selfReturn();
 
-        //print("Level statement {}\n",.{levelStatement});
-
-        // if (levelStatement == .STARTING) {
-        //     Elf.setState(player.PlayerState.ALIVE);
-        //     levelStatement = .ONGOING;
-        // }
-
-        //TMP Conditions
-        if (levelStatement == .PRE_COMPLETED or levelStatement == .COMPLETED) {
-            // try Level.stateLevelManager();
-            return;
-        }
-
         areaSetting(&elf);
 
         try playerStatement(&elf);
 
         autoDeathTimer();
-
-        // print("Current Area {}\n", .{playerEventstatus});
-        //drawIntermediateArea(level.i_event);
-        // eventDrawing(level.i_event);
     }
 
     fn autoDeathTimer() void {

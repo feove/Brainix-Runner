@@ -24,6 +24,9 @@ pub const ButtonsPanel = struct {
     exit: Button,
     settings: Button,
     back: Button,
+    res: Button,
+    option: Button,
+    //  menu: Button,
     next: Button,
     prev: Button,
     levels: []Button,
@@ -140,6 +143,42 @@ pub const ButtonsPanel = struct {
                 .fontText = "Back",
                 .size = 32,
                 .fontOffset = .{ .x = 60, .y = 10 },
+            },
+            .res = Button{
+                .texture = textures.back_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.5,
+                    .hover_scale = 5.6,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.31 },
+                    .scale = 5.5,
+                    .sprite = Sprite{
+                        .name = "Resume",
+                        .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
+                    },
+                },
+                .fontText = "resume",
+                .size = 32,
+                .fontOffset = .{ .x = 35, .y = 10 },
+            },
+            .option = Button{
+                .texture = textures.back_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.5,
+                    .hover_scale = 5.6,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.4 },
+                    .scale = 5.5,
+                    .sprite = Sprite{
+                        .name = "Option",
+                        .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
+                    },
+                },
+                .fontText = "option",
+                .size = 32,
+                .fontOffset = .{ .x = 35, .y = 10 },
             },
             .next = Button{
                 .texture = textures.next_button,
