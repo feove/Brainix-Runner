@@ -19,6 +19,7 @@ pub fn update() !void {
 
     if (btns.btns_panel.settings.isClicked()) {
         window.previousView = .Play;
+
         window.currentView = GameView.Settings;
     }
 

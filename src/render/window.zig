@@ -6,6 +6,7 @@ const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
 const levels = @import("../view/levels.zig");
 const settings = @import("../view/settings.zig");
+const options = @import("../view/options.zig");
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
 
@@ -56,6 +57,10 @@ pub fn GameViewManager() !void {
         .Settings => {
             try settings.update();
             try settings.render();
+        },
+        .Options => {
+            try options.update();
+            try options.render();
         },
         .Credits => {},
         .Help => {},

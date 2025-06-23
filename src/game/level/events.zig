@@ -299,6 +299,17 @@ pub const Level = struct {
         return .init(x, y, h, w); //flex
     }
 
+    pub fn guiQuit() void{
+        var event: Event = level.events[level.i_event];
+        event.objectsCleaning(event.grid_objects);
+
+        ElfManager.reset();
+        CutScene.reset();
+        auto_death_timer_active = false;
+        playerEventstatus = .IDLE_AREA;
+
+    }
+
     pub fn stateLevelManager() !void {
         switch (levelStatement) {
             .STARTING => {

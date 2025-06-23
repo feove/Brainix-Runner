@@ -24,6 +24,7 @@ pub const ButtonsPanel = struct {
     exit: Button,
     settings: Button,
     back: Button,
+    back_option: Button,
     res: Button,
     option: Button,
     menu: Button,
@@ -144,6 +145,24 @@ pub const ButtonsPanel = struct {
                 .size = 32,
                 .fontOffset = .{ .x = 60, .y = 10 },
             },
+            .back_option = Button{
+                .texture = textures.back_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.1,
+                    .hover_scale = 5.3,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.20, .y = window.WINDOW_HEIGHT * 0.60 },
+                    .scale = 5.2,
+                    .sprite = Sprite{
+                        .name = "Back",
+                        .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
+                    },
+                },
+                .fontText = "back",
+                .size = 32,
+                .fontOffset = .{ .x = 60, .y = 10 },
+            },
             .res = Button{
                 .texture = textures.back_button,
                 .hoverConf = HoverConfig{
@@ -169,7 +188,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.6,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.4 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.41 },
                     .scale = 5.5,
                     .sprite = Sprite{
                         .name = "Option",
@@ -187,7 +206,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.6,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.49 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.51 },
                     .scale = 5.5,
                     .sprite = Sprite{
                         .name = "Menu",
@@ -257,7 +276,7 @@ pub const ButtonsPanel = struct {
             .levels = levels,
         };
 
-        print("TEXT : {s} \n", .{btns_panel.levels[0].fontText});
+        //print("TEXT : {s} \n", .{btns_panel.levels[0].fontText});
     }
 
     pub fn deinit(allocator: std.mem.Allocator) void {
