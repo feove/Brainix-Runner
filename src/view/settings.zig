@@ -1,5 +1,6 @@
 const rl = @import("raylib");
 const std = @import("std");
+const print = std.debug.print;
 const window = @import("../render/window.zig");
 const GameView = window.GameView;
 const textures = @import("../render/textures.zig");
@@ -8,14 +9,46 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const btns = @import("../ui/buttons_panel.zig");
 const Level = @import("../game/level/events.zig").Level;
 const menu = @import("menu.zig");
+const game = @import("../game/level/events.zig");
+
+pub var settings = Settings{};
+var hasStarted: bool = false;
+
+const Settings = struct {
+    breakTime: f64 = 0,
+    startTime: f64 = 0,
+
+    fn update() void {
+        settings.breakTime = rl.getTime() - settings.startTime;
+    }
+
+    fn setNewStartTime() void {
+        game.auto_death_start_time += settings.breakTime;
+        print("Break time set {d}\n", .{settings.breakTime});
+    }
+
+    fn reset() void {
+        settings.breakTime = 0;
+    }
+};
+
+pub fn start() void {
+    if (hasStarted) return;
+
+    settings.startTime = rl.getTime();
+    hasStarted = true;
+}
 
 pub fn update() !void {
     if (btns.btns_panel.res.isClicked()) {
+        Settings.setNewStartTime();
+        Settings.reset();
         window.currentView = window.previousView;
     }
 
     if (btns.btns_panel.menu.isClicked()) {
         if (window.previousView == .Play) Level.guiQuit();
+        hasStarted = false;
 
         window.currentView = .Menu;
     }
@@ -23,7 +56,8 @@ pub fn update() !void {
     if (btns.btns_panel.option.isClicked()) {
         window.currentView = .Options;
     }
-    //btns
+
+    Settings.update();
 }
 
 pub fn render() !void {

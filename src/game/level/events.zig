@@ -299,7 +299,7 @@ pub const Level = struct {
         return .init(x, y, h, w); //flex
     }
 
-    pub fn guiQuit() void{
+    pub fn guiQuit() void {
         var event: Event = level.events[level.i_event];
         event.objectsCleaning(event.grid_objects);
 
@@ -307,7 +307,6 @@ pub const Level = struct {
         CutScene.reset();
         auto_death_timer_active = false;
         playerEventstatus = .IDLE_AREA;
-
     }
 
     pub fn stateLevelManager() !void {

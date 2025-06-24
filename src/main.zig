@@ -37,11 +37,7 @@ pub fn main() anyerror!void {
 
     window.clear();
 
-    while (window.isOpen) {
-        if (rl.isKeyPressed(rl.KeyboardKey.escape)) {
-            break;
-        }
-
+    while (window.isOpen and !rl.isKeyPressed(rl.KeyboardKey.q)) {
         try window.GameViewManager();
     }
 

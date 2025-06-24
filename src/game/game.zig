@@ -5,6 +5,7 @@ const flying = @import("../entity/flying_platform.zig");
 const terrain = @import("../terrain/grid.zig");
 const inventory = @import("../game/inventory.zig");
 const btns = @import("../ui/buttons_panel.zig");
+const events = @import("../game/level/events.zig");
 const Level = @import("../game/level/events.zig").Level;
 const Entity = @import("../entity/entity_manager.zig").Entity;
 const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
@@ -17,10 +18,11 @@ const GameView = window.GameView;
 pub fn update() !void {
     Switcher.start(.CIRCLE_OUT);
 
-    if (btns.btns_panel.settings.isClicked()) {
+    if (btns.btns_panel.settings.isClicked() or rl.isKeyPressed(rl.KeyboardKey.escape)) {
         window.previousView = .Play;
 
         window.currentView = GameView.Settings;
+        print(" start : {d}\n", .{events.auto_death_start_time});
     }
 
     //Interactions
