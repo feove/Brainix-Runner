@@ -22,8 +22,12 @@ pub fn render() !void {
 }
 
 fn drawBG() void {
+    //alpha
+    const color: rl.Color = rl.colorAlpha(.gray, 0.03);
+    rl.drawRectangle(0, 0, window.WINDOW_WIDTH, window.WINDOW_HEIGHT, color);
+
     Sprite.drawCustom(textures.simple_gui_sheets, SpriteDefaultConfig{
-        .position = .{ .x = window.WINDOW_WIDTH * 0.25, .y = window.WINDOW_HEIGHT * 0.2 },
+        .position = .{ .x = window.WINDOW_WIDTH * 0.23, .y = window.WINDOW_HEIGHT * 0.21 },
         .sprite = Sprite{
             .name = "Completed Level Background",
             .src = .{ .x = 0, .y = 95, .width = 48, .height = 35 },
