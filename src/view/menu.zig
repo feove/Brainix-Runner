@@ -18,6 +18,11 @@ var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {
 
+    //tmp
+    if (rl.isKeyPressed(rl.KeyboardKey.c)) {
+        window.currentView = .Completed;
+    }
+
     //affect once time
     Switcher.start(.CIRCLE_OUT);
 

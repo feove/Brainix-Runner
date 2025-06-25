@@ -9,7 +9,7 @@ const btns = @import("../ui/buttons_panel.zig");
 const Level = @import("../game/level/events.zig").Level;
 
 pub fn update() !void {
-    if (btns.btns_panel.back_option.isClicked()) {
+    if (btns.btns_panel.complete.isClicked()) {
         Level.end_level();
         window.currentView = .Levels;
     }
@@ -22,17 +22,17 @@ pub fn render() !void {
 }
 
 fn drawBG() void {
-    Sprite.drawCustom(textures.level_selector_bg, SpriteDefaultConfig{
-        .position = .{ .x = window.WINDOW_WIDTH * 0.3, .y = window.WINDOW_HEIGHT * 0.3 },
+    Sprite.drawCustom(textures.simple_gui_sheets, SpriteDefaultConfig{
+        .position = .{ .x = window.WINDOW_WIDTH * 0.25, .y = window.WINDOW_HEIGHT * 0.2 },
         .sprite = Sprite{
             .name = "Completed Level Background",
-            .src = .{ .x = 0, .y = 0, .width = 96, .height = 52 },
+            .src = .{ .x = 0, .y = 95, .width = 48, .height = 35 },
         },
         .color = .white,
-        .scale = 7.00,
+        .scale = 11.00,
     });
 }
 
 fn drawButtons() void {
-    btns.btns_panel.back_option.draw();
+    btns.btns_panel.complete.draw();
 }

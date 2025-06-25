@@ -25,6 +25,7 @@ pub const ButtonsPanel = struct {
     settings: Button,
     back: Button,
     back_option: Button,
+    complete: Button,
     res: Button,
     option: Button,
     menu: Button,
@@ -180,6 +181,24 @@ pub const ButtonsPanel = struct {
                 .fontText = "resume",
                 .size = 32,
                 .fontOffset = .{ .x = 35, .y = 10 },
+            },
+            .complete = Button{
+                .texture = textures.back_button,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.1,
+                    .hover_scale = 5.3,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.2, .y = window.WINDOW_HEIGHT * 0.60 },
+                    .scale = 5.2,
+                    .sprite = Sprite{
+                        .name = "Complete",
+                        .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
+                    },
+                },
+                .fontText = "Ok",
+                .size = 32,
+                .fontOffset = .{ .x = 40, .y = 10 },
             },
             .option = Button{
                 .texture = textures.back_button,
