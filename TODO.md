@@ -6,6 +6,10 @@
 - [ ] Rename All "Object" words by "Item"
 - [ ] Add more levels
 - [ ] Add Debugger Panel in Console
+- [ ] Add Level Completion Screen
+- [ ] Add Sound Effects
+- [ ] Add Music
+- [ ] Add Slow Motion visuals effects
 
 ### Tasks Completed  ✓
 - [X] Add Door Front end
