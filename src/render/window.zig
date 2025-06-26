@@ -7,7 +7,7 @@ const menu = @import("../view/menu.zig");
 const levels = @import("../view/levels.zig");
 const settings = @import("../view/settings.zig");
 const options = @import("../view/options.zig");
-const completed = @import("../view/level_completed.zig");
+const completed = @import("../view/completed.zig");
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
 

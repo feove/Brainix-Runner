@@ -33,6 +33,8 @@ pub const ButtonsPanel = struct {
     prev: Button,
     levels: []Button,
     locked_level: Button,
+    mute: Button,
+    unmute: Button,
 
     pub fn init(allocator: std.mem.Allocator) !void {
         var levels = try allocator.alloc(Button, lvls.level_manager.level_nb);
@@ -149,12 +151,12 @@ pub const ButtonsPanel = struct {
             .back_option = Button{
                 .texture = textures.back_button,
                 .hoverConf = HoverConfig{
-                    .default_scale = 5.1,
-                    .hover_scale = 5.3,
+                    .default_scale = 5.4,
+                    .hover_scale = 5.5,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.20, .y = window.WINDOW_HEIGHT * 0.60 },
-                    .scale = 5.2,
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.42, .y = window.WINDOW_HEIGHT * 0.53 },
+                    .scale = 5.3,
                     .sprite = Sprite{
                         .name = "Back",
                         .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
@@ -185,20 +187,20 @@ pub const ButtonsPanel = struct {
             .complete = Button{
                 .texture = textures.back_button,
                 .hoverConf = HoverConfig{
-                    .default_scale = 5.1,
-                    .hover_scale = 5.3,
+                    .default_scale = 5.3,
+                    .hover_scale = 5.4,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.2, .y = window.WINDOW_HEIGHT * 0.60 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.385, .y = window.WINDOW_HEIGHT * 0.51 },
                     .scale = 5.2,
                     .sprite = Sprite{
                         .name = "Complete",
                         .src = .{ .x = 19, .y = 0, .width = 42, .height = 11 },
                     },
                 },
-                .fontText = "Ok",
-                .size = 32,
-                .fontOffset = .{ .x = 40, .y = 10 },
+                .fontText = "Complete",
+                .size = 26,
+                .fontOffset = .{ .x = 23, .y = 13 },
             },
             .option = Button{
                 .texture = textures.back_button,
@@ -224,6 +226,7 @@ pub const ButtonsPanel = struct {
                     .default_scale = 5.5,
                     .hover_scale = 5.6,
                 },
+
                 .spriteConf = SpriteDefaultConfig{
                     .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.51 },
                     .scale = 5.5,
@@ -292,6 +295,42 @@ pub const ButtonsPanel = struct {
                 .size = 0,
                 .fontOffset = .{ .x = 0, .y = 0 },
             },
+            .mute = Button{
+                .texture = textures.settings_button_sheet,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.1,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.315, .y = window.WINDOW_HEIGHT * 0.32 },
+                    .scale = 5.0,
+                    .sprite = Sprite{
+                        .name = "Mute",
+                        .src = .{ .x = 96, .y = 160, .width = 16, .height = 16 },
+                    },
+                },
+                .fontText = "",
+                .size = 32,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
+            .unmute = Button{
+                .texture = textures.settings_button_sheet,
+                .hoverConf = HoverConfig{
+                    .default_scale = 5.0,
+                    .hover_scale = 5.1,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.315, .y = window.WINDOW_HEIGHT * 0.32 },
+                    .scale = 5.0,
+                    .sprite = Sprite{
+                        .name = "Unmute",
+                        .src = .{ .x = 112, .y = 160, .width = 16, .height = 16 },
+                    },
+                },
+                .fontText = "",
+                .size = 32,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
             .levels = levels,
         };
 
@@ -337,8 +376,10 @@ pub const Button = struct {
     pub fn isClicked(self: *Button) bool {
         const hover = self.isHover();
         const mouseLeftButton: bool = rl.isMouseButtonPressed(rl.MouseButton.left);
+        const res = hover and mouseLeftButton and self.canClick;
+        //if (res) makeSound(self.soundType);
 
-        return hover and mouseLeftButton;
+        return res;
     }
 
     fn resetHover(self: *Button) void {

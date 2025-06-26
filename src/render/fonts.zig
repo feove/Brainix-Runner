@@ -12,6 +12,7 @@ pub const FontManager = struct {
         };
 
         try fontManager.loadFont(allocator, 32);
+        try fontManager.loadFont(allocator, 26);
         try fontManager.loadFont(allocator, 24);
         try fontManager.loadFont(allocator, 16);
     }
