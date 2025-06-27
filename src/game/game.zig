@@ -6,7 +6,8 @@ const terrain = @import("../terrain/grid.zig");
 const inventory = @import("../game/inventory.zig");
 const btns = @import("../ui/buttons_panel.zig");
 const events = @import("../game/level/events.zig");
-const Level = @import("../game/level/events.zig").Level;
+const level = @import("../game/level/events.zig");
+const Level = level.Level;
 const Entity = @import("../entity/entity_manager.zig").Entity;
 const CutScene = @import("../game/level/cutscene_manager.zig").CutSceneManager;
 const rl = @import("raylib");
@@ -22,7 +23,7 @@ pub fn update() !void {
         window.previousView = .Play;
 
         window.currentView = GameView.Settings;
-        print(" start : {d}\n", .{events.auto_death_start_time});
+        //  print(" start : {d}\n", .{events.auto_death_start_time});
     }
 
     //Interactions

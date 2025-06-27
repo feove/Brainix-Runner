@@ -7,7 +7,8 @@ const textures = @import("../render/textures.zig");
 const Sprite = textures.Sprite;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const btns = @import("../ui/buttons_panel.zig");
-const Level = @import("../game/level/events.zig").Level;
+const level = @import("../game/level/events.zig");
+const Level = level.Level;
 const menu = @import("menu.zig");
 const game = @import("../game/level/events.zig");
 
@@ -47,7 +48,10 @@ pub fn update() !void {
     }
 
     if (btns.btns_panel.menu.isClicked()) {
-        if (window.previousView == .Play) Level.guiQuit();
+        if (window.previousView == .Play) {
+            level.reset_level_values();
+            Level.guiQuit();
+        }
         hasStarted = false;
 
         window.currentView = .Menu;

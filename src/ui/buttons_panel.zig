@@ -191,7 +191,7 @@ pub const ButtonsPanel = struct {
                     .hover_scale = 5.4,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.385, .y = window.WINDOW_HEIGHT * 0.51 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.38, .y = window.WINDOW_HEIGHT * 0.51 },
                     .scale = 5.2,
                     .sprite = Sprite{
                         .name = "Complete",

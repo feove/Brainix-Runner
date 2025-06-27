@@ -88,7 +88,7 @@ pub const Elf = struct {
         elf.x = RESPAWN_POINT.x;
         elf.y = RESPAWN_POINT.y;
         elf.setDefaultSpeed();
-        elf.physics.auto_moving = AutoMovements.RIGHT;
+        elf.physics.reset();
     }
 
     pub fn selfReturn() Elf {

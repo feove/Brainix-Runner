@@ -54,11 +54,6 @@ pub var levelStatement: LevelStatement = .STARTING;
 const LEVEL_NB: usize = 26;
 pub var CURRENT_LEVEL: usize = 0;
 
-const level_paths: []const []const u8 = &.{
-    "levels/lvl_1.json",
-    "levels/lvl_2.json",
-};
-
 var EVENT_NB: usize = undefined;
 const CURRENT_EVENT: usize = 0;
 
@@ -75,6 +70,15 @@ pub const LevelStatement = enum {
     PRE_COMPLETED,
     COMPLETED,
 };
+
+pub fn reset_level_values() void {
+    quick_slow_motion_active = false;
+    quick_slow_motion_start_time = 0;
+    quick_slow_motion_active = false;
+    quick_slow_motion_start_time = 0;
+    player.time_divisor = 1;
+    Elf.respawn();
+}
 
 pub const Areas = struct {
     trigger_area: rl.Vector4,
