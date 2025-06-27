@@ -32,6 +32,9 @@ pub var wizard_falling: AnimatedSprite = undefined;
 pub var wizard_attacking_1: AnimatedSprite = undefined;
 pub var wizard_attacking_2: AnimatedSprite = undefined;
 
+//Star
+pub var star: AnimatedSprite = undefined;
+
 pub fn init() !void {
     falling_platform = AnimatedSprite{
         .texture = textures.falling_platfom,
@@ -360,6 +363,21 @@ pub fn init() !void {
         .frame_height = 8,
         .horizontal_shift = true,
         .num_frames = 10,
+        .frame_duration = 0.1,
+    };
+
+    star = AnimatedSprite{
+        .texture = textures.star_sheet,
+        .sprite = Sprite{
+            .name = "Star",
+            .src = rl.Rectangle{ .x = 0, .y = 0, .width = 32, .height = 32 },
+        },
+        .start_x = 0,
+        .start_y = 0,
+        .frame_width = 32,
+        .frame_height = 32,
+        .horizontal_shift = true,
+        .num_frames = 13,
         .frame_duration = 0.1,
     };
 }

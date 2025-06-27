@@ -28,6 +28,9 @@ pub var wizard_falling: rl.Texture2D = undefined;
 pub var wizard_attacking_1: rl.Texture2D = undefined;
 pub var wizard_attacking_2: rl.Texture2D = undefined;
 
+//Star Anims
+pub var star_sheet: rl.Texture2D = undefined;
+
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
 pub var inventory_hud: rl.Texture2D = undefined;
@@ -114,6 +117,9 @@ pub fn init() !void {
 
     //Dungeons
     dungeons_tile = try rl.loadTexture("assets/textures/pack/oak_woods/dungeons_tile.png");
+
+    //Star Anims
+    star_sheet = try rl.loadTexture("assets/textures/star/Star.png");
 
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");
@@ -402,6 +408,8 @@ pub fn deinit() void {
     rl.unloadTexture(wizard_falling);
     rl.unloadTexture(wizard_attacking_1);
     rl.unloadTexture(wizard_attacking_2);
+
+    rl.unloadTexture(star_sheet);
 
     rl.unloadTexture(spriteSheet);
     rl.unloadTexture(forest_background);

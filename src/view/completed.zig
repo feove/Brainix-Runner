@@ -5,6 +5,7 @@ const window = @import("../render/window.zig");
 const textures = @import("../render/textures.zig");
 const Sprite = textures.Sprite;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
+const anim = @import("../game/animations/animations_manager.zig");
 const btns = @import("../ui/buttons_panel.zig");
 const Level = @import("../game/level/events.zig").Level;
 
@@ -17,6 +18,8 @@ pub fn update() !void {
 
 pub fn render() !void {
     drawBG();
+
+    drawStars();
 
     drawButtons();
 }
@@ -35,6 +38,12 @@ fn drawBG() void {
         .color = .white,
         .scale = 11.00,
     });
+}
+
+fn drawStars() void {
+    anim.star.isRunning = true;
+    anim.star.update(rl.getFrameTime(), 1);
+    anim.star.draw(.{ .x = 100, .y = 100 }, 3.00, 0.0, 255, 0, 0);
 }
 
 fn drawButtons() void {
