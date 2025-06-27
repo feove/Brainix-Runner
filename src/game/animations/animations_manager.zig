@@ -378,7 +378,7 @@ pub fn init() !void {
         .frame_height = 32,
         .horizontal_shift = true,
         .num_frames = 13,
-        .frame_duration = 0.1,
+        .frame_duration = 0.2,
     };
 }
 
@@ -408,6 +408,8 @@ pub fn deinit() void {
     rl.unloadTexture(wizard_falling.texture);
     rl.unloadTexture(wizard_attacking_1.texture);
     rl.unloadTexture(wizard_attacking_2.texture);
+
+    rl.unloadTexture(star.texture);
 }
 
 pub const AnimatedSprite = struct {
@@ -488,7 +490,14 @@ pub const AnimatedSprite = struct {
             .height = self.frame_height * scale,
         };
 
-        const origin = rl.Vector2{ .x = 0, .y = 0 };
+        const origin = rl.Vector2{
+            .x = 0,
+            .y = 0,
+        };
+
+        //Reminder
+        //.x = self.start_x + x_apply + self.frame_width / 2,
+        //.y = self.start_y + y_apply + self.frame_height / 2,
 
         const color: rl.Color = .white;
 

@@ -30,6 +30,7 @@ pub var wizard_attacking_2: rl.Texture2D = undefined;
 
 //Star Anims
 pub var star_sheet: rl.Texture2D = undefined;
+pub var empty_star: rl.Texture2D = undefined;
 
 pub var spriteSheet: rl.Texture2D = undefined;
 pub var forest_background: rl.Texture2D = undefined;
@@ -120,7 +121,7 @@ pub fn init() !void {
 
     //Star Anims
     star_sheet = try rl.loadTexture("assets/textures/star/Star.png");
-
+    empty_star = try rl.loadTexture("assets/textures/star/empty_star.png");
     //try rl.loadTexture("assets/textures/demon/Idle.png")
     //try rl.loadTexture("assets/textures/demon/idle2.png");
 
@@ -410,6 +411,7 @@ pub fn deinit() void {
     rl.unloadTexture(wizard_attacking_2);
 
     rl.unloadTexture(star_sheet);
+    rl.unloadTexture(empty_star);
 
     rl.unloadTexture(spriteSheet);
     rl.unloadTexture(forest_background);

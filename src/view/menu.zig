@@ -85,7 +85,9 @@ fn drawBackground() void {
     drawNPC();
 
     Sprite.drawCustom(textures.forest_bg_3, sprite_forest_config);
-    Sprite.drawCustom(textures.forest_bg_2, sprite_forest_config);
+
+    drawFoliageParallax(sprite_forest_config);
+
     Sprite.drawCustom(textures.forest_bg_1, sprite_forest_config);
 
     drawTopBlackBackground();
@@ -95,8 +97,14 @@ fn drawTreesParallax(trees_config: SpriteDefaultConfig) void {
     var config = trees_config;
     config.position.x += rl.getMousePosition().x * 0.002;
     Sprite.drawCustom(textures.forest_bg_7, config);
-    config.position.x += rl.getMousePosition().x * 0.005;
+    config.position.x += rl.getMousePosition().x * 0.003;
     Sprite.drawCustom(textures.forest_bg_6, config);
+}
+
+fn drawFoliageParallax(foliage_config: SpriteDefaultConfig) void {
+    var config = foliage_config;
+    config.position.x += rl.getMousePosition().x * 0.005;
+    Sprite.drawCustom(textures.forest_bg_2, config);
 }
 
 fn drawClouds(config: SpriteDefaultConfig) void {

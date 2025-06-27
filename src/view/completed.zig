@@ -8,7 +8,7 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const anim = @import("../game/animations/animations_manager.zig");
 const btns = @import("../ui/buttons_panel.zig");
 const Level = @import("../game/level/events.zig").Level;
-
+const LevelMeta = @import("../game/level/levels_manager.zig").LevelMeta;
 pub fn update() !void {
     if (btns.btns_panel.complete.isClicked()) {
         Level.end_level();
@@ -41,9 +41,37 @@ fn drawBG() void {
 }
 
 fn drawStars() void {
-    anim.star.isRunning = true;
-    anim.star.update(rl.getFrameTime(), 1);
-    anim.star.draw(.{ .x = 100, .y = 100 }, 3.00, 0.0, 255, 0, 0);
+    const star_nb: usize = LevelMeta.getCurrentStars();
+    for (0..3) |i| {
+        if (i + 1 <= star_nb) {
+            anim.star.isRunning = true;
+            anim.star.update(rl.getFrameTime(), 1);
+            anim.star.draw(
+                .{
+                    .x = window.WINDOW_WIDTH * 0.31 + @as(f32, @floatFromInt(i)) * 120,
+                    .y = window.WINDOW_HEIGHT * 0.30,
+                },
+                4.00,
+                0.0,
+                255,
+                0,
+                0,
+            );
+            continue;
+        }
+
+        Sprite.drawCustom(textures.empty_star, SpriteDefaultConfig{
+            .position = .{
+                .x = window.WINDOW_WIDTH * 0.31 + @as(f32, @floatFromInt(i)) * 120,
+                .y = window.WINDOW_HEIGHT * 0.30,
+            },
+            .sprite = Sprite{
+                .name = "Empty Star",
+                .src = .{ .x = 0, .y = 0, .width = 32, .height = 32 },
+            },
+            .scale = 4.00,
+        });
+    }
 }
 
 fn drawButtons() void {

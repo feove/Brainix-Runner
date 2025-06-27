@@ -331,7 +331,8 @@ pub const Level = struct {
             .COMPLETED => {
                 if (CutScene.lastDone() == .LEVEL_ENDING) {
                     print("LEVEL COMPLETED \n", .{});
-
+                    LevelMeta.manageStars();
+                    LevelMeta.unlockNextLevel();
                     window.currentView = .Completed;
                 }
             },

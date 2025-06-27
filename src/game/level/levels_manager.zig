@@ -49,6 +49,32 @@ pub const LevelMeta = struct {
     stars_collected: u8,
     path: []const u8,
 
+    pub fn manageStars() void {
+        const stars_nb = 1;
+
+        if (false) { //Star 2
+            //Implement star collection logic
+        }
+
+        if (false) { //Star 3
+            //Implement star collection logic
+        }
+
+        level_manager.levels[level_manager.current_level].stars_collected = stars_nb;
+    }
+
+    pub fn getCurrentStars() usize {
+        return @as(usize, @intCast(level_manager.levels[level_manager.current_level].stars_collected));
+    }
+
+    pub fn unlockNextLevel() void {
+        const next = level_manager.current_level + 1;
+        if (next >= LEVEL_NB) return;
+        if (level_manager.levels[next].is_locked) {
+            level_manager.levels[next].is_locked = false;
+        }
+    }
+
     pub fn draw_unlocked_level(id: usize) void {
         const pos = btns.btns_panel.levels[id].spriteConf.position;
 
@@ -99,7 +125,7 @@ pub const LevelManager = struct {
             const path = try makePath(allocator, id);
             levels[id] = LevelMeta{
                 .id = id,
-                .is_locked = id > 18,
+                .is_locked = id > 0,
                 .stars_collected = 0,
                 .path = path,
             };
