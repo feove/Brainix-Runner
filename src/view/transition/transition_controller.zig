@@ -111,6 +111,10 @@ pub const TransitionController = struct {
                 try Switcher.default_render();
                 render(&transition_controller.cercleOut);
             },
+            .EPIC => {
+                try Switcher.default_render();
+                render(&transition_controller.epic);
+            },
             else => {},
         }
     }
@@ -161,7 +165,6 @@ pub const TransitionController = struct {
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
         try transition_controller.epic.fillFrames(allocator, "epic/epic_", ".png", 0, 1);
-
     }
 
     pub fn deinit(allocator: std.mem.Allocator) void {

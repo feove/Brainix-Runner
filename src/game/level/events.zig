@@ -25,9 +25,10 @@ const CellType = terrain.CellType;
 const Object = @import("../terrain_object.zig").Object;
 const Inventory = @import("../inventory.zig").Inventory;
 const EventConfig = @import("level_reader.zig").EventConfig;
-
 const CursorManager = @import("../cursor.zig").CursorManager;
-
+const transition = @import("../../view/transition/transition_controller.zig");
+const Switcher = transition.Switcher;
+const Controller = transition.TransitionController;
 const window = @import("../../render/window.zig");
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -226,6 +227,7 @@ pub const Event = struct {
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
                 level.events[level.i_event].already_triggered = true;
+                Controller.setCurrent(.EPIC);
                 return;
             }
         }
