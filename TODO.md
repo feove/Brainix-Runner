@@ -1,22 +1,22 @@
 # Brainix Runner
 
-
 ### Tasks Remaining
-- [ ] Add Fronted End
-- [ ] Rename All "Object" words by "Item"
+
+- [ ] Rename all instances of "Object" to "Item"
 - [ ] Add more levels
 - [ ] Add Debugger Panel in Console
-- [ ] Add Level Completion Screen
 - [ ] Add Sound Effects
 - [ ] Add Music
-- [ ] Add Slow Motion visuals effects
+- [ ] Add Slow Motion Visual Effects
 
-### Tasks Completed  ✓
-- [X] Add Door Front end
-- [X] Add Wizard elf detection to avoid collisions
-- [X] Add Animations before objects spawning/Despawning
-- [x] Set Up a Door Animation when level starting
-- [x] Level Transitions
-- [X] Allocate an integer array of  event's level number
-- [X] Add boost Item
-- [X] Stacking items in Inventory's bar
+### Tasks Completed
+- [X] Add Frontend levels
+- [X] Add Door Frontend
+- [X] Add Wizard Elf detection to avoid collisions
+- [X] Add animations before item spawning/despawning
+- [X] Set up a door animation when the level starts
+- [X] Level transitions
+- [X] Allocate an integer array for the event's level numbers
+- [X] Add Boost Item
+- [X] Stack items in the Inventory bar
+- [X] Add Level Completion Screen

@@ -20,6 +20,7 @@ pub const TransitionType = enum {
     NONE,
     CIRCLE_IN,
     CIRCLE_OUT,
+    EPIC,
 };
 
 pub const Switcher = struct {
@@ -72,6 +73,7 @@ pub const Switcher = struct {
 pub const TransitionController = struct {
     cercleIn: Transition,
     cercleOut: Transition,
+    epic: Transition,
     current: TransitionType,
     previous: TransitionType,
 
@@ -145,11 +147,20 @@ pub const TransitionController = struct {
                 .frames = try allocator.alloc(rl.Texture2D, 14),
                 .frame_duration = 0.03,
             },
+            .epic = Transition{
+                .frame_start = 0,
+                .frame_end = 1,
+                .frame_current = 0,
+                .transition_type = .EPIC,
+                .frames = try allocator.alloc(rl.Texture2D, 1),
+                .frame_duration = 1.0,
+            },
             .current = .NONE,
             .previous = .NONE,
         };
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
+        try transition_controller.epic.fillFrames(allocator, "epic/epic_", ".png", 0, 1);
 
     }
 
