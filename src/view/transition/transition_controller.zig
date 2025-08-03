@@ -156,7 +156,7 @@ pub const TransitionController = struct {
                 .frame_end = 1,
                 .frame_current = 0,
                 .transition_type = .EPIC,
-                .frames = try allocator.alloc(rl.Texture2D, 1),
+                .frames = try allocator.alloc(rl.Texture2D, 3),
                 .frame_duration = 1.0,
             },
             .current = .NONE,
@@ -164,7 +164,7 @@ pub const TransitionController = struct {
         };
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
-        try transition_controller.epic.fillFrames(allocator, "epic/epic_", ".png", 0, 1);
+        try transition_controller.epic.fillFrames(allocator, "epic/epic_in/epic_", ".png", 0, 3); //18 for in
     }
 
     pub fn deinit(allocator: std.mem.Allocator) void {
