@@ -153,7 +153,7 @@ pub const TransitionController = struct {
             },
             .epic_in = Transition{
                 .frame_start = 0,
-                .frame_end = 3, //Need to get edited
+                .frame_end = 8, //Need to get edited
                 .frame_current = 0,
                 .transition_type = .EPIC_IN,
                 .frames = try allocator.alloc(rl.Texture2D, 8),

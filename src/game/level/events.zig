@@ -213,6 +213,7 @@ pub const Event = struct {
         if (elapsed >= limit) {
             quick_slow_motion_active = false;
             player.time_divisor = 1;
+            Controller.setPrevious(.NONE);
 
             //EffectManager.setCurrent(.SLOT_CLEANNING);
         }
@@ -242,6 +243,7 @@ pub const Event = struct {
                 player.time_divisor = 1;
                 if (level.events[level.i_event].areas.intermediate_areas_nb == 0) {
                     EffectManager.setCurrent(.SLOT_CLEANNING);
+                    Controller.setPrevious(.NONE);
                 }
                 playerEventstatus = .IDLE_AREA;
             }

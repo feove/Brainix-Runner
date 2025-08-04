@@ -26,8 +26,6 @@ const transitions = @import("../view/transition/transition_controller.zig");
 pub fn drawScene() !void {
     // rl.clearBackground(.white);
 
-    drawEpicBackground();
-
     drawBackgrounds();
 
     drawGrid();
@@ -38,12 +36,14 @@ pub fn drawScene() !void {
     drawInventory();
 
     //try drawItemNumber();
+    drawEpicBackground();
 
     CursorManager.spriteUnderCursor();
 }
 
 fn drawEpicBackground() void {
-    if (events.slow_motion_active and transitions.transition_controller.previous == .NONE) {
+    if (events.slow_motion_active and transitions.transition_controller.previous == .EPIC_IN) {
+        print("EPIC BACKGROUND\n", .{});
         rl.drawTexture(textures.epic_background, 0, 0, .white);
     }
     //Sprite.draw(textures.epic_background, 0, rl.Vector2.init(0, 0), 1.0, .white);
