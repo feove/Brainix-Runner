@@ -227,7 +227,7 @@ pub const Event = struct {
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
                 level.events[level.i_event].already_triggered = true;
-                Controller.setCurrent(.EPIC);
+                Controller.setCurrent(.EPIC_IN);
                 return;
             }
         }

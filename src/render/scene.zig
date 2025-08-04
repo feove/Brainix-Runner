@@ -20,10 +20,14 @@ const hud = @import("../interface/hud.zig");
 const Interface = hud.Interface;
 const Selector = @import("../interface/selector.zig").Selector;
 const scenarios = @import("../game/level/cutscene_manager.zig");
-
+const events = @import("../game/level/events.zig");
+const transitions = @import("../view/transition/transition_controller.zig");
 //Tmp Drawing
 pub fn drawScene() !void {
     // rl.clearBackground(.white);
+
+    drawEpicBackground();
+
     drawBackgrounds();
 
     drawGrid();
@@ -36,6 +40,13 @@ pub fn drawScene() !void {
     //try drawItemNumber();
 
     CursorManager.spriteUnderCursor();
+}
+
+fn drawEpicBackground() void {
+    if (events.slow_motion_active and transitions.transition_controller.previous == .NONE) {
+        rl.drawTexture(textures.epic_background, 0, 0, .white);
+    }
+    //Sprite.draw(textures.epic_background, 0, rl.Vector2.init(0, 0), 1.0, .white);
 }
 
 fn drawGrid() void {

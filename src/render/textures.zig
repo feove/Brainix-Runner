@@ -89,6 +89,8 @@ pub var forest_bg_7: rl.Texture2D = undefined;
 pub var forest_bg_8: rl.Texture2D = undefined;
 pub var forest_bg_9: rl.Texture2D = undefined;
 
+pub var epic_background: rl.Texture2D = undefined;
+
 pub const BLOCK_SIZE: f32 = 16;
 const KEY_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
@@ -174,6 +176,8 @@ pub fn init() !void {
     forest_bg_7 = try rl.loadTexture("assets/textures/bg/forest_layer_7.png");
     forest_bg_8 = try rl.loadTexture("assets/textures/bg/forest_layer_8.png");
     forest_bg_9 = try rl.loadTexture("assets/textures/bg/forest_layer_9.png");
+
+    epic_background = try rl.loadTexture("assets/transitions/epic/epic_in/epic_in_08.png");
 
     keyboard_sprites = KeyboardSprites.init();
     sprites = Sprites.init();
@@ -463,4 +467,6 @@ pub fn deinit() void {
     rl.unloadTexture(forest_bg_7);
     rl.unloadTexture(forest_bg_8);
     rl.unloadTexture(forest_bg_9);
+
+    rl.unloadTexture(epic_background);
 }

@@ -20,7 +20,7 @@ pub const TransitionType = enum {
     NONE,
     CIRCLE_IN,
     CIRCLE_OUT,
-    EPIC,
+    EPIC_IN,
 };
 
 pub const Switcher = struct {
@@ -73,7 +73,7 @@ pub const Switcher = struct {
 pub const TransitionController = struct {
     cercleIn: Transition,
     cercleOut: Transition,
-    epic: Transition,
+    epic_in: Transition,
     current: TransitionType,
     previous: TransitionType,
 
@@ -111,9 +111,9 @@ pub const TransitionController = struct {
                 try Switcher.default_render();
                 render(&transition_controller.cercleOut);
             },
-            .EPIC => {
+            .EPIC_IN => {
                 try Switcher.default_render();
-                render(&transition_controller.epic);
+                render(&transition_controller.epic_in);
             },
             else => {},
         }
@@ -151,20 +151,20 @@ pub const TransitionController = struct {
                 .frames = try allocator.alloc(rl.Texture2D, 14),
                 .frame_duration = 0.03,
             },
-            .epic = Transition{
+            .epic_in = Transition{
                 .frame_start = 0,
-                .frame_end = 1,
+                .frame_end = 3, //Need to get edited
                 .frame_current = 0,
-                .transition_type = .EPIC,
-                .frames = try allocator.alloc(rl.Texture2D, 3),
-                .frame_duration = 1.0,
+                .transition_type = .EPIC_IN,
+                .frames = try allocator.alloc(rl.Texture2D, 8),
+                .frame_duration = 0.03,
             },
             .current = .NONE,
             .previous = .NONE,
         };
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
-        try transition_controller.epic.fillFrames(allocator, "epic/epic_in/epic_", ".png", 0, 3); //18 for in
+        try transition_controller.epic_in.fillFrames(allocator, "epic/epic_in/epic_in_", ".png", 0, 8); //18 for inz
     }
 
     pub fn deinit(allocator: std.mem.Allocator) void {
