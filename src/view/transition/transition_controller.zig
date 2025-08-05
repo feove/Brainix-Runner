@@ -9,6 +9,7 @@ const menuView = @import("./../menu.zig");
 const gameView = @import("../../game/game.zig");
 const window = @import("../../render/window.zig");
 const GameView = window.GameView;
+const scene = @import("../../render/scene.zig");
 
 pub var transition_controller: TransitionController = undefined;
 pub var switcher: Switcher = undefined;
@@ -114,6 +115,7 @@ pub const TransitionController = struct {
             .EPIC_IN => {
                 try Switcher.default_render();
                 render(&transition_controller.epic_in);
+                scene.drawInventory();
             },
             else => {},
         }

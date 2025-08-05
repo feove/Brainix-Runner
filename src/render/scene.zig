@@ -33,18 +33,27 @@ pub fn drawScene() !void {
 
     drawUnderGroundDeco();
     drawIndications();
-    drawInventory();
 
     //try drawItemNumber();
     drawEpicBackground();
+
+    drawInventory();
 
     CursorManager.spriteUnderCursor();
 }
 
 fn drawEpicBackground() void {
     if (events.slow_motion_active and transitions.transition_controller.previous == .EPIC_IN) {
-        print("EPIC BACKGROUND\n", .{});
-        rl.drawTexture(textures.epic_background, 0, 0, .white);
+
+        //rl.drawTexture(textures.epic_background, 0, 0, .white);
+        Sprite.drawCustom(textures.epic_background, SpriteDefaultConfig{
+            .sprite = Sprite{
+                .name = "Epic Bg",
+                .src = .init(0, 0, 1000, 800),
+            },
+            .position = .init(0, 0),
+            .alpha = 0.9,
+        });
     }
     //Sprite.draw(textures.epic_background, 0, rl.Vector2.init(0, 0), 1.0, .white);
 }
@@ -282,7 +291,7 @@ fn drawIndications() void {
     }
 }
 
-fn drawInventory() void {
+pub fn drawInventory() void {
     const inv = Inventory.selfReturn();
 
     //Draw Inventory Borders
