@@ -7,9 +7,10 @@
 - [ ] Add Debugger Panel in Console
 - [ ] Add Sound Effects
 - [ ] Add Music
-- [ ] Add Slow Motion Visual Effects
+
 
 ### Tasks Completed
+- [X] Add Slow Motion Visual Effects
 - [X] Add Frontend levels
 - [X] Add Door Frontend
 - [X] Add Wizard Elf detection to avoid collisions
