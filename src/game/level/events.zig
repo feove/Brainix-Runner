@@ -222,6 +222,7 @@ pub const Event = struct {
     pub fn slow_motion_effect(elf: *Elf) void {
         const current_time = rl.getTime();
 
+        const ev = level.events[level.i_event];
         _ = elf;
         if (!slow_motion_active) {
             if (playerEventstatus == .SLOW_MOTION_AREA and !level.events[level.i_event].already_triggered) {
@@ -229,7 +230,7 @@ pub const Event = struct {
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
                 level.events[level.i_event].already_triggered = true;
-                if (level.events[level.i_event].areas.intermediate_areas_nb == 0) {
+                if (ev.areas.intermediate_areas_nb == 0 and ev.object_nb != 1) {
                     Controller.setCurrent(.EPIC_IN);
                 }
                 return;
