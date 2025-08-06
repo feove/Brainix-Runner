@@ -22,6 +22,7 @@ pub const TransitionType = enum {
     CIRCLE_IN,
     CIRCLE_OUT,
     EPIC_IN,
+    EPIC_OUT,
 };
 
 pub const Switcher = struct {
@@ -75,6 +76,7 @@ pub const TransitionController = struct {
     cercleIn: Transition,
     cercleOut: Transition,
     epic_in: Transition,
+    epic_out: Transition,
     current: TransitionType,
     previous: TransitionType,
 
@@ -115,6 +117,11 @@ pub const TransitionController = struct {
             .EPIC_IN => {
                 try Switcher.default_render();
                 render(&transition_controller.epic_in);
+                scene.drawInventory();
+            },
+            .EPIC_OUT => {
+                try Switcher.default_render();
+                render(&transition_controller.epic_out);
                 scene.drawInventory();
             },
             else => {},
@@ -161,12 +168,22 @@ pub const TransitionController = struct {
                 .frames = try allocator.alloc(rl.Texture2D, 8),
                 .frame_duration = 0.03,
             },
+            .epic_out = Transition{
+                .frame_start = 0,
+                .frame_end = 8, //Need to get edited
+                .frame_current = 0,
+                .transition_type = .EPIC_OUT,
+                .frames = try allocator.alloc(rl.Texture2D, 8),
+                .frame_duration = 0.03,
+            },
             .current = .NONE,
             .previous = .NONE,
         };
         try transition_controller.cercleOut.fillFrames(allocator, "cercle_out/cercle_out_", ".png", 0, 13); //18
         try transition_controller.cercleIn.fillFrames(allocator, "cercle_in/cercle_in_", ".png", 0, 13); //18 cercle_in/cercle_in_
         try transition_controller.epic_in.fillFrames(allocator, "epic/epic_in/epic_in_", ".png", 0, 8); //18 for inz
+        try transition_controller.epic_out.fillFrames(allocator, "epic/epic_out/epic_out_", ".png", 0, 8); //18 for inz
+
     }
 
     pub fn deinit(allocator: std.mem.Allocator) void {

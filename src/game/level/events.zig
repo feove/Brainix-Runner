@@ -221,6 +221,7 @@ pub const Event = struct {
 
     pub fn slow_motion_effect(elf: *Elf) void {
         const current_time = rl.getTime();
+
         _ = elf;
         if (!slow_motion_active) {
             if (playerEventstatus == .SLOW_MOTION_AREA and !level.events[level.i_event].already_triggered) {
@@ -228,7 +229,9 @@ pub const Event = struct {
                 slow_motion_active = true;
                 slow_motion_start_time = current_time;
                 level.events[level.i_event].already_triggered = true;
-                Controller.setCurrent(.EPIC_IN);
+                if (level.events[level.i_event].areas.intermediate_areas_nb == 0) {
+                    Controller.setCurrent(.EPIC_IN);
+                }
                 return;
             }
         }
@@ -244,7 +247,9 @@ pub const Event = struct {
                 if (level.events[level.i_event].areas.intermediate_areas_nb == 0) {
                     EffectManager.setCurrent(.SLOT_CLEANNING);
                     Controller.setPrevious(.NONE);
+                    Controller.setCurrent(.EPIC_OUT);
                 }
+
                 playerEventstatus = .IDLE_AREA;
             }
         }
