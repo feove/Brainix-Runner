@@ -62,6 +62,26 @@ pub const SoundSet = struct {
     }
 };
 
+pub fn decreaseVolume() void {
+    if (rl.isAudioDeviceReady()) {
+        rl.setMasterVolume(rl.getMasterVolume() - 0.25);
+    }
+    if (currentVolume < VOLUME_MAX) {
+        currentVolume += 1;
+    }
+}
+
+pub fn increaseVolume() void {
+    if (rl.isAudioDeviceReady()) {
+        rl.setMasterVolume(rl.getMasterVolume() + 0.25);
+    }
+    if (currentVolume > VOLUME_MIN) {
+        currentVolume -= 1;
+    }
+
+    soundControl.play(soundsets.basic_btn_sound);
+}
+
 const SoundDisplay = struct {
     canPlayAllSound: bool = true,
 

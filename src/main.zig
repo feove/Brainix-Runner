@@ -35,7 +35,7 @@ pub fn main() anyerror!void {
     try FontManager.init(allocator);
     try ButtonsPanel.init(allocator);
     try TransitionController.init(allocator);
-    //try sounds.init();
+    try sounds.init();
 
     window.clear();
 
@@ -52,6 +52,6 @@ pub fn main() anyerror!void {
     FontManager.deinit();
     ButtonsPanel.deinit(allocator);
     TransitionController.deinit(allocator);
-    //sounds.deinit();
+    sounds.deinit();
     rl.closeWindow();
 }

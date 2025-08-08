@@ -75,7 +75,7 @@ pub fn GameViewManager() !void {
         else => return,
     }
 
-    //sounds.run();
+    sounds.run();
 }
 
 pub fn clear() void {

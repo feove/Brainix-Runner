@@ -27,6 +27,12 @@ pub fn update() !void {
     } else if (btns.btns_panel.unmute.isClicked()) {
         muted = false;
     }
+
+    if (btns.btns_panel.left_arrow.isClicked()) {
+        sounds.decreaseVolume();
+    } else if (btns.btns_panel.right_arrow.isClicked()) {
+        sounds.increaseVolume();
+    }
 }
 
 pub fn render() !void {
@@ -49,13 +55,16 @@ fn drawSoundsEffectsBar() void {
 
     Sprite.drawCustom(textures.ui_sheet, SpriteDefaultConfig{
         .sprite = textures.ui_sprites.bar,
-        .position = .{ .x = 580, .y = 250 },
-        .scale = 4.5,
+        .position = .{ .x = 566, .y = 250 },
+        .scale = 5.2,
         .x_offset = x_offset,
     });
 }
 
-fn drawSoundsEffectsButtons() void {}
+fn drawSoundsEffectsButtons() void {
+    btns.btns_panel.left_arrow.draw();
+    btns.btns_panel.right_arrow.draw();
+}
 
 pub fn drawHUD() void {
     textures.Sprite.drawCustom(textures.level_selector_bg, SpriteDefaultConfig{

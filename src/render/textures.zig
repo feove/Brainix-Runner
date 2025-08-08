@@ -287,10 +287,14 @@ pub const KeyboardSprites = struct {
 
 pub const UiSprites = struct {
     bar: Sprite,
+    left_arrow: Sprite,
+    right_arrow: Sprite,
 
     fn init() UiSprites {
         return UiSprites{
             .bar = .{ .name = "bar", .src = rl.Rectangle{ .x = 630, .y = 160, .width = 40, .height = 20 } },
+            .left_arrow = .{ .name = "left arrow", .src = rl.Rectangle{ .x = 130, .y = 110, .width = 13, .height = 17 } },
+            .right_arrow = .{ .name = "right arrow", .src = rl.Rectangle{ .x = 148, .y = 110, .width = 13, .height = 17 } },
         };
     }
 };

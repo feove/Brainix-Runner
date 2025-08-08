@@ -35,6 +35,8 @@ pub const ButtonsPanel = struct {
     locked_level: Button,
     mute: Button,
     unmute: Button,
+    left_arrow: Button,
+    right_arrow: Button,
 
     pub fn init(allocator: std.mem.Allocator) !void {
         var levels = try allocator.alloc(Button, lvls.level_manager.level_nb);
@@ -326,6 +328,36 @@ pub const ButtonsPanel = struct {
                         .name = "Unmute",
                         .src = .{ .x = 112, .y = 160, .width = 16, .height = 16 },
                     },
+                },
+                .fontText = "",
+                .size = 32,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
+            .left_arrow = Button{
+                .texture = textures.ui_sheet,
+                .hoverConf = HoverConfig{
+                    .default_scale = 4.0,
+                    .hover_scale = 4.1,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.52, .y = window.WINDOW_HEIGHT * 0.31 },
+                    .scale = 2.0,
+                    .sprite = textures.ui_sprites.left_arrow,
+                },
+                .fontText = "",
+                .size = 32,
+                .fontOffset = .{ .x = 0, .y = 0 },
+            },
+            .right_arrow = Button{
+                .texture = textures.ui_sheet,
+                .hoverConf = HoverConfig{
+                    .default_scale = 4.0,
+                    .hover_scale = 4.1,
+                },
+                .spriteConf = SpriteDefaultConfig{
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.76, .y = window.WINDOW_HEIGHT * 0.31 },
+                    .scale = 2.0,
+                    .sprite = textures.ui_sprites.right_arrow,
                 },
                 .fontText = "",
                 .size = 32,
