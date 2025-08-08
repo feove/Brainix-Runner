@@ -38,11 +38,14 @@ pub fn render() !void {
 
     drawButtons();
 
-    drawSliderBar();
+    drawSoundsEffectsBar();
+
+    drawSoundsEffectsButtons();
 }
 
-fn drawSliderBar() void {
-    const x_offset = 0 * sounds.currentVolume;
+fn drawSoundsEffectsBar() void {
+    const bar_size = 48;
+    const x_offset = bar_size * sounds.currentVolume;
 
     Sprite.drawCustom(textures.ui_sheet, SpriteDefaultConfig{
         .sprite = textures.ui_sprites.bar,
@@ -51,6 +54,8 @@ fn drawSliderBar() void {
         .x_offset = x_offset,
     });
 }
+
+fn drawSoundsEffectsButtons() void {}
 
 pub fn drawHUD() void {
     textures.Sprite.drawCustom(textures.level_selector_bg, SpriteDefaultConfig{

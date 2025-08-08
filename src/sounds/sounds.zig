@@ -5,9 +5,9 @@ pub var soundControl = SoundDisplay{};
 pub var soundsets = SoundSet{};
 pub var canPlayMusic: bool = true;
 
-pub const VOLUME_MAX = 5;
-pub const VOLUME_MIN = 0;
-pub var currentVolume: u8 = 3;
+pub const VOLUME_MAX: f32 = 5.0;
+pub const VOLUME_MIN: f32 = 0.0;
+pub var currentVolume: f32 = 0.0;
 
 pub fn run() void {
     if (canPlayMusic) {
