@@ -13,6 +13,7 @@ const Sprite = textures.Sprite;
 const FontManager = @import("../render/fonts.zig").FontManager;
 const menu = @import("menu.zig");
 const settings = @import("settings.zig");
+const sounds = @import("../sounds/sounds.zig");
 
 pub var muted: bool = false;
 
@@ -36,6 +37,19 @@ pub fn render() !void {
     drawFonts();
 
     drawButtons();
+
+    drawSliderBar();
+}
+
+fn drawSliderBar() void {
+    const x_offset = 0 * sounds.currentVolume;
+
+    Sprite.drawCustom(textures.ui_sheet, SpriteDefaultConfig{
+        .sprite = textures.ui_sprites.bar,
+        .position = .{ .x = 580, .y = 250 },
+        .scale = 4.5,
+        .x_offset = x_offset,
+    });
 }
 
 pub fn drawHUD() void {

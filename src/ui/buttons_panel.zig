@@ -151,11 +151,11 @@ pub const ButtonsPanel = struct {
             .back_option = Button{
                 .texture = textures.back_button,
                 .hoverConf = HoverConfig{
-                    .default_scale = 5.4,
-                    .hover_scale = 5.5,
+                    .default_scale = 5.6,
+                    .hover_scale = 5.7,
                 },
                 .spriteConf = SpriteDefaultConfig{
-                    .position = .{ .x = window.WINDOW_WIDTH * 0.42, .y = window.WINDOW_HEIGHT * 0.53 },
+                    .position = .{ .x = window.WINDOW_WIDTH * 0.41, .y = window.WINDOW_HEIGHT * 0.55 },
                     .scale = 5.3,
                     .sprite = Sprite{
                         .name = "Back",
@@ -164,7 +164,7 @@ pub const ButtonsPanel = struct {
                 },
                 .fontText = "back",
                 .size = 32,
-                .fontOffset = .{ .x = 60, .y = 10 },
+                .fontOffset = .{ .x = 70, .y = 10 },
             },
             .res = Button{
                 .texture = textures.back_button,

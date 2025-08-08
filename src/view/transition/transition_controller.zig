@@ -10,7 +10,7 @@ const gameView = @import("../../game/game.zig");
 const window = @import("../../render/window.zig");
 const GameView = window.GameView;
 const scene = @import("../../render/scene.zig");
-
+const sounds = @import("../../sounds/sounds.zig");
 pub var transition_controller: TransitionController = undefined;
 pub var switcher: Switcher = undefined;
 pub var start_transiton: f32 = 0.0;
@@ -53,6 +53,7 @@ pub const Switcher = struct {
 
         TransitionController.setCurrent(tr);
         switcher.has_started = true;
+
         //set Background render func
         return;
     }

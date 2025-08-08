@@ -76,6 +76,9 @@ pub var simple_gui_sheets: rl.Texture2D = undefined;
 pub var settings_button_sheet: rl.Texture2D = undefined;
 pub var simple_button_bg: rl.Texture2D = undefined;
 
+//Ui
+pub var ui_sheet: rl.Texture2D = undefined;
+
 pub var logo: rl.Texture2D = undefined;
 pub var level_selector_bg: rl.Texture2D = undefined;
 
@@ -95,6 +98,7 @@ pub const BLOCK_SIZE: f32 = 16;
 const KEY_SIZE: f32 = 16;
 pub var sprites: Sprites = undefined;
 pub var keyboard_sprites: KeyboardSprites = undefined;
+pub var ui_sprites: UiSprites = undefined;
 
 pub fn init() !void {
     //Hud
@@ -179,7 +183,10 @@ pub fn init() !void {
 
     epic_background = try rl.loadTexture("assets/transitions/epic/epic_in/epic_in_08.png");
 
+    ui_sheet = try rl.loadTexture("assets/textures/ui/ui.png");
+
     keyboard_sprites = KeyboardSprites.init();
+    ui_sprites = UiSprites.init();
     sprites = Sprites.init();
 }
 
@@ -274,6 +281,16 @@ pub const KeyboardSprites = struct {
             .f = .{ .name = "f key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 10, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .e = .{ .name = "e key", .src = rl.Rectangle{ .x = KEY_SIZE * 2, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
             .r = .{ .name = "r key", .src = rl.Rectangle{ .x = KEY_SIZE * 3, .y = KEY_SIZE * 9, .width = BLOCK_SIZE, .height = BLOCK_SIZE } },
+        };
+    }
+};
+
+pub const UiSprites = struct {
+    bar: Sprite,
+
+    fn init() UiSprites {
+        return UiSprites{
+            .bar = .{ .name = "bar", .src = rl.Rectangle{ .x = 630, .y = 160, .width = 40, .height = 20 } },
         };
     }
 };
@@ -467,6 +484,8 @@ pub fn deinit() void {
     rl.unloadTexture(forest_bg_7);
     rl.unloadTexture(forest_bg_8);
     rl.unloadTexture(forest_bg_9);
+
+    rl.unloadTexture(ui_sheet);
 
     rl.unloadTexture(epic_background);
 }

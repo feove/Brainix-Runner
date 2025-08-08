@@ -13,7 +13,7 @@ const Wizard = @import("../entity/wizard.zig").Wizard;
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
 const Switcher = @import("./transition/transition_controller.zig").Switcher;
-
+const sounds = @import("../sounds/sounds.zig");
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {
@@ -40,6 +40,10 @@ pub fn update() !void {
     if (btns.btns_panel.exit.isClicked()) {
         window.isOpen = false;
     }
+
+    //if (!rl.isMusicStreamPlaying(sounds.soundsets.theme_music)) {
+    //  sounds.soundControl.playMusic(sounds.soundsets.theme_music);
+    //}
 }
 
 pub fn render() !void {

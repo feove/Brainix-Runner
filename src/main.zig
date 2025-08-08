@@ -7,7 +7,8 @@ const Grid = @import("terrain/grid.zig").Grid;
 const Inventory = @import("game/inventory.zig").Inventory;
 const textures = @import("render/textures.zig");
 const anim = @import("game/animations/animations_manager.zig");
-const sounds = @import("sounds/sounds.zig");const Level = @import("game/level/events.zig").Level;
+const sounds = @import("sounds/sounds.zig");
+const Level = @import("game/level/events.zig").Level;
 const Entity = @import("entity/entity_manager.zig").Entity;
 const Interface = @import("interface/hud.zig").Interface;
 const ButtonsPanel = @import("ui/buttons_panel.zig").ButtonsPanel;
@@ -34,7 +35,7 @@ pub fn main() anyerror!void {
     try FontManager.init(allocator);
     try ButtonsPanel.init(allocator);
     try TransitionController.init(allocator);
-    try sounds.init();
+    //try sounds.init();
 
     window.clear();
 
@@ -51,6 +52,6 @@ pub fn main() anyerror!void {
     FontManager.deinit();
     ButtonsPanel.deinit(allocator);
     TransitionController.deinit(allocator);
-    sounds.deinit();
+    //sounds.deinit();
     rl.closeWindow();
 }
