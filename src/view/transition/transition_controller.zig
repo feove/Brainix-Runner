@@ -11,6 +11,7 @@ const window = @import("../../render/window.zig");
 const GameView = window.GameView;
 const scene = @import("../../render/scene.zig");
 const sounds = @import("../../sounds/sounds.zig");
+const Button = @import("../../ui/buttons_panel.zig").Button;
 pub var transition_controller: TransitionController = undefined;
 pub var switcher: Switcher = undefined;
 pub var start_transiton: f32 = 0.0;
@@ -96,6 +97,7 @@ pub const TransitionController = struct {
 
     pub fn setCurrent(transition: TransitionType) void {
         transition_controller.current = transition;
+        Button.reset();
     }
 
     pub fn setPrevious(transition: TransitionType) void {

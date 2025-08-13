@@ -171,16 +171,6 @@ pub const Elf = struct {
             self.physics.velocity_x = 0;
         }
 
-        ElfManager.AnimationTrigger(&elf);
-
-        Object.padAction(&elf);
-
-        Object.upPadAction(&elf);
-
-        Object.spikeAction(&elf);
-
-        Object.boostAction(&elf);
-
         //HitBox.antiGrounbGlitch(&elf);
         updatePlayerStatement();
 
@@ -191,6 +181,16 @@ pub const Elf = struct {
         if (rl.isKeyDown(rl.KeyboardKey.left) or self.physics.auto_moving == AutoMovements.LEFT) {
             x_movement -= self.speed * dt - self.physics.velocity_x;
         }
+
+        ElfManager.AnimationTrigger(&elf);
+
+        Object.padAction(&elf);
+
+        Object.upPadAction(&elf);
+
+        Object.spikeAction(&elf);
+
+        Object.boostAction(&elf);
 
         self.elfMovement(x_movement, self.physics.velocity_y * dt);
 

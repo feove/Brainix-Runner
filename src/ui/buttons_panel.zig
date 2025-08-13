@@ -381,7 +381,7 @@ pub const Button = struct {
     fontText: [:0]const u8,
     size: u32,
     fontOffset: rl.Vector2,
-    canClick: bool = true,
+    canClick: bool = false,
 
     pub fn setPosition(self: *Button, x: f32, y: f32) void {
         self.spriteConf.position.x = x;
@@ -406,12 +406,14 @@ pub const Button = struct {
     }
 
     pub fn isClicked(self: *Button) bool {
-        const hover = self.isHover();
-        const mouseLeftButton: bool = rl.isMouseButtonPressed(rl.MouseButton.left);
-        const res = hover and mouseLeftButton and self.canClick;
-        //if (res) makeSound(self.soundType);
-
-        return res;
+        if (self.canClick) {
+            const hover = self.isHover();
+            const mouseLeftButton: bool = rl.isMouseButtonPressed(rl.MouseButton.left);
+            const res = hover and mouseLeftButton;
+            return res;
+            //if (res) makeSound(self.soundType);
+        }
+        return false;
     }
 
     fn resetHover(self: *Button) void {
@@ -439,10 +441,30 @@ pub const Button = struct {
     pub fn draw(self: *Button) void {
         applyHover(self);
 
+        setCanClick(self, true);
         // print("x : {d} y : {d}\n", .{ self.spriteConf.position.x, self.spriteConf.position.y });
         Sprite.drawCustom(self.texture, self.spriteConf);
         FontManager.drawText(self.fontText, self.spriteConf.position.x + self.fontOffset.x, self.spriteConf.position.y + self.fontOffset.y, self.size, 0.0, .black);
 
         resetHover(self);
+    }
+
+    pub fn reset() void {
+        btns_panel.play.setCanClick(false);
+        btns_panel.exit.setCanClick(false);
+        btns_panel.settings.setCanClick(false);
+        btns_panel.back.setCanClick(false);
+        btns_panel.back_option.setCanClick(false);
+        btns_panel.complete.setCanClick(false);
+        btns_panel.res.setCanClick(false);
+        btns_panel.option.setCanClick(false);
+        btns_panel.menu.setCanClick(false);
+        btns_panel.next.setCanClick(false);
+        btns_panel.prev.setCanClick(false);
+        btns_panel.mute.setCanClick(false);
+        btns_panel.unmute.setCanClick(false);
+        btns_panel.left_arrow.setCanClick(false);
+        btns_panel.right_arrow.setCanClick(false);
+        btns_panel.locked_level.setCanClick(false);
     }
 };
