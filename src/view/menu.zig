@@ -13,6 +13,7 @@ const Wizard = @import("../entity/wizard.zig").Wizard;
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
 const Switcher = @import("./transition/transition_controller.zig").Switcher;
+const Button = @import("../ui/buttons_panel.zig").Button;
 const sounds = @import("../sounds/sounds.zig");
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
@@ -28,6 +29,7 @@ pub fn update() !void {
 
     if (btns.btns_panel.play.isClicked()) {
         //print("Clicked\n", .{});
+        Button.reset();
         Switcher.authorize_switch(.Levels);
         TransitionController.setCurrent(.CIRCLE_IN);
     }
@@ -35,6 +37,7 @@ pub fn update() !void {
     if (btns.btns_panel.settings.isClicked()) {
         window.previousView = window.currentView;
         window.currentView = GameView.Settings;
+        Button.reset();
     }
 
     if (btns.btns_panel.exit.isClicked()) {

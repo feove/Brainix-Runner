@@ -11,6 +11,7 @@ const btns = @import("../ui/buttons_panel.zig");
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
 const FontManager = @import("../render/fonts.zig").FontManager;
+const Button = @import("../ui/buttons_panel.zig").Button;
 const menu = @import("menu.zig");
 const settings = @import("settings.zig");
 const sounds = @import("../sounds/sounds.zig");
@@ -20,6 +21,7 @@ pub var muted: bool = false;
 pub fn update() !void {
     if (btns.btns_panel.back_option.isClicked()) {
         window.currentView = .Settings;
+        Button.reset();
     }
 
     if (btns.btns_panel.mute.isClicked()) {

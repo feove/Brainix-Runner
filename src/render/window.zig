@@ -12,6 +12,9 @@ const sounds = @import("../sounds/sounds.zig");
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 const TransitionController = @import("../view/transition/transition_controller.zig").TransitionController;
 
+//tmp
+const btn = @import("../ui/buttons_panel.zig");
+
 pub const WINDOW_WIDTH = 1000;
 pub const WINDOW_HEIGHT = 800;
 
@@ -43,6 +46,11 @@ pub fn GameViewManager() !void {
 
     CursorManager.refresh();
     try TransitionController.update();
+
+    //   print("Option Button {}\n", .{btn.btns_panel.option.canClick});
+    if (currentView == previousView) {
+        // btn.Button.reset();
+    }
 
     switch (currentView) {
         .Menu => {

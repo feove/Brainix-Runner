@@ -450,6 +450,7 @@ pub const Button = struct {
     }
 
     pub fn reset() void {
+        print("ZEUBI\n", .{});
         btns_panel.play.setCanClick(false);
         btns_panel.exit.setCanClick(false);
         btns_panel.settings.setCanClick(false);

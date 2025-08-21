@@ -97,7 +97,7 @@ pub const TransitionController = struct {
 
     pub fn setCurrent(transition: TransitionType) void {
         transition_controller.current = transition;
-        Button.reset();
+        // Button.reset();
     }
 
     pub fn setPrevious(transition: TransitionType) void {

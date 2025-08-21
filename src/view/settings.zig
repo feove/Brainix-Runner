@@ -9,6 +9,7 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const btns = @import("../ui/buttons_panel.zig");
 const level = @import("../game/level/events.zig");
 const Level = level.Level;
+const Button = btns.Button;
 const menu = @import("menu.zig");
 const game = @import("../game/level/events.zig");
 
@@ -44,6 +45,7 @@ pub fn update() !void {
     if (btns.btns_panel.res.isClicked()) {
         Settings.setNewStartTime();
         Settings.reset();
+        Button.reset();
         window.currentView = window.previousView;
     }
 
@@ -53,11 +55,12 @@ pub fn update() !void {
             Level.guiQuit();
         }
         hasStarted = false;
-
+        Button.reset();
         window.currentView = .Menu;
     }
 
     if (btns.btns_panel.option.isClicked()) {
+        Button.reset();
         window.currentView = .Options;
     }
 
