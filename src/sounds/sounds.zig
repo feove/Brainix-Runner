@@ -32,8 +32,10 @@ pub fn run() void {
 }
 
 pub fn init() !void {
+    rl.initAudioDevice();
+
     if (!rl.isAudioDeviceReady()) {
-        rl.initAudioDevice();
+        return error.AudioDeviceNotReady;
     }
 
     try SoundSet.init();
