@@ -400,6 +400,8 @@ pub const Button = struct {
         const hover = isHover(self);
         const conf = self.hoverConf;
         if (hover) {
+            setCanClick(self, true);
+
             self.spriteConf.color = conf.hover_color;
             self.spriteConf.scale = conf.hover_scale;
         }
@@ -441,7 +443,6 @@ pub const Button = struct {
     pub fn draw(self: *Button) void {
         applyHover(self);
 
-        setCanClick(self, true);
         // print("x : {d} y : {d}\n", .{ self.spriteConf.position.x, self.spriteConf.position.y });
         Sprite.drawCustom(self.texture, self.spriteConf);
         FontManager.drawText(self.fontText, self.spriteConf.position.x + self.fontOffset.x, self.spriteConf.position.y + self.fontOffset.y, self.size, 0.0, .black);
@@ -450,15 +451,15 @@ pub const Button = struct {
     }
 
     pub fn reset() void {
-        print("ZEUBI\n", .{});
+        print("RESET SOUNDS EFFECTS\n", .{});
         btns_panel.play.setCanClick(false);
         btns_panel.exit.setCanClick(false);
         btns_panel.settings.setCanClick(false);
         btns_panel.back.setCanClick(false);
+        btns_panel.option.setCanClick(false);
         btns_panel.back_option.setCanClick(false);
         btns_panel.complete.setCanClick(false);
         btns_panel.res.setCanClick(false);
-        btns_panel.option.setCanClick(false);
         btns_panel.menu.setCanClick(false);
         btns_panel.next.setCanClick(false);
         btns_panel.prev.setCanClick(false);

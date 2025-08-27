@@ -26,7 +26,7 @@ const Settings = struct {
 
     fn setNewStartTime() void {
         game.auto_death_start_time += settings.breakTime;
-        print("Break time set {d}\n", .{settings.breakTime});
+        //       print("Break time set {d}\n", .{settings.breakTime});
     }
 
     fn reset() void {

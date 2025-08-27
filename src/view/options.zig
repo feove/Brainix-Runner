@@ -19,6 +19,10 @@ const sounds = @import("../sounds/sounds.zig");
 pub var muted: bool = false;
 
 pub fn update() !void {
+
+    //Hardcoded
+    btns.btns_panel.option.setCanClick(false);
+
     if (btns.btns_panel.back_option.isClicked()) {
         window.currentView = .Settings;
         Button.reset();
