@@ -29,6 +29,7 @@ const CursorManager = @import("../cursor.zig").CursorManager;
 const transition = @import("../../view/transition/transition_controller.zig");
 const Switcher = transition.Switcher;
 const Controller = transition.TransitionController;
+const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
 const window = @import("../../render/window.zig");
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -191,6 +192,7 @@ pub const Event = struct {
         }
         //exception
         anim.jumper_sprite.resetPos();
+        SoundDisplay.makeSound(.MARTIAL_ARTS);
     }
 
     pub fn quick_slow_motion() void {

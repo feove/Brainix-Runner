@@ -50,9 +50,9 @@ pub fn render() !void {
 
     drawButtons();
 
-    drawSoundsEffectsBar();
-
     drawSoundsEffectsButtons();
+
+    drawSoundsEffectsBar();
 }
 
 fn drawSoundsEffectsBar() void {

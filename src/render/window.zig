@@ -47,11 +47,6 @@ pub fn GameViewManager() !void {
     CursorManager.refresh();
     try TransitionController.update();
 
-    //   print("Option Button {}\n", .{btn.btns_panel.option.canClick});
-    if (currentView == previousView) {
-        // btn.Button.reset();
-    }
-
     switch (currentView) {
         .Menu => {
             try menu.update();

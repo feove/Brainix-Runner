@@ -14,21 +14,6 @@ pub fn run() void {
         soundControl.play(soundsets.theme_music);
         canPlayMusic = false;
     }
-
-    var ctn = btns.btns_panel;
-
-    const basic_btn: bool = ctn.settings.isClicked() or
-        ctn.res.isClicked() or
-        ctn.option.isClicked() or
-        ctn.mute.isClicked() or
-        ctn.unmute.isClicked();
-
-    const back_btn: bool = ctn.back.isClicked() or
-        ctn.menu.isClicked() or
-        ctn.back_option.isClicked();
-
-    if (basic_btn) soundControl.play(soundsets.basic_btn_sound);
-    if (back_btn) soundControl.play(soundsets.back_btn_sound);
 }
 
 pub fn init() !void {
@@ -47,20 +32,35 @@ pub fn deinit() void {
 }
 
 pub const SoundSet = struct {
-    basic_btn_sound: rl.Sound = undefined,
-    back_btn_sound: rl.Sound = undefined,
+    basic_btn: rl.Sound = undefined,
+    back_btn: rl.Sound = undefined,
+    arrow: rl.Sound = undefined,
     theme_music: rl.Sound = undefined,
+    play_btn: rl.Sound = undefined,
+    boom: rl.Sound = undefined,
+    woosh_1: rl.Sound = undefined,
+    martial_arts: rl.Sound = undefined,
 
     fn init() !void {
-        soundsets.basic_btn_sound = try rl.loadSound("sounds/basic_btn.mp3");
-        soundsets.back_btn_sound = try rl.loadSound("sounds/back_btn.mp3");
+        soundsets.basic_btn = try rl.loadSound("sounds/basic_btn.mp3");
+        soundsets.back_btn = try rl.loadSound("sounds/back_btn.mp3");
+        soundsets.arrow = try rl.loadSound("sounds/arrow_button.mp3");
         soundsets.theme_music = try rl.loadSound("sounds/theme_music.mp3");
+        soundsets.boom = try rl.loadSound("sounds/boom.mp3");
+        soundsets.play_btn = try rl.loadSound("sounds/play_btn_sound.mp3");
+        soundsets.woosh_1 = try rl.loadSound("sounds/woosh_1_sound.mp3");
+        soundsets.martial_arts = try rl.loadSound("sounds/martial_arts.wav");
     }
 
     pub fn deinit(self: *SoundSet) void {
-        rl.unloadSound(self.basic_btn_sound);
-        rl.unloadSound(self.back_btn_sound);
+        rl.unloadSound(self.basic_btn);
+        rl.unloadSound(self.back_btn);
+        rl.unloadSound(self.arrow);
         rl.unloadSound(self.theme_music);
+        rl.unloadSound(self.play_btn);
+        rl.unloadSound(self.boom);
+        rl.unloadSound(self.woosh_1);
+        rl.unloadSound(self.martial_arts);
     }
 };
 
@@ -80,12 +80,35 @@ pub fn increaseVolume() void {
     if (currentVolume > VOLUME_MIN) {
         currentVolume -= 1;
     }
-
-    soundControl.play(soundsets.basic_btn_sound);
 }
 
-const SoundDisplay = struct {
+pub const SoundType = enum {
+    BASIC,
+    BACK,
+    ARROW,
+    THEME,
+    PLAY,
+    BOOM,
+    WOOSH_1,
+    MARTIAL_ARTS,
+};
+
+pub const SoundDisplay = struct {
     canPlayAllSound: bool = true,
+
+    pub fn makeSound(soundtype: SoundType) void {
+        const sound: rl.Sound = switch (soundtype) {
+            .BASIC => soundsets.basic_btn,
+            .BACK => soundsets.back_btn,
+            .ARROW => soundsets.arrow,
+            .THEME => soundsets.theme_music,
+            .PLAY => soundsets.play_btn,
+            .BOOM => soundsets.boom,
+            .WOOSH_1 => soundsets.woosh_1,
+            .MARTIAL_ARTS => soundsets.martial_arts,
+        };
+        rl.playSound(sound);
+    }
 
     pub fn play(self: *const SoundDisplay, sound: rl.Sound) void {
         if (self.canPlayAllSound) {

@@ -7,6 +7,8 @@ const lvls = @import("../game/level/levels_manager.zig");
 const FontManager = @import("../render/fonts.zig").FontManager;
 const CursorManager = @import("../game/cursor.zig").CursorManager;
 const SpriteDefaultConfig = textures.SpriteDefaultConfig;
+const SoundType = @import("../sounds/sounds.zig").SoundType;
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 const Sprite = textures.Sprite;
 
 pub var btns_panel: ButtonsPanel = undefined;
@@ -95,6 +97,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "Play",
                 .size = 32,
                 .fontOffset = .{ .x = 90, .y = 10 },
+                .soundType = SoundType.PLAY,
             },
             .exit = Button{
                 .texture = textures.exit_button,
@@ -149,6 +152,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "Back",
                 .size = 32,
                 .fontOffset = .{ .x = 60, .y = 10 },
+                .soundType = SoundType.BACK,
             },
             .back_option = Button{
                 .texture = textures.back_button,
@@ -167,6 +171,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "back",
                 .size = 32,
                 .fontOffset = .{ .x = 70, .y = 10 },
+                .soundType = SoundType.BACK,
             },
             .res = Button{
                 .texture = textures.back_button,
@@ -258,6 +263,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "Next",
                 .size = 32,
                 .fontOffset = .{ .x = 60, .y = 10 },
+                .soundType = SoundType.ARROW,
             },
             .prev = Button{
                 .texture = textures.next_button,
@@ -278,6 +284,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "Play",
                 .size = 0,
                 .fontOffset = .{ .x = 0, .y = 0 },
+                .soundType = SoundType.ARROW,
             },
             .locked_level = Button{
                 .texture = textures.locked_level_button,
@@ -296,6 +303,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "",
                 .size = 0,
                 .fontOffset = .{ .x = 0, .y = 0 },
+                .soundType = SoundType.ARROW,
             },
             .mute = Button{
                 .texture = textures.settings_button_sheet,
@@ -347,6 +355,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "",
                 .size = 32,
                 .fontOffset = .{ .x = 0, .y = 0 },
+                .soundType = SoundType.ARROW,
             },
             .right_arrow = Button{
                 .texture = textures.ui_sheet,
@@ -362,6 +371,7 @@ pub const ButtonsPanel = struct {
                 .fontText = "",
                 .size = 32,
                 .fontOffset = .{ .x = 0, .y = 0 },
+                .soundType = SoundType.ARROW,
             },
             .levels = levels,
         };
@@ -382,6 +392,7 @@ pub const Button = struct {
     size: u32,
     fontOffset: rl.Vector2,
     canClick: bool = false,
+    soundType: SoundType = SoundType.BASIC,
 
     pub fn setPosition(self: *Button, x: f32, y: f32) void {
         self.spriteConf.position.x = x;
@@ -412,8 +423,9 @@ pub const Button = struct {
             const hover = self.isHover();
             const mouseLeftButton: bool = rl.isMouseButtonPressed(rl.MouseButton.left);
             const res = hover and mouseLeftButton;
+
+            if (res) SoundDisplay.makeSound(self.soundType);
             return res;
-            //if (res) makeSound(self.soundType);
         }
         return false;
     }

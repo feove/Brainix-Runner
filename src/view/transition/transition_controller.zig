@@ -10,7 +10,7 @@ const gameView = @import("../../game/game.zig");
 const window = @import("../../render/window.zig");
 const GameView = window.GameView;
 const scene = @import("../../render/scene.zig");
-const sounds = @import("../../sounds/sounds.zig");
+const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
 const Button = @import("../../ui/buttons_panel.zig").Button;
 pub var transition_controller: TransitionController = undefined;
 pub var switcher: Switcher = undefined;
@@ -112,6 +112,7 @@ pub const TransitionController = struct {
         switch (transition_controller.current) {
             .CIRCLE_IN => {
                 render(&transition_controller.cercleIn);
+                SoundDisplay.makeSound(.WOOSH_1);
             },
             .CIRCLE_OUT => {
                 try Switcher.default_render();
@@ -121,6 +122,7 @@ pub const TransitionController = struct {
                 try Switcher.default_render();
                 render(&transition_controller.epic_in);
                 scene.drawInventory();
+                SoundDisplay.makeSound(.BOOM);
             },
             .EPIC_OUT => {
                 try Switcher.default_render();
