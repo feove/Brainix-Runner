@@ -47,6 +47,8 @@ pub fn GameViewManager() !void {
     CursorManager.refresh();
     try TransitionController.update();
 
+    sounds.run();
+
     switch (currentView) {
         .Menu => {
             try menu.update();
@@ -77,8 +79,6 @@ pub fn GameViewManager() !void {
         .Quit => {},
         else => return,
     }
-
-    sounds.run();
 }
 
 pub fn clear() void {

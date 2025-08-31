@@ -16,7 +16,8 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
 const Switcher = @import("./transition/transition_controller.zig").Switcher;
-const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
+const sounds = @import("../sounds/sounds.zig");
+const SoundDisplay = sounds.SoundDisplay;
 
 pub fn update() !void {
     Switcher.start(.CIRCLE_OUT);
@@ -120,6 +121,7 @@ fn level_is_clicked() !void {
             try Level.init(allocator);
             Switcher.authorize_switch(.Play);
             TransitionController.setCurrent(.CIRCLE_IN);
+            SoundDisplay.stopMusic(sounds.soundsets.theme_music);
             window.currentView = GameView.Play;
         }
     }

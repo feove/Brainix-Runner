@@ -11,10 +11,12 @@ pub const VOLUME_MIN: f32 = 0.0;
 pub var currentVolume: f32 = 0.0;
 
 pub fn run() void {
+    rl.updateMusicStream(soundsets.theme_music);
+
     if (canPlayMusic) {
-        soundControl.playMusic(soundsets.theme_music);
-        //soundControl.play(soundsets.theme_music);
-        // canPlayMusic = false;
+        SoundDisplay.playMusic(soundsets.theme_music);
+        rl.setMusicVolume(soundsets.theme_music, 1.0);
+        canPlayMusic = false;
     }
 }
 
@@ -155,19 +157,43 @@ pub const SoundDisplay = struct {
         rl.playSound(sound);
     }
 
-    pub fn stopMusic(sound: rl.Sound) void {
+    pub fn stopSound(sound: rl.Sound) void {
         if (!soundControl.canPlayAllSound) {
             rl.stopSound(sound);
         }
     }
 
-    pub fn playMusic(self: *const SoundDisplay, music: rl.Music) void {
-        if (self.canPlayAllSound) {
-            if (rl.isMusicValid(music)) {
-                rl.playMusicStream(music);
-            } else {
-                print("Music is not valid\n", .{});
-            }
+    pub fn playMusic(music: rl.Music) void {
+        //if (self.canPlayAllSound) {}
+        if (rl.isMusicValid(music)) {
+            rl.playMusicStream(music);
+        } else {
+            print("Music is not valid\n", .{});
+        }
+    }
+
+    pub fn stopMusic(music: rl.Music) void {
+        if (rl.isMusicValid(music)) {
+            rl.stopMusicStream(music);
+        }
+    }
+
+    pub fn pauseMusic(music: rl.Music) void {
+        if (rl.isMusicValid(music)) {
+            rl.pauseMusicStream(music);
+        }
+    }
+
+    pub fn resumeMusic(music: rl.Music) void {
+        if (rl.isMusicValid(music)) {
+            rl.resumeMusicStream(music);
+        }
+    }
+
+    pub fn restartMusic(music: rl.Music) void {
+        if (rl.isMusicValid(music)) {
+            rl.stopMusicStream(music);
+            rl.playMusicStream(music);
         }
     }
 

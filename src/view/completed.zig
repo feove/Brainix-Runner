@@ -9,10 +9,15 @@ const anim = @import("../game/animations/animations_manager.zig");
 const btns = @import("../ui/buttons_panel.zig");
 const Level = @import("../game/level/events.zig").Level;
 const LevelMeta = @import("../game/level/levels_manager.zig").LevelMeta;
+const sounds = @import("../sounds/sounds.zig");
+const SoundDisplay = sounds.SoundDisplay;
+
 pub fn update() !void {
     if (btns.btns_panel.complete.isClicked()) {
         Level.end_level();
         window.currentView = .Levels;
+        SoundDisplay.makeSound(.BASIC);
+        SoundDisplay.playMusic(sounds.soundsets.theme_music);
     }
 }
 

@@ -15,6 +15,7 @@ const TransitionController = @import("./transition/transition_controller.zig").T
 const Switcher = @import("./transition/transition_controller.zig").Switcher;
 const Button = @import("../ui/buttons_panel.zig").Button;
 const sounds = @import("../sounds/sounds.zig");
+const SoundDisplay = sounds.SoundDisplay;
 var cloud_position: rl.Vector2 = .{ .x = -window.WINDOW_WIDTH, .y = 0 };
 
 pub fn update() !void {

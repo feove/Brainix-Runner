@@ -12,6 +12,8 @@ const Level = level.Level;
 const Button = btns.Button;
 const menu = @import("menu.zig");
 const game = @import("../game/level/events.zig");
+const sounds = @import("../sounds/sounds.zig");
+const SoundDisplay = sounds.SoundDisplay;
 
 pub var settings = Settings{};
 var hasStarted: bool = false;
@@ -56,6 +58,7 @@ pub fn update() !void {
         }
         hasStarted = false;
         Button.reset();
+        SoundDisplay.restartMusic(sounds.soundsets.theme_music);
         window.currentView = .Menu;
     }
 
