@@ -23,7 +23,7 @@ pub fn main() anyerror!void {
 
     //---Inits------------
 
-    window.windowInit(window.WINDOW_WIDTH, window.WINDOW_HEIGHT);
+    try window.windowInit(window.WINDOW_WIDTH, window.WINDOW_HEIGHT);
 
     try textures.init();
     try anim.init();

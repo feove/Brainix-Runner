@@ -36,8 +36,10 @@ pub const GameView = enum {
 pub var currentView = GameView.Menu;
 pub var previousView = GameView.None;
 
-pub fn windowInit(screenWidth: i32, screenHeight: i32) void {
+pub fn windowInit(screenWidth: i32, screenHeight: i32) !void {
     rl.initWindow(screenWidth, screenHeight, "Brainix Runner");
+    const icon = try rl.loadImage("assets/logo/icon.png");
+    rl.setWindowIcon(icon);
 }
 
 pub fn GameViewManager() !void {

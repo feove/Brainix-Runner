@@ -171,7 +171,7 @@ pub const SoundDisplay = struct {
     pub fn playMusic(music: rl.Music) void {
         if (rl.isMusicValid(music)) {
             rl.playMusicStream(music);
-            rl.setMusicVolume(music, 1.0);
+            rl.setMusicVolume(music, 0.8);
         } else {
             print("Music is not valid\n", .{});
         }
