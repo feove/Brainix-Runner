@@ -11,6 +11,7 @@ const Areas = @import("../game/level/events.zig").Areas;
 const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
 const Selector = @import("../interface/selector.zig").Selector;
 const Interface = @import("../interface/hud.zig").Interface;
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 pub var inv: Inventory = undefined;
 
 pub const SLOT_NB: usize = 4;
@@ -225,6 +226,7 @@ pub const Inventory = struct {
                         if (place(i, inv.cell.type)) {
                             increaseSlotCount(i);
                             inv.cell.type = CellType.EMPTY;
+                            SoundDisplay.makeSound(.TAKE_ITEM);
                         }
                     }
                 }
@@ -259,6 +261,7 @@ pub const Inventory = struct {
             //Take Item fom Inventory
             inv.cell.type = inv.slots[i].object.type;
             remove(i, inv.slots[i].object.type);
+            SoundDisplay.makeSound(.TAKE_ITEM);
             return true;
         }
         return false;

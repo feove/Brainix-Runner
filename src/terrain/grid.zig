@@ -12,6 +12,7 @@ const Inventory = @import("../game/inventory.zig").Inventory;
 const terrain = @import("../game/terrain_object.zig");
 const AroundConfig = terrain.AroundConfig;
 const Object = @import("../game/terrain_object.zig").Object;
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 
 const WizardManager = @import("../game/animations/wizard_anims.zig").WizardManager;
 const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
@@ -243,6 +244,7 @@ pub const Grid = struct {
 
                         if (rl.isMouseButtonPressed(rl.MouseButton.right)) {
                             removeCell(i, j);
+                            SoundDisplay.makeSound(.TAKE_ITEM);
                         }
 
                         left_click = rl.isMouseButtonPressed(rl.MouseButton.left);
@@ -258,6 +260,7 @@ pub const Grid = struct {
                                 if (left_click and cellSet(i, j, inv.cell.type)) {
                                     grid.cells[j][i].object.canPlayerTake = true;
                                     Inventory.clearinv_cell();
+                                    SoundDisplay.makeSound(.TAKE_ITEM);
                                 }
                             }
                             continue;
@@ -267,6 +270,7 @@ pub const Grid = struct {
                         if (left_click and grid.cells[j][i].object.canPlayerTake) {
                             Inventory.setinv_cell(grid.cells[j][i].object.type);
                             removeFromGrid(i, j, grid.cells[j][i].object.type);
+                            SoundDisplay.makeSound(.TAKE_ITEM);
                         }
                     }
                 }

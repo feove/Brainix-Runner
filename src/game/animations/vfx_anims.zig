@@ -11,6 +11,7 @@ const Grid = @import("../../terrain/grid.zig").Grid;
 const FlyingPlatform = @import("../../entity/flying_platform.zig").FlyingPlatform;
 const inventory = @import("../inventory.zig");
 const InvCell = inventory.InvCell;
+const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
 const Inventory = inventory.Inventory;
 const events = @import("../level/events.zig");
 const Event = events.Event;
@@ -138,11 +139,11 @@ pub const EffectManager = struct {
 
     pub fn scratch() void {
         const elf: Elf = Elf.selfReturn();
+
         anim.scratch.isRunning = true;
 
         anim.scratch.update(Elf.getCurrentTime() / 2, 1);
         anim.scratch.draw(.init(elf.x, elf.y + elf.height * 0.2), 2.0, 0, 255, 0, 0); //sale : 3.5
-
         if (anim.scratch.isRunning == false) {
             effect_anim.prev = .SCRATCH;
             effect_anim.current = .NONE;

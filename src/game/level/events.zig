@@ -182,6 +182,8 @@ pub const Event = struct {
 
             Object.set(&objects[i], &grid);
         }
+
+        SoundDisplay.makeSound(.SPELL);
     }
 
     fn objectsCleaning(event: *Event, objects: []Object) void {
@@ -346,6 +348,7 @@ pub const Level = struct {
                     LevelMeta.manageStars();
                     LevelMeta.unlockNextLevel();
                     window.currentView = .Completed;
+                    SoundDisplay.makeSound(.COMPLETION);
                 }
             },
         }

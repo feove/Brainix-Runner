@@ -8,6 +8,7 @@ const EffectManager = @import("../animations/vfx_anims.zig").EffectManager;
 const flying_platform = @import("../../entity/flying_platform.zig");
 const FlyingPlatform = flying_platform.FlyingPlatform;
 const Grid = @import("../../terrain/grid.zig").Grid;
+const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
 
 pub var cut_scene_manager = CutSceneManager{};
 pub var wait_active: bool = false;

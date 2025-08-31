@@ -85,7 +85,7 @@ pub const WizardManager = struct {
     }
 
     fn attacking_1(wizard: *Wizard) void {
-        // SoundDisplay.makeSound(.BOOM);
+        SoundDisplay.makeSound(.ATTACKING_1);
         anim.wizard_attacking_1.isRunning = true;
         anim.wizard_attacking_1.update(Elf.getCurrentTime() * Elf.getTimeDivisor(), 1);
         anim.wizard_attacking_1.draw(.init(wizard.x, wizard.y), wizard.scale, 0.0, 255, 0, 0);

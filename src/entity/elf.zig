@@ -20,6 +20,7 @@ const elf_anims = @import("../game/animations/elf_anims.zig");
 const ElfManager = elf_anims.ElfManager;
 const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
 const Object = @import("../game/terrain_object.zig").Object;
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 
 const print = @import("std").debug.print;
 
@@ -283,6 +284,7 @@ pub const Elf = struct {
     fn updatePlayerStatement() void {
         switch (elf.state) {
             .DEAD => {
+                //SoundDisplay.makeSound(.WOOSH_1);
                 animDeathPurpose();
                 elf_anims.ElfManager.setAnim(.DYING); //Auto respawning
                 event.auto_death_timer_active = false;

@@ -17,7 +17,7 @@ const textures = @import("../render/textures.zig");
 const anim = @import("animations/animations_manager.zig");
 const elf_anims = @import("../game/animations/elf_anims.zig");
 const EffectManager = @import("../game/animations/vfx_anims.zig").EffectManager;
-
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 const print = std.debug.print;
 
 pub var DoorPos: rl.Vector2 = undefined;
@@ -74,11 +74,15 @@ pub const PhysicObject = struct {
         };
 
         self.jump = false;
+
+        SoundDisplay.makeSound(.JUMP);
     }
 
     pub fn upPadEffect(self: *PhysicObject, up_pad_force: f32) void {
         self.velocity_y = up_pad_force;
         self.velocity_x = 0;
+
+        SoundDisplay.makeSound(.JUMP);
     }
 
     pub fn boostEffect(self: *PhysicObject, boost_force: f32) void {

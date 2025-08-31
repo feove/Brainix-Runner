@@ -16,6 +16,7 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
 const TransitionController = @import("./transition/transition_controller.zig").TransitionController;
 const Switcher = @import("./transition/transition_controller.zig").Switcher;
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 
 pub fn update() !void {
     Switcher.start(.CIRCLE_OUT);

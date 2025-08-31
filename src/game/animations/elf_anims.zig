@@ -1,5 +1,6 @@
 const anim = @import("animations_manager.zig");
 const Elf = @import("../../entity/elf.zig").Elf;
+const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
 const rl = @import("raylib");
 const print = @import("std").debug.print;
 

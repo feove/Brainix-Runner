@@ -22,7 +22,8 @@ const Selector = @import("../interface/selector.zig").Selector;
 const scenarios = @import("../game/level/cutscene_manager.zig");
 const events = @import("../game/level/events.zig");
 const transitions = @import("../view/transition/transition_controller.zig");
-//Tmp Drawing
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
+
 pub fn drawScene() !void {
     // rl.clearBackground(.white);
 
@@ -187,7 +188,9 @@ fn Spawndoor() void {
 
     if (door_is_opened) {
         textures.Sprite.draw(textures.dungeons_tile, textures.sprites.dungeon_opened_door, .init(x, y + bh + 25), 3.2, closed_door_color);
+        return;
     }
+    SoundDisplay.makeSound(.DOOR);
 }
 
 fn drawBorders() void {

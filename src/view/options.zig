@@ -12,6 +12,7 @@ const SpriteDefaultConfig = textures.SpriteDefaultConfig;
 const Sprite = textures.Sprite;
 const FontManager = @import("../render/fonts.zig").FontManager;
 const Button = @import("../ui/buttons_panel.zig").Button;
+const SoundDisplay = @import("../sounds/sounds.zig").SoundDisplay;
 const menu = @import("menu.zig");
 const settings = @import("settings.zig");
 const sounds = @import("../sounds/sounds.zig");
@@ -94,7 +95,9 @@ fn drawButtons() void {
 
     if (muted) {
         btns.btns_panel.unmute.draw();
+        SoundDisplay.muteAll();
     } else {
+        SoundDisplay.unmuteAll();
         btns.btns_panel.mute.draw();
     }
 
