@@ -15,13 +15,14 @@ const print = @import("std").debug.print;
 const Switcher = @import("../view/transition/transition_controller.zig").Switcher;
 const window = @import("../render/window.zig");
 const GameView = window.GameView;
-
+const sounds = @import("../sounds/sounds.zig");
+const SoundDisplay = sounds.SoundDisplay;
 pub fn update() !void {
     Switcher.start(.CIRCLE_OUT);
 
     if (btns.btns_panel.settings.isClicked() or rl.isKeyPressed(rl.KeyboardKey.escape)) {
         window.previousView = .Play;
-
+        SoundDisplay.pauseMusic(sounds.current_music);
         window.currentView = GameView.Settings;
         //  print(" start : {d}\n", .{events.auto_death_start_time});
     }

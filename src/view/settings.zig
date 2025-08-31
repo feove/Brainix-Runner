@@ -49,6 +49,8 @@ pub fn update() !void {
         Settings.reset();
         Button.reset();
         window.currentView = window.previousView;
+
+        SoundDisplay.playMusic(sounds.current_music);
     }
 
     if (btns.btns_panel.menu.isClicked()) {
@@ -58,8 +60,9 @@ pub fn update() !void {
         }
         hasStarted = false;
         Button.reset();
-        SoundDisplay.restartMusic(sounds.soundsets.theme_music);
         window.currentView = .Menu;
+        sounds.current_music = sounds.soundsets.theme_music;
+        SoundDisplay.playMusic(sounds.current_music);
     }
 
     if (btns.btns_panel.option.isClicked()) {

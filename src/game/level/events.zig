@@ -29,7 +29,8 @@ const CursorManager = @import("../cursor.zig").CursorManager;
 const transition = @import("../../view/transition/transition_controller.zig");
 const Switcher = transition.Switcher;
 const Controller = transition.TransitionController;
-const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
+const sounds = @import("../../sounds/sounds.zig");
+const SoundDisplay = sounds.SoundDisplay;
 const window = @import("../../render/window.zig");
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -348,6 +349,9 @@ pub const Level = struct {
                     LevelMeta.manageStars();
                     LevelMeta.unlockNextLevel();
                     window.currentView = .Completed;
+
+                    SoundDisplay.stopMusic(sounds.soundsets.gameplay);
+                    sounds.current_music = sounds.soundsets.theme_music;
                     SoundDisplay.makeSound(.COMPLETION);
                 }
             },

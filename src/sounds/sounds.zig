@@ -5,17 +5,18 @@ const btns = @import("../ui/buttons_panel.zig");
 pub var soundControl = SoundDisplay{};
 pub var soundsets = SoundSet{};
 pub var canPlayMusic: bool = true;
+pub var current_music: rl.Music = undefined;
 
 pub const VOLUME_MAX: f32 = 5.0;
 pub const VOLUME_MIN: f32 = 0.0;
 pub var currentVolume: f32 = 0.0;
 
 pub fn run() void {
-    rl.updateMusicStream(soundsets.theme_music);
+    SoundDisplay.updateMusic(current_music);
 
     if (canPlayMusic) {
         SoundDisplay.playMusic(soundsets.theme_music);
-        rl.setMusicVolume(soundsets.theme_music, 1.0);
+
         canPlayMusic = false;
     }
 }
@@ -37,6 +38,8 @@ pub fn deinit() void {
 
 pub const SoundSet = struct {
     theme_music: rl.Music = undefined,
+    gameplay: rl.Music = undefined,
+
     basic_btn: rl.Sound = undefined,
     back_btn: rl.Sound = undefined,
     arrow: rl.Sound = undefined,
@@ -54,6 +57,7 @@ pub const SoundSet = struct {
 
     fn init() !void {
         soundsets.theme_music = try rl.loadMusicStream("sounds/theme_music.mp3");
+        soundsets.gameplay = try rl.loadMusicStream("sounds/gameplay_music.mp3");
 
         soundsets.basic_btn = try rl.loadSound("sounds/basic_btn.mp3");
         soundsets.back_btn = try rl.loadSound("sounds/back_btn.mp3");
@@ -69,10 +73,13 @@ pub const SoundSet = struct {
         soundsets.take_item = try rl.loadSound("sounds/take_item.mp3");
         soundsets.attacking_1 = try rl.loadSound("sounds/attacking_1.mp3");
         soundsets.death = try rl.loadSound("sounds/death.mp3");
+
+        current_music = soundsets.theme_music;
     }
 
     pub fn deinit(self: *SoundSet) void {
         rl.unloadMusicStream(self.theme_music);
+        rl.unloadMusicStream(self.gameplay);
 
         rl.unloadSound(self.basic_btn);
         rl.unloadSound(self.back_btn);
@@ -113,7 +120,6 @@ pub const SoundType = enum {
     BASIC,
     BACK,
     ARROW,
-    //   THEME,
     PLAY,
     BOOM,
     WOOSH_1,
@@ -137,7 +143,6 @@ pub const SoundDisplay = struct {
             .BASIC => soundsets.basic_btn,
             .BACK => soundsets.back_btn,
             .ARROW => soundsets.arrow,
-            // .THEME => soundsets.theme_music,
             .PLAY => soundsets.play_btn,
             .BOOM => soundsets.boom,
             .WOOSH_1 => soundsets.woosh_1,
@@ -164,11 +169,17 @@ pub const SoundDisplay = struct {
     }
 
     pub fn playMusic(music: rl.Music) void {
-        //if (self.canPlayAllSound) {}
         if (rl.isMusicValid(music)) {
             rl.playMusicStream(music);
+            rl.setMusicVolume(music, 1.0);
         } else {
             print("Music is not valid\n", .{});
+        }
+    }
+
+    pub fn updateMusic(music: rl.Music) void {
+        if (rl.isMusicValid(music)) {
+            rl.updateMusicStream(music);
         }
     }
 

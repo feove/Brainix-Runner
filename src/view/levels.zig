@@ -121,8 +121,13 @@ fn level_is_clicked() !void {
             try Level.init(allocator);
             Switcher.authorize_switch(.Play);
             TransitionController.setCurrent(.CIRCLE_IN);
-            SoundDisplay.stopMusic(sounds.soundsets.theme_music);
             window.currentView = GameView.Play;
+
+            sounds.canPlayMusic = false;
+            SoundDisplay.stopMusic(sounds.soundsets.theme_music);
+
+            sounds.current_music = sounds.soundsets.gameplay;
+            SoundDisplay.playMusic(sounds.soundsets.gameplay);
         }
     }
 }
