@@ -25,7 +25,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .linux_display_backend = .X11,
     });
-    
+
     const raylib = raylib_dep.module("raylib");
     // const raygui = raylib_dep.module("raygui");
     const raylib_artifact = raylib_dep.artifact("raylib");
