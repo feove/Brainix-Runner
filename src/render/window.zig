@@ -1,7 +1,6 @@
 const rl = @import("raylib");
 const std = @import("std");
 const print = std.debug.print;
-const stdout = std.io.getStdOut().writer();
 const game = @import("../game/game.zig");
 const menu = @import("../view/menu.zig");
 const levels = @import("../view/levels.zig");
@@ -84,5 +83,9 @@ pub fn GameViewManager() !void {
 }
 
 pub fn clear() void {
+    var stdout_buffer: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    const stdout = &stdout_writer.interface;
+
     stdout.writeAll("\x1b[2J\x1b[H") catch {};
 }

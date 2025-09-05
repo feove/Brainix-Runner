@@ -3,7 +3,7 @@
 
   inputs = {
     zig2nix.url = "github:Cloudef/zig2nix";
-    zls.url = "github:zigtools/zls?ref=0.14.0";
+    zls.url = "github:zigtools/zls?ref=0.15.0";
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
     zigimports.url = "github:frost-phoenix/zigimports";
@@ -27,7 +27,7 @@
         # Check the flake.nix in zig2nix project for more options:
         # <https://github.com/Cloudef/zig2nix/blob/master/flake.nix>
         env = zig2nix.outputs.zig-env.${system} {
-          zig = zig2nix.outputs.packages.${system}.zig-0_14_0;
+          zig = zig2nix.outputs.packages.${system}.zig-latest;
         };
 
         zlsPkg = zls.packages.${system}.default;
@@ -116,13 +116,12 @@
         devShells.default = env.mkShell {
           # Packages required for compiling, linking and running
           # Libraries added here will be automatically added to the LD_LIBRARY_PATH and PKG_CONFIG_PATH
-          nativeBuildInputs =
-            [
-              zlsPkg
-              zigimportsPkg
-            ]
-            ++ nativeBuildInputs
-            ++ buildInputs;
+          nativeBuildInputs = [
+            zlsPkg
+            zigimportsPkg
+          ]
+          ++ nativeBuildInputs
+          ++ buildInputs;
         };
       }
     ));
