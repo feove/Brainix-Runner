@@ -13,7 +13,7 @@ const scene = @import("../../render/scene.zig");
 const SoundDisplay = @import("../../sounds/sounds.zig").SoundDisplay;
 const Button = @import("../../ui/buttons_panel.zig").Button;
 pub var transition_controller: TransitionController = undefined;
-pub var switcher: Switcher = undefined;
+pub var switcher: Switcher = .{};
 pub var start_transiton: f32 = 0.0;
 
 const root = "assets/transitions/";
@@ -240,9 +240,9 @@ pub const Transition = struct {
         for (start..end) |i| {
             const unit = if (i < 9) "0" else "";
             const number = try std.fmt.allocPrint(allocator, "{s}{d}", .{ unit, i + 1 });
-            const path = try std.fmt.allocPrintZ(allocator, "{s}{s}{s}{s}", .{ root, name, number, format });
+            const path = try std.fmt.allocPrint(allocator, "{s}{s}{s}{s}", .{ root, name, number, format });
             print("{s}\n", .{path});
-            self.frames[i] = try rl.loadTexture(path);
+            self.frames[i] = try rl.loadTexture(@ptrCast(path));
         }
     }
 
