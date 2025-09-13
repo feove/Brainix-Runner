@@ -5,11 +5,11 @@
 - [ ] Rename all instances of "Object" to "Item"
 - [ ] Add more levels
 - [ ] Add Debugger Panel in Console
-- [ ] Add Sound Effects
-- [ ] Add Music
 
 
 ### Tasks Completed
+- [X] Add Sound Effects
+- [X] Add Music
 - [X] Add Slow Motion Visual Effects
 - [X] Add Frontend levels
 - [X] Add Door Frontend
