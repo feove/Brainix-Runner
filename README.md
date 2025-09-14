@@ -5,7 +5,7 @@ Your goal: survive, jump, and run through challenging levels while enjoying smoo
 
 ![Brainix Demo](assets/demo/brainix_demo.gif)
 
----
+-----------
 
 ## 📦 Requirements
 
@@ -23,4 +23,5 @@ Clone the repository and run:
 
 ```bash
 zig build run
-```
+````
+
