@@ -252,7 +252,6 @@ pub const Elf = struct {
             }
         }
 
-        //print("DEBUG 2 : x : {d} ||y : {d}\n\n", .{ elf.x, elf.y });
         if (canMoveVertical(self, y)) {
             if (self.y < grid.y) {
                 self.y += 5;
