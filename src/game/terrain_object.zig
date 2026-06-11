@@ -66,7 +66,7 @@ pub const PhysicObject = struct {
     pub fn applyJump(self: *PhysicObject, jump_force: f32) void {
         self.velocity_y = jump_force;
 
-        const horizontal_boost: f32 = 0.08;
+        const horizontal_boost: f32 = 0.1;
 
         self.velocity_x = switch (self.auto_moving) {
             .RIGHT => horizontal_boost,
