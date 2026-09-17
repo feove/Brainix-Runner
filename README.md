@@ -7,17 +7,17 @@ Your goal: survive, jump, and run through challenging levels while enjoying smoo
 
 -----------
 
-## 📦 Requirements
+## Requirements
 
 - [Zig](https://ziglang.org/download/) **version 0.15.1**
-  > ⚠️ Other versions are not guaranteed to work. Please install exactly 0.15.1
+  >  Other versions are not guaranteed to work. Please install exactly 0.15.1
 
 - A C compiler (for linking with raylib). On Linux, install `gcc` or `clang`.
 - [raylib](https://www.raylib.com/) is bundled through Zig’s build, no manual installation required.
 
 ---
 
-## 🚀 Build & Run
+##  Build & Run
 
 Clone the repository and run:
 
