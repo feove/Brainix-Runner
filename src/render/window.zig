@@ -83,9 +83,5 @@ pub fn GameViewManager() !void {
 }
 
 pub fn clear() void {
-    var stdout_buffer: [1024]u8 = undefined;
-    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
-    const stdout = &stdout_writer.interface;
-
-    stdout.writeAll("\x1b[2J\x1b[H") catch {};
+    std.debug.print("\x1b[2J\x1b[H", .{});
 }

@@ -15,12 +15,14 @@
     // on the following line intact, so that it shows up in code reviews that
     // modify the field.
     .fingerprint = 0xe929346204080a93, // Changing this has security and trust implications.
-    .minimum_zig_version = "0.15.1",
+    .minimum_zig_version = "0.16.0",
 
     .dependencies = .{
         .raylib_zig = .{
-            .url = "git+https://github.com/raylib-zig/raylib-zig?ref=devel#9ad8b8ba7432642acc336d17539e73c3fb9ac300",
-            .hash = "raylib_zig-5.6.0-dev-KE8REK4zBQA5y8W9NTGXGHM3YKFtS5UDttcwZ4GTZSau",
+
+        	.url = "git+https://github.com/raylib-zig/raylib-zig#8758f4cd3a5ae0df6941c4715257223d34c5ad3e",
+
+			.hash = "raylib_zig-6.0.0-KE8RECZ8BQDm-txuospkpZHbJ6DNpacUF7D88RWQ_qAe"            
         },
     },
     .paths = .{

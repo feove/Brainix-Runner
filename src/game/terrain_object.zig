@@ -98,9 +98,8 @@ pub const AroundConfig = struct {
     },
 
     pub fn cellAroundchecking(i: usize, j: usize, cell: CellType) bool {
-        const config_requirement: AroundConfig = cellConfigRequirment(cell).*;
-
-        const current_config: AroundConfig = currentConfig(i, j).*;
+        const config_requirement = cellConfigRequirment(cell);
+        const current_config = currentConfig(i, j);
         //print("\n\ncurrent_config {any}\n\n\n", .{current_config});
 
         for (0..3) |r| {
@@ -117,7 +116,7 @@ pub const AroundConfig = struct {
         return false;
     }
 
-    fn cellConfigRequirment(cell: CellType) *AroundConfig {
+    fn cellConfigRequirment(cell: CellType) AroundConfig {
         var aroundConfig: AroundConfig = AroundConfig{};
         var model: [3][3]CellType = aroundConfig.model;
 
@@ -129,7 +128,7 @@ pub const AroundConfig = struct {
         }
         aroundConfig.model = model;
 
-        return &aroundConfig;
+        return aroundConfig;
     }
 
     fn set_row(config: *AroundConfig, i: usize, cell: CellType) void {
@@ -162,7 +161,7 @@ pub const AroundConfig = struct {
             set_col(config, 2, .VOID);
         }
     }
-    fn currentConfig(i: usize, j: usize) *AroundConfig {
+    fn currentConfig(i: usize, j: usize) AroundConfig {
         var config: AroundConfig = AroundConfig{};
         setVoidConfig(&config, i, j);
 
@@ -187,7 +186,7 @@ pub const AroundConfig = struct {
             }
         }
 
-        return &config;
+        return config;
     }
 };
 

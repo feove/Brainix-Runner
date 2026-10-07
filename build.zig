@@ -23,7 +23,9 @@ pub fn build(b: *std.Build) void {
     const raylib_dep = b.dependency("raylib_zig", .{
         .target = target,
         .optimize = optimize,
+        .linkage = .dynamic, // Build raylib as a shared library
         .linux_display_backend = .X11,
+        .opengl_version = rlz.OpenglVersion.gl_2_1, // Use OpenGL 2.1 (requires importing raylib-zig's build script)
     });
 
     const raylib = raylib_dep.module("raylib");
@@ -37,7 +39,7 @@ pub fn build(b: *std.Build) void {
 
     addAssets(b, exe);
 
-    exe.linkLibrary(raylib_artifact);
+    exe.root_module.linkLibrary(raylib_artifact);
     exe.root_module.addImport("raylib", raylib);
     // exe.root_module.addImport("raygui", raygui);
 
@@ -61,4 +63,34 @@ pub fn build(b: *std.Build) void {
 
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_exe_unit_tests.step);
+
+    if (target.query.os_tag == .emscripten) {
+        const emsdk = rlz.emsdk;
+        const wasm = b.addLibrary(.{
+            .name = "Brainix Runner",
+            .root_module = exe_mod,
+        });
+
+        const install_dir: std.Build.InstallDir = .{ .custom = "web" };
+        const emcc_flags = emsdk.emccDefaultFlags(b.allocator, .{ .optimize = optimize });
+        const emcc_settings = emsdk.emccDefaultSettings(b.allocator, .{ .optimize = optimize });
+
+        const emcc_step = emsdk.emccStep(b, raylib_artifact, wasm, .{
+            .optimize = optimize,
+            .flags = emcc_flags,
+            .settings = emcc_settings,
+            .install_dir = install_dir,
+        });
+        b.getInstallStep().dependOn(emcc_step);
+
+        const html_filename = b.fmt("{s}.html", .{wasm.name});
+        const emrun_step = emsdk.emrunStep(
+            b,
+            b.getInstallPath(install_dir, html_filename),
+            &.{},
+        );
+
+        emrun_step.dependOn(emcc_step);
+        run_step.dependOn(emrun_step);
+    }
 }

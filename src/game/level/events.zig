@@ -33,8 +33,7 @@ const sounds = @import("../../sounds/sounds.zig");
 const SoundDisplay = sounds.SoundDisplay;
 const window = @import("../../render/window.zig");
 
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-const alloc = gpa.allocator();
+const alloc = std.heap.page_allocator;
 const print = std.debug.print;
 
 pub var level: Level = undefined;
@@ -279,9 +278,9 @@ pub const Level = struct {
         const level_path = level_meta.path;
         const eventConfig: *EventConfig = try EventConfig.levelReader(allocator, level_path);
 
-        level.events = eventConfig.*.events.*;
+        level.events = eventConfig.events;
         // print("INIT : {d} \n", .{level.events[3].areas.intermediate_areas[0].x});
-        EVENT_NB = eventConfig.*.event_nb;
+        EVENT_NB = eventConfig.event_nb;
         level.event_nb = EVENT_NB;
         reset();
     }
