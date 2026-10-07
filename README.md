@@ -7,7 +7,7 @@ Your goal: survive, jump, and run through challenging levels while enjoying smoo
 
 -----------
 
-## 📦 Requirements
+## Requirements
 
 - [Zig](https://ziglang.org/download/) **version 0.16.0**
   > ⚠️ Other versions are not guaranteed to work. Please install exactly 0.16.0
@@ -17,7 +17,7 @@ Your goal: survive, jump, and run through challenging levels while enjoying smoo
 
 ---
 
-## 🚀 Build & Run
+##  Build & Run
 
 Clone the repository and run:
 
