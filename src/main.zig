@@ -16,8 +16,7 @@ const CursorManager = @import("game/cursor.zig").CursorManager;
 const FontManager = @import("render/fonts.zig").FontManager;
 const LevelsManager = @import("game/level/levels_manager.zig").LevelManager;
 const TransitionController = @import("view/transition/transition_controller.zig").TransitionController;
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-const allocator = gpa.allocator();
+const allocator = std.heap.page_allocator;
 
 pub fn main() anyerror!void {
 

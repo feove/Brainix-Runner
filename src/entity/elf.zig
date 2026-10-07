@@ -65,7 +65,7 @@ pub fn init() void {
 
 const gravity: f32 = 1500.0;
 const jump_force: f32 = -800.0;
-const boost_force: f32 = 0.1;
+const boost_force: f32 = 0.05;
 
 pub const Elf = struct {
     x: f32,

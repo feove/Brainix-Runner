@@ -16,14 +16,15 @@ const Event = @import("events.zig").Event;
 const Level = @import("events.zig").Level;
 
 pub const EventConfig = struct {
-    events: *[]Event,
+    events: []Event,
     event_nb: usize,
 
     pub fn levelReader(allocator: std.mem.Allocator, level_pathway: []const u8) !*EventConfig {
-        var file = try std.fs.cwd().openFile(level_pathway, .{});
-        defer file.close();
-
-        const json_data = try file.readToEndAlloc(allocator, 1024 * 10);
+        const io = std.Io.Threaded.global_single_threaded.io();
+        const json_data = std.Io.Dir.cwd().readFileAlloc(io, level_pathway, allocator, .unlimited) catch |err| {
+            std.debug.print("Failed to read level file '{s}' ({})\n", .{ level_pathway, err });
+            return err;
+        };
         defer allocator.free(json_data);
 
         const parsed = std.json.parseFromSlice(std.json.Value, allocator, json_data, .{}) catch |err| {
@@ -36,11 +37,18 @@ pub const EventConfig = struct {
         var iter = root_object.iterator();
 
         var id: usize = 0;
-
         const size: usize = @as(usize, @intCast(iter.values[0].integer));
 
-        var eventConfig: EventConfig = undefined;
-        var events = try allocator.alloc(Event, size);
+        const event_config = try allocator.create(EventConfig);
+        errdefer allocator.destroy(event_config);
+
+        const events = try allocator.alloc(Event, size);
+        errdefer allocator.free(events);
+
+        event_config.* = .{
+            .events = events,
+            .event_nb = size,
+        };
 
         while (iter.next()) |entry| {
             if (entry.key_ptr.*[6] == 'n') {
@@ -107,9 +115,6 @@ pub const EventConfig = struct {
             const intermediate = areas.object.get("intermediate_areas").?.array;
             var intermediate_areas = try allocator.alloc(rl.Vector4, intermediate_nb);
 
-            // for (0..1) |i_inter| {
-            //     intermediate_areas[i_inter] = rl.Vector4.init(0, 0, 0, 0);
-            // }
             const quick_motions = if (intermediate_nb != 0) try allocator.alloc(f64, intermediate_nb) else null;
 
             var i_area: usize = 0;
@@ -119,15 +124,11 @@ pub const EventConfig = struct {
                 const width_i = @as(usize, @intCast(area.object.get("width").?.integer));
                 const height_i = @as(usize, @intCast(area.object.get("height").?.integer));
                 const quick_motion: f64 = @as(f64, @floatCast(area.object.get("quick_motion").?.float));
-                // std.debug.print("i_i : {d} j_i : {d} width_i : {d} height_i : {d}\n", .{ i_i, j_i, width_i, height_i });
 
                 intermediate_areas[i_area] = Level.usize_assign_to_f32(i_i, j_i, width_i, height_i);
                 quick_motions.?[i_area] = quick_motion;
-                //std.debug.print("intermediate_areas[i_area].x {d} \n", .{intermediate_areas[i_area].x});
                 i_area += 1;
             }
-
-            //Quik Slow motion assign
 
             events[id].object_nb = object_nb;
             events[id].slow_motion_time = slow_motion_time;
@@ -145,9 +146,8 @@ pub const EventConfig = struct {
 
             id += 1;
         }
-        eventConfig.events = &events;
-        eventConfig.event_nb = size;
-        return &eventConfig;
+
+        return event_config;
     }
 };
 
