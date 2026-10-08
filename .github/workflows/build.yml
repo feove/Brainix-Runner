@@ -12,6 +12,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
@@ -19,17 +20,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Zig 0.14
+      - name: Install Zig 0.16
         uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.14.0
-          install-path: /usr/local/bin
+          version: 0.16.0
 
       - name: Install Linux Dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update && sudo apt-get install -y \
-            libx11-dev libxcursor-dev libxinerama-dev libxi-dev libgl1-mesa-dev \
+            libx11-dev libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev libgl1-mesa-dev \
             libwayland-dev
 
       - name: Build Game

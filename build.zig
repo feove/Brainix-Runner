@@ -23,7 +23,7 @@ pub fn build(b: *std.Build) void {
     const raylib_dep = b.dependency("raylib_zig", .{
         .target = target,
         .optimize = optimize,
-        .linkage = .dynamic, // Build raylib as a shared library
+        .linkage = if (target.result.os.tag == .linux) std.builtin.LinkMode.dynamic else .static,
         .linux_display_backend = .X11,
         .opengl_version = rlz.OpenglVersion.gl_2_1, // Use OpenGL 2.1 (requires importing raylib-zig's build script)
     });
